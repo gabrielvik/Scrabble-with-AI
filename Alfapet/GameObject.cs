@@ -1,6 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
 using System.Diagnostics;
 using System.Collections.Generic;
 
@@ -18,11 +17,13 @@ namespace Alfapet
 
         private static int index_i = 0;
 
+        public char Letter;
+
         public GameObject()
         {
             GameObjects.Add(this); // lägg till objektet i listan
             Index = index_i; // 
-            index_i++; 
+            index_i++;
         }
 
         public void SetTexture(Texture2D texture)
@@ -55,14 +56,6 @@ namespace Alfapet
         public static List<GameObject> GetAllObjects()
         {
             return GameObjects;
-        }
-
-        public void Draw()
-        {
-            for (int i = 0; i < GameObjects.Count i++)
-            {
-                Alfapet._spriteBatch.Draw(this.texture, this.draw_object, Color.White);
-            }
         }
     }
 }

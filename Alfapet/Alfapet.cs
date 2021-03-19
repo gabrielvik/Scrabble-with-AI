@@ -1,6 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
 using System.Diagnostics;
 using System.Collections.Generic;
 
@@ -15,6 +14,8 @@ namespace Alfapet
 
         private List<GameObject> objects;
 
+        public static Texture2D TransparentBack;
+
         public Alfapet()
         {
             _graphics = new GraphicsDeviceManager(this);
@@ -26,13 +27,23 @@ namespace Alfapet
         {
             objects = GameObject.GetAllObjects();
 
+            _graphics.PreferredBackBufferWidth = 900;  // set this value to the desired width of your window
+            _graphics.PreferredBackBufferHeight = 800;   // set this value to the desired height of your window
+            _graphics.ApplyChanges();
+
+            hand.Init();
+
             base.Initialize();
         }
 
         protected override void LoadContent()
         {
-            hand.Load();
             _spriteBatch = new SpriteBatch(GraphicsDevice);
+
+            TransparentBack = new Texture2D(GraphicsDevice, 1, 1);
+            TransparentBack.SetData(new Color[] { Color.White * 0.5f });
+
+            Fonts.Load(Content);
         }
 
         protected override void Update(GameTime gameTime)
@@ -46,13 +57,10 @@ namespace Alfapet
 
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.Black);
+            GraphicsDevice.Clear(new Color(47, 54, 64));
 
             _spriteBatch.Begin();
-            for(int i = 0; i < objects.Count; i++)
-            {
-                objects[i].Draw();
-            }
+
             hand.Draw();
             _spriteBatch.End();
 

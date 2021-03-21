@@ -8,7 +8,7 @@ namespace Alfapet
     public class GameObject : Game
     {
         private Texture2D texture;
-        //private int x, y, w, h;
+        public float X, Y;
         private static List<GameObject> GameObjects = new List<GameObject>();
 
         private dynamic draw_object; // dynamisk så man kan sätta till vilket objekt som helst 
@@ -18,6 +18,8 @@ namespace Alfapet
         private static int index_i = 0;
 
         public char Letter;
+
+        public bool BeingDragged = false;
 
         public GameObject()
         {
@@ -44,14 +46,19 @@ namespace Alfapet
             GameObjects[Index].w = w;
             GameObjects[Index].h = h;
         }
-
-        public void SetPos(int x, int y)
+        */
+        public void SetPos(float x, float y)
         {
-            this.x = x;
-            this.y = y;
-            GameObjects[Index].x = x;
-            GameObjects[Index].y = y;
-        }*/
+            this.X = x;
+            this.Y = y;
+            //GameObjects[Index].x = x;
+            //GameObjects[Index].y = y;
+        }
+
+        public Vector2 GetPos()
+        {
+            return new Vector2(X, Y);
+        }
 
         public static List<GameObject> GetAllObjects()
         {

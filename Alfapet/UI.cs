@@ -32,11 +32,13 @@ namespace Alfapet
             Alfapet._spriteBatch.Draw(Alfapet.TransparentBack, new Rectangle(rec.X + rec.Width - width, rec.Y + rec.Height - thickness, width, thickness), border_color);
             Alfapet._spriteBatch.Draw(Alfapet.TransparentBack, new Rectangle(rec.X + rec.Width - thickness, rec.Y + rec.Height - height, thickness, height - thickness), border_color);
         }
-        public static void DrawString(SpriteFont font, string text, Vector2 pos, Color color)
+        public static void DrawCenterChar(SpriteFont font, string text, Vector2 pos, Color color, int rec_width, int rec_height)
         {
             Vector2 font_size = font.MeasureString(text);
+            int offset_x = (int)(rec_width / 2 - font_size.X / 2);
+            int offset_y = (int)(rec_height / 2 - font_size.Y / 2);
 
-
+            Alfapet._spriteBatch.DrawString(font, text, new Vector2(pos.X + offset_x, pos.Y + offset_y), color);
         }
     }
 }

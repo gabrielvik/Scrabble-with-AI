@@ -8,33 +8,41 @@ namespace Alfapet
      */
     class Hand : Game
     {
-        private GameObject[] hand_tiles = new GameObject[Alfapet_Config.HandAmount];
+        public static GameObject[] HandTiles = new GameObject[Alfapet_Config.HandAmount];
 
-        public void Init() // Körs i Initialize()
+        public static float TilesMargin = 5f;
+        public static float TilesWidth = ((Alfapet._graphics.GraphicsDevice.Viewport.Width - TilesMargin * HandTiles.Length) / HandTiles.Length);
+        public static float TilesHeight = Alfapet._graphics.GraphicsDevice.Viewport.Height / 8;
+        public static void Init() // Körs i Initialize()
         {
-            for (int i = 0; i < hand_tiles.Length; i++) // Populera arrayen med nya objekt
+            for (int i = 0; i < HandTiles.Length; i++) // Populera arrayen med nya objekt
             {
-                hand_tiles[i] = new GameObject();
-                hand_tiles[i].Letter = Alfapet_Util.GenerateRandomLetter();
+                HandTiles[i] = new GameObject();
+                HandTiles[i].Letter = Alfapet_Util.GenerateRandomLetter();
             }
         }
 
-        public void Draw()
+        public static void Draw()
         {
-            int height = Alfapet._graphics.GraphicsDevice.Viewport.Height / 8;
-            Alfapet._spriteBatch.Draw(Alfapet.TransparentBack, new Rectangle(0, Alfapet._graphics.GraphicsDevice.Viewport.Height - height, Alfapet._graphics.GraphicsDevice.Viewport.Width, height), Color.Black * 0.5f);
+            Alfapet._spriteBatch.Draw(Alfapet.TransparentBack, new Rectangle(0, (int)(Alfapet._graphics.GraphicsDevice.Viewport.Height - TilesHeight), Alfapet._graphics.GraphicsDevice.Viewport.Width, (int)TilesHeight), Color.Black * 0.5f);
 
-            float _margin = 5;
-            float _w = 5;
-            float width = ((Alfapet._graphics.GraphicsDevice.Viewport.Width - _margin * hand_tiles.Length - _w / 2) / hand_tiles.Length);
+            float _w = 5f;
 
-            for (int i = 0; i < hand_tiles.Length; i++)
+            for (int i = 0; i < HandTiles.Length; i++)
             {
-                UI.StylishRectangle(new Rectangle((int)_w, Alfapet._graphics.GraphicsDevice.Viewport.Height - height + 5, (int)width, height - 10));
+                if(HandTiles[i] == null)
+                    continue;
 
-                Alfapet._spriteBatch.DrawString(Fonts.Montserrat_Bold, hand_tiles[i].Letter.ToString(), new Vector2(_w + 30, Alfapet._graphics.GraphicsDevice.Viewport.Height - height + 18), Color.White); ;
-                // TODO: CENTER CHARS WITH UI.DRAWSTRING
-                _w += width + _margin;
+                if (!HandTiles[i].BeingDragged)
+                {
+                   HandTiles[i].SetPos(_w, Alfapet._graphics.GraphicsDevice.Viewport.Height - TilesHeight + 5);
+                }
+
+                UI.StylishRectangle(new Rectangle((int)HandTiles[i].X, (int)HandTiles[i].Y, (int)TilesWidth, (int)TilesHeight - 10));
+
+                UI.DrawCenterChar(Fonts.Montserrat_Bold, HandTiles[i].Letter.ToString(), new Vector2(HandTiles[i].X, HandTiles[i].Y - 5), Color.White, (int)TilesWidth, (int)TilesHeight);
+
+                _w += TilesWidth + TilesMargin;
             }
         }
     }

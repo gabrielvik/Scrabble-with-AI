@@ -10,8 +10,6 @@ namespace Alfapet
         public static GraphicsDeviceManager _graphics;
         public static SpriteBatch _spriteBatch;
 
-        private Hand hand = new Hand();
-
         private List<GameObject> objects;
 
         public static Texture2D TransparentBack;
@@ -27,11 +25,13 @@ namespace Alfapet
         {
             objects = GameObject.GetAllObjects();
 
-            _graphics.PreferredBackBufferWidth = 900;  // set this value to the desired width of your window
-            _graphics.PreferredBackBufferHeight = 800;   // set this value to the desired height of your window
+            _graphics.PreferredBackBufferWidth = 900;
+            _graphics.PreferredBackBufferHeight = 800;
+            _graphics.SynchronizeWithVerticalRetrace = false;
+            IsFixedTimeStep = false;
             _graphics.ApplyChanges();
 
-            hand.Init();
+            Hand.Init();
 
             base.Initialize();
         }
@@ -51,7 +51,9 @@ namespace Alfapet
             /*if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit(); 
             */
-            
+
+            DragDrop.Think(Window);
+
             base.Update(gameTime);
         }
 
@@ -60,8 +62,7 @@ namespace Alfapet
             GraphicsDevice.Clear(new Color(47, 54, 64));
 
             _spriteBatch.Begin();
-
-            hand.Draw();
+                Hand.Draw();
             _spriteBatch.End();
 
             base.Draw(gameTime);

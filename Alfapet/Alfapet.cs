@@ -10,7 +10,7 @@ namespace Alfapet
         public static GraphicsDeviceManager _graphics;
         public static SpriteBatch _spriteBatch;
 
-        private List<GameObject> objects;
+        private List<Tile> objects;
 
         public static Texture2D TransparentBack;
 
@@ -23,14 +23,13 @@ namespace Alfapet
 
         protected override void Initialize()
         {
-            objects = GameObject.GetAllObjects();
-
             _graphics.PreferredBackBufferWidth = 900;
             _graphics.PreferredBackBufferHeight = 800;
             _graphics.SynchronizeWithVerticalRetrace = false;
             IsFixedTimeStep = false;
             _graphics.ApplyChanges();
 
+            Board.BuildBoard();
             Hand.Init();
 
             base.Initialize();

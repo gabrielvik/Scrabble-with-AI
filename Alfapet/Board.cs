@@ -7,16 +7,48 @@ namespace Alfapet
 {
     class Board : Game
     {
-        public static Tile[] Tiles = new Tile[40];
-        public static void BuildBoard() // Bygger brädan, kallas i Initalize()
+        public static Tile[] Tiles;
+
+        static public float TilesMargin = 5;
+
+        static public float TilesWidth;
+        static public float TilesHeight;
+
+        public static void Build() // Bygger brädan, kallas i Initalize()
         {
-            int x_tiles = Alfapet._graphics.GraphicsDevice.Viewport.Width / 100;
-            int y_tiles = (Alfapet._graphics.GraphicsDevice.Viewport.Height - (int)Hand.TilesHeight - 5) / 100;
+            int x_tiles = 9;
+            int y_tiles = 9;
+            int tiles = x_tiles * y_tiles;
 
-            int margin = 5;
+            Tiles = new Tile[tiles];
 
-            int width = x_tiles;
-            int height = y_tiles;
+            TilesWidth = (Alfapet._graphics.GraphicsDevice.Viewport.Width) / x_tiles - TilesMargin;
+            TilesHeight = ((Alfapet._graphics.GraphicsDevice.Viewport.Width) / y_tiles - TilesMargin) - Hand.TilesWidth / y_tiles;
+
+            float x = 5, y = 5;
+
+            for (int i = 0; i < tiles; i++)
+            {
+                if(x + TilesWidth > Alfapet._graphics.GraphicsDevice.Viewport.Width)
+                {
+                    y += TilesHeight - TilesMargin;
+                    x = 5;
+                }
+
+                Tiles[i] = new Tile();
+                Tiles[i].SetSize(TilesWidth, TilesHeight);
+                Tiles[i].SetPos(x, y);
+
+                x += TilesWidth + TilesMargin;
+            }
+
+            /*int x_tiles = Alfapet._graphics.GraphicsDevice.Viewport.TilesWidth / 100;
+            int y_tiles = (Alfapet._graphics.GraphicsDevice.Viewport.TilesHeight - (int)Hand.TilesTilesHeight - 5) / 100;
+
+            int TilesMargin = 5;
+
+            int TilesWidth = x_tiles;
+            int TilesHeight = y_tiles;
 
             int x = 5, y = 5;
 
@@ -24,11 +56,19 @@ namespace Alfapet
             {
                 if(i % y_tiles == 0)
                 {
-                    y += height + margin;
+                    y += TilesHeight + TilesMargin;
                 }
-                x += width + margin;
+                x += TilesWidth + TilesMargin;
 
                 Debug.WriteLine("x: " + x + " y:" + y);
+            }*/
+        }
+
+        public static void Draw()
+        {
+            for(int i = 0; i < Tiles.Length; i++)
+            {
+                UI.StylishRectangle(new Rectangle((int)Tiles[i].X, (int)Tiles[i].Y, (int)Tiles[i].W, (int)Tiles[i].H - 10));
             }
         }
     }

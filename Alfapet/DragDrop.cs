@@ -20,7 +20,11 @@ namespace Alfapet
 
             Tile tile = Hand.Tiles[index];
 
-            // TODO: Sök för en receiver 
+            for(int i = 0; i < Board.Tiles.Length; i++)
+            {
+                Alfapet_Util.IsHovering(pos);
+            }
+            
         }
 
         static public void Think(GameWindow window)
@@ -36,7 +40,8 @@ namespace Alfapet
                 {
                     if(mouse.LeftButton == ButtonState.Pressed)
                     {
-                        Hand.Tiles[i].SetPos(mouse.X + mouse.X - Hand.Tiles[i].X - Hand.TilesWidth, mouse.Y - Hand.TilesHeight / 2);
+                       // Debug.WriteLine(mouse.X - Hand.Tiles[i].X);
+                       Hand.Tiles[i].SetPos(mouse.X - Hand.TilesWidth / 2, mouse.Y - Hand.TilesHeight / 2);
                     }
                     else
                     {
@@ -53,7 +58,6 @@ namespace Alfapet
                 {
                     Hand.Tiles[i].Dragging = true;
                     Hand.BeingDragged = true;
-                    Hand.Tiles[i].SetPos(mouse.X + Hand.Tiles[i].X - mouse.X, mouse.Y);
                 }
             }
         }

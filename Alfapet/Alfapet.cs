@@ -23,14 +23,13 @@ namespace Alfapet
 
         protected override void Initialize()
         {
-            _graphics.PreferredBackBufferWidth = 900;
+            _graphics.PreferredBackBufferWidth = 1000;
             _graphics.PreferredBackBufferHeight = 800;
-            _graphics.SynchronizeWithVerticalRetrace = false;
-            IsFixedTimeStep = false;
+            IsFixedTimeStep = false; // tar bort FPS cap
             _graphics.ApplyChanges();
 
-            Board.BuildBoard();
-            Hand.Init();
+            Board.Build();
+            Hand.Build();
 
             base.Initialize();
         }
@@ -50,7 +49,7 @@ namespace Alfapet
             /*if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit(); 
             */
-
+            
             DragDrop.Think(Window);
 
             base.Update(gameTime);
@@ -61,6 +60,7 @@ namespace Alfapet
             GraphicsDevice.Clear(new Color(47, 54, 64));
 
             _spriteBatch.Begin();
+                Board.Draw();
                 Hand.Draw();
             _spriteBatch.End();
 

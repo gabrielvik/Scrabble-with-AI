@@ -13,11 +13,11 @@ namespace Alfapet
 
         public static float TilesMargin = 5f;
         public static float TilesWidth = ((Alfapet._graphics.GraphicsDevice.Viewport.Width - TilesMargin * Tiles.Length) / Tiles.Length);
-        public static float TilesHeight = Alfapet._graphics.GraphicsDevice.Viewport.Height / 8;
+        public static float TilesHeight = TilesWidth;
 
         public static bool BeingDragged = false;
 
-        public static void Init() // Körs i Initialize()
+        public static void Build() // Körs i Initialize()
         {
             for (int i = 0; i < Tiles.Length; i++) // Populera arrayen med nya objekt
             {
@@ -44,7 +44,7 @@ namespace Alfapet
                 }
                 else
                 {
-                    Tiles[i].SetSize(TilesWidth / 1.1f, TilesHeight / 1.1f);
+                    Tiles[i].SetSize(Board.TilesWidth, Board.TilesHeight);
                 }
 
 

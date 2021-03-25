@@ -16,22 +16,22 @@ namespace Alfapet
 
         public static void Build() // Bygger brädan, kallas i Initalize()
         {
-            int x_tiles = 9;
-            int y_tiles = 9;
+            int x_tiles = 15;
+            int y_tiles = 15;
             int tiles = x_tiles * y_tiles;
 
             Tiles = new Tile[tiles];
 
-            TilesWidth = (Alfapet._graphics.GraphicsDevice.Viewport.Width) / x_tiles - TilesMargin;
-            TilesHeight = ((Alfapet._graphics.GraphicsDevice.Viewport.Width) / y_tiles - TilesMargin) - Hand.TilesWidth / y_tiles;
+            TilesWidth  = (Alfapet._graphics.GraphicsDevice.Viewport.Width - (TilesMargin * (x_tiles + 1))) / x_tiles;
+            TilesHeight = (Alfapet._graphics.GraphicsDevice.Viewport.Height - Hand.TilesHeight - (TilesMargin * (y_tiles))) / y_tiles;
 
             float x = 5, y = 5;
 
             for (int i = 0; i < tiles; i++)
             {
-                if(x + TilesWidth > Alfapet._graphics.GraphicsDevice.Viewport.Width)
+                if (x + TilesWidth > Alfapet._graphics.GraphicsDevice.Viewport.Width)
                 {
-                    y += TilesHeight - TilesMargin;
+                    y += TilesHeight + TilesMargin;
                     x = 5;
                 }
 
@@ -68,7 +68,7 @@ namespace Alfapet
         {
             for(int i = 0; i < Tiles.Length; i++)
             {
-                UI.StylishRectangle(new Rectangle((int)Tiles[i].X, (int)Tiles[i].Y, (int)Tiles[i].W, (int)Tiles[i].H - 10));
+                UI.StylishRectangle(new Rectangle((int)Tiles[i].X, (int)Tiles[i].Y, (int)Tiles[i].W, (int)Tiles[i].H));
             }
         }
     }

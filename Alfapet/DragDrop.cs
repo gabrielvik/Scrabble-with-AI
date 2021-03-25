@@ -14,7 +14,7 @@ namespace Alfapet
             
         }
 
-        static private void DoDrop(int index, Vector2 pos) // Kallas när användaren släppt
+        static private void DoDrop(int index, Vector2 pos, GameWindow window) // Kallas när användaren släppt
         {
             Debug.WriteLine("Dropped " + index + " at position (" + pos.X + ", " + pos.Y + ')');
 
@@ -22,7 +22,10 @@ namespace Alfapet
 
             for(int i = 0; i < Board.Tiles.Length; i++)
             {
-                Alfapet_Util.IsHovering(pos);
+                if(Alfapet_Util.IsHovering(pos, new Vector2(Hand.TilesWidth, Hand.TilesHeight), window))
+                {
+                    Debug.WriteLine(i);
+                }
             }
             
         }
@@ -45,7 +48,7 @@ namespace Alfapet
                     }
                     else
                     {
-                        DoDrop(i, Hand.Tiles[i].GetPos()); // Kalla funktionen när användaren släppt 
+                        DoDrop(i, Hand.Tiles[i].GetPos(), window); // Kalla funktionen när användaren släppt 
                         Hand.BeingDragged = false;
                         Hand.Tiles[i].Dragging = false;
                     }
@@ -54,7 +57,7 @@ namespace Alfapet
                 else if (Hand.BeingDragged) // Om detta objekt inte blir draggen fast någon annan blir det, fortsätt till nästa
                     continue;
 
-                if (mouse.LeftButton == ButtonState.Pressed && mouse.X >= Hand.Tiles[i].X && mouse.X <= Hand.Tiles[i].X + Hand.TilesWidth && mouse.Y >= Hand.Tiles[i].Y && mouse.Y <= Hand.Tiles[i].Y + Hand.TilesHeight)
+                if (mouse.LeftButton == ButtonState.Pressed && Alfapet_Util.IsHovering(Hand.Tiles[i].GetPos(), new Vector2(Hand.TilesWidth, Hand.TilesHeight), window))
                 {
                     Hand.Tiles[i].Dragging = true;
                     Hand.BeingDragged = true;

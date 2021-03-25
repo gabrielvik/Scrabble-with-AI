@@ -40,7 +40,7 @@ namespace Alfapet
                 if (!Tiles[i].Dragging)
                 {
                     Tiles[i].SetPos(_w, Alfapet._graphics.GraphicsDevice.Viewport.Height - TilesHeight + 5);
-                    Tiles[i].SetSize(TilesWidth, TilesHeight);
+                    Tiles[i].SetSize(TilesWidth, TilesHeight - 10);
                 }
                 else
                 {
@@ -48,9 +48,9 @@ namespace Alfapet
                 }
 
 
-                UI.StylishRectangle(new Rectangle((int)Tiles[i].X, (int)Tiles[i].Y, (int)Tiles[i].W, (int)Tiles[i].H - 10));
+                UI.StylishRectangle(new Rectangle((int)Tiles[i].X, (int)Tiles[i].Y, (int)Tiles[i].W, (int)Tiles[i].H));
 
-                UI.DrawCenterChar(Fonts.Montserrat_Bold, Tiles[i].Letter.ToString(), new Vector2(Tiles[i].X, Tiles[i].Y - 5), Color.White, (int)Tiles[i].W, (int)Tiles[i].H);
+                UI.DrawCenterChar(Fonts.Montserrat_Bold, Tiles[i].Letter.ToString(), new Vector2(Tiles[i].X, Tiles[i].Y), Color.White, (int)Tiles[i].W, (int)Tiles[i].H);
 
                 _w += TilesWidth + TilesMargin;
             }

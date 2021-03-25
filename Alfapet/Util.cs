@@ -13,11 +13,13 @@ namespace Alfapet
             return (char)new Random().Next(65, 90); // Random från 65-90 (värden för stora bokstäver i ASCII) och sedan gör om till char
         }
 
-        public static bool IsHovering(Vector2 pos)
+        public static bool IsHovering(Vector2 pos, Vector2 size, GameWindow window)
         {
-            MouseState mouse = new MouseState();
-
-            Debug.WriteLine(mouse.X);
+            MouseState mouse = Mouse.GetState(window);
+            // Debug.WriteLine(mouse.X);
+            if (mouse.X >= pos.X && mouse.X <= pos.X + size.X && mouse.Y >= pos.Y && mouse.Y <= pos.Y + size.Y){
+                return true;
+            }
 
             return false;
         }

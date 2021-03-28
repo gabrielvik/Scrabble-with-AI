@@ -16,12 +16,8 @@ namespace Alfapet
         public static bool IsHovering(Vector2 pos, Vector2 size, GameWindow window)
         {
             MouseState mouse = Mouse.GetState(window);
-            // Debug.WriteLine(mouse.X);
-            if (mouse.X >= pos.X && mouse.X <= pos.X + size.X && mouse.Y >= pos.Y && mouse.Y <= pos.Y + size.Y){
-                return true;
-            }
 
-            return false;
+            return (mouse.X >= pos.X && mouse.X <= pos.X + size.X && mouse.Y >= pos.Y && mouse.Y <= pos.Y + size.Y);
         }
     }
 }

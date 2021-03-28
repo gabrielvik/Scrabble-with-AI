@@ -4,9 +4,11 @@
   <Platform>Windows</Platform>
   <Config />
   <SourceFiles>
-    <File>C:/Users/tissto19gabvik/source/repos/alfapet_school/Alfapet/Content/Fonts/File.spritefont</File>
+    <File>C:/Users/dator/source/repos/alfapet_school/Alfapet/Content/Fonts/File.spritefont</File>
+    <File>C:/Users/dator/source/repos/alfapet_school/Alfapet/Content/Fonts/Montserrat-Bold-Smaller.spritefont</File>
   </SourceFiles>
   <DestFiles>
     <File>Fonts/Montserrat-Bold.spritefont</File>
+    <File xsi:nil="true" />
   </DestFiles>
 </SourceFileCollection>

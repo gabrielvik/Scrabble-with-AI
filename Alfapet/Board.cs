@@ -16,14 +16,14 @@ namespace Alfapet
 
         public static void Build() // Bygger brädan, kallas i Initalize()
         {
-            int x_tiles = 15;
-            int y_tiles = 15;
+            int x_tiles = 16;
+            int y_tiles = 16;
             int tiles = x_tiles * y_tiles;
 
             Tiles = new Tile[tiles];
 
             TilesWidth  = (Alfapet._graphics.GraphicsDevice.Viewport.Width - (TilesMargin * (x_tiles + 1))) / x_tiles;
-            TilesHeight = (Alfapet._graphics.GraphicsDevice.Viewport.Height - Hand.TilesHeight - (TilesMargin * (y_tiles))) / y_tiles;
+            TilesHeight = (Alfapet._graphics.GraphicsDevice.Viewport.Height - Hand.TilesHeight - (TilesMargin * (y_tiles + 1))) / y_tiles;
 
             float x = 5, y = 5;
 
@@ -69,6 +69,11 @@ namespace Alfapet
             for(int i = 0; i < Tiles.Length; i++)
             {
                 UI.StylishRectangle(new Rectangle((int)Tiles[i].X, (int)Tiles[i].Y, (int)Tiles[i].W, (int)Tiles[i].H));
+
+                if (Tiles[i].Letter != '\0')
+                {
+                    UI.DrawCenterChar(Fonts.Montserrat_Bold_Smaller, Tiles[i].Letter.ToString(), new Vector2(Tiles[i].X, Tiles[i].Y), Color.White, (int)Tiles[i].W, (int)Tiles[i].H);
+                }
             }
         }
     }

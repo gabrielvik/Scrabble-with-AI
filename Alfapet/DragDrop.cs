@@ -9,11 +9,6 @@ namespace Alfapet
 {
     public class DragDrop : Game
     {
-        public DragDrop(Tile obj)
-        {
-            
-        }
-
         static private void DoDrop(int index, Vector2 pos, GameWindow window) // Kallas när användaren släppt
         {
             Debug.WriteLine("Dropped " + index + " at position (" + pos.X + ", " + pos.Y + ')');
@@ -22,9 +17,10 @@ namespace Alfapet
 
             for(int i = 0; i < Board.Tiles.Length; i++)
             {
-                if(Alfapet_Util.IsHovering(pos, new Vector2(Hand.TilesWidth, Hand.TilesHeight), window))
+                if (Alfapet_Util.IsHovering(Board.Tiles[i].GetPos(), new Vector2(tile.W, tile.H), window))
                 {
-                    Debug.WriteLine(i);
+                    Board.Tiles[i].Letter = tile.Letter;
+                    Hand.Tiles[index] = null;
                 }
             }
             
@@ -44,13 +40,13 @@ namespace Alfapet
                     if(mouse.LeftButton == ButtonState.Pressed)
                     {
                        // Debug.WriteLine(mouse.X - Hand.Tiles[i].X);
-                       Hand.Tiles[i].SetPos(mouse.X - Hand.TilesWidth / 2, mouse.Y - Hand.TilesHeight / 2);
+                       Hand.Tiles[i].SetPos(mouse.X - Hand.Tiles[i].W / 2, mouse.Y - Hand.Tiles[i].H / 2);
                     }
                     else
                     {
-                        DoDrop(i, Hand.Tiles[i].GetPos(), window); // Kalla funktionen när användaren släppt 
                         Hand.BeingDragged = false;
                         Hand.Tiles[i].Dragging = false;
+                        DoDrop(i, Hand.Tiles[i].GetPos(), window);
                     }
                     continue;
                 }

@@ -12,7 +12,7 @@ namespace Alfapet
         public static Tile[] Tiles = new Tile[Alfapet_Config.HandAmount];
 
         public static float TilesMargin = 5f;
-        public static float TilesWidth = ((Alfapet._graphics.GraphicsDevice.Viewport.Width - TilesMargin * Tiles.Length) / Tiles.Length);
+        public static float TilesWidth = ((Alfapet._graphics.GraphicsDevice.Viewport.Width - (TilesMargin * (Tiles.Length + 1))) / Tiles.Length);
         public static float TilesHeight = TilesWidth;
 
         public static bool BeingDragged = false;
@@ -41,16 +41,17 @@ namespace Alfapet
                 {
                     Tiles[i].SetPos(_w, Alfapet._graphics.GraphicsDevice.Viewport.Height - TilesHeight + 5);
                     Tiles[i].SetSize(TilesWidth, TilesHeight - 10);
+                    Tiles[i].SetFont(Fonts.Montserrat_Bold);
                 }
                 else
                 {
                     Tiles[i].SetSize(Board.TilesWidth, Board.TilesHeight);
+                    Tiles[i].SetFont(Fonts.Montserrat_Bold_Smaller);
                 }
-
 
                 UI.StylishRectangle(new Rectangle((int)Tiles[i].X, (int)Tiles[i].Y, (int)Tiles[i].W, (int)Tiles[i].H));
 
-                UI.DrawCenterChar(Fonts.Montserrat_Bold, Tiles[i].Letter.ToString(), new Vector2(Tiles[i].X, Tiles[i].Y), Color.White, (int)Tiles[i].W, (int)Tiles[i].H);
+                UI.DrawCenterChar(Tiles[i].Font, Tiles[i].Letter.ToString(), new Vector2(Tiles[i].X, Tiles[i].Y), Color.White, (int)Tiles[i].W, (int)Tiles[i].H);
 
                 _w += TilesWidth + TilesMargin;
             }

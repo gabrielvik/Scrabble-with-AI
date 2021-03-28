@@ -9,7 +9,8 @@ namespace Alfapet
     {
         public float X, Y;
         public float W, H;
-        public char Letter;
+        public char Letter = '\0';
+        public SpriteFont Font;
 
         public bool Dragging = false;
 
@@ -22,6 +23,11 @@ namespace Alfapet
         {
             this.X = x;
             this.Y = y;
+        }
+
+        public void SetFont(SpriteFont font)
+        {
+            this.Font = font;
         }
 
         public void SetSize(float w, float h)

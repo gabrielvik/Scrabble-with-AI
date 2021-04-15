@@ -2,6 +2,7 @@
 using System.IO;
 using System.Collections.Generic;
 using Newtonsoft.Json;
+using System.Diagnostics;
 
 namespace Alfapet
 {
@@ -10,15 +11,18 @@ namespace Alfapet
         
         public static Dictionary<string, string> Current;
 
-        public static void Initialize(string dictionary)
+        public static void Initialize(string language)
         {
-            string json = File.ReadAllText(@"dictionaries/" + dictionary + ".json"); // Få JSON från vilket språk man kallar funktionen
+            string json = File.ReadAllText(@"dictionaries/" + language + ".json"); // Få JSON från vilket språk man kallar funktionen
 
             Current = JsonConvert.DeserializeObject<Dictionary<string, string>>(json); // Gör om JSON till ett dictionary
         }
 
         public static bool IsWord(string word)
         {
+            // TODO: CHECK IF LOWER CCAES
+            Debug.WriteLine(word);
+            Debug.WriteLine(Current.ContainsKey(word));
             return Current.ContainsKey(word);
         }
 

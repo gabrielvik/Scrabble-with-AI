@@ -10,7 +10,7 @@ namespace Alfapet
         public static GraphicsDeviceManager _graphics;
         public static SpriteBatch _spriteBatch;
 
-        private List<Tile> objects;
+        //private List<Tile> objects;
 
         public static Texture2D TransparentBack;
 
@@ -23,10 +23,10 @@ namespace Alfapet
 
         protected override void Initialize()
         {
-            _graphics.PreferredBackBufferWidth = 1000;
-            _graphics.PreferredBackBufferHeight = 1000;
+            _graphics.PreferredBackBufferWidth = 800;
+            _graphics.PreferredBackBufferHeight = 800;
             IsFixedTimeStep = false; // tar bort FPS cap
-            Window.Position = new Point(-1500, 0);
+            //Window.Position = new Point(-1500, 0);
             _graphics.ApplyChanges();
 
             Board.Build();

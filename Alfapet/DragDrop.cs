@@ -15,15 +15,21 @@ namespace Alfapet
 
             Tile tile = Hand.Tiles[index];
 
-            for(int i = 0; i < Board.Tiles.Length; i++)
+            for (int i = 0; i < Board.Tiles.Length; i++)
             {
                 if (Alfapet_Util.IsHovering(Board.Tiles[i].GetPos(), new Vector2(tile.W, tile.H), window))
                 {
+                    if (Board.Tiles[i].Letter != '\0') // Om platsen inte är tom returnar man
+                        return;
+
+                    if (!Board.IsValidWord(i, tile.Letter))
+                        return;
+
                     Board.Tiles[i].Letter = tile.Letter;
                     Hand.Tiles[index] = null;
                 }
             }
-            
+
         }
 
         static public void Think(GameWindow window)
@@ -37,10 +43,10 @@ namespace Alfapet
 
                 if (Hand.Tiles[i].Dragging)
                 {
-                    if(mouse.LeftButton == ButtonState.Pressed)
+                    if (mouse.LeftButton == ButtonState.Pressed)
                     {
-                       // Debug.WriteLine(mouse.X - Hand.Tiles[i].X);
-                       Hand.Tiles[i].SetPos(mouse.X - Hand.Tiles[i].W / 2, mouse.Y - Hand.Tiles[i].H / 2);
+                        // Debug.WriteLine(mouse.X - Hand.Tiles[i].X);
+                        Hand.Tiles[i].SetPos(mouse.X - Hand.Tiles[i].W / 2, mouse.Y - Hand.Tiles[i].H / 2);
                     }
                     else
                     {

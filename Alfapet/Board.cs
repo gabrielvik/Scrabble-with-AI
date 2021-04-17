@@ -7,7 +7,7 @@ namespace Alfapet
 {
     class Board : Game
     {
-        public static Tile[] Tiles;
+        public static Tile[,] Tiles;
 
         static public float TilesMargin = 5;
 
@@ -21,14 +21,14 @@ namespace Alfapet
         {
             int tiles = XTiles * YTiles;
 
-            Tiles = new Tile[tiles];
+            Tiles = new Tile[YTiles, XTiles];
 
             TilesWidth = (Alfapet._graphics.GraphicsDevice.Viewport.Width - (TilesMargin * (XTiles + 1))) / XTiles;
             TilesHeight = (Alfapet._graphics.GraphicsDevice.Viewport.Height - Hand.TilesHeight - (TilesMargin * (YTiles + 1))) / YTiles;
 
             float x = 5, y = 5;
 
-            for (int i = 0; i < tiles; i++)
+            for (int i = 0; i < YTiles; i++)
             {
                 if (x + TilesWidth > Alfapet._graphics.GraphicsDevice.Viewport.Width)
                 {
@@ -36,11 +36,14 @@ namespace Alfapet
                     x = 5;
                 }
 
-                Tiles[i] = new Tile();
-                Tiles[i].SetSize(TilesWidth, TilesHeight);
-                Tiles[i].SetPos(x, y);
+                for(int z = 0; z < XTiles; z++)
+                {
+                    Tiles[i, z] = new Tile();
+                    Tiles[i, z].SetSize(TilesWidth, TilesHeight);
+                    Tiles[i, z].SetPos(x, y);
 
-                x += TilesWidth + TilesMargin;
+                    x += TilesWidth + TilesMargin;
+                }
             }
 
             /*int XTiles = Alfapet._graphics.GraphicsDevice.Viewport.TilesWidth / 100;
@@ -67,105 +70,92 @@ namespace Alfapet
 
         public static void Draw()
         {
-            for (int i = 0; i < Tiles.Length; i++)
+            foreach(var tile in Tiles)
             {
-                UI.StylishRectangle(new Rectangle((int)Tiles[i].X, (int)Tiles[i].Y, (int)Tiles[i].W, (int)Tiles[i].H));
+                UI.StylishRectangle(new Rectangle((int)tile.X, (int)tile.Y, (int)tile.W, (int)tile.H));
 
-                if (Tiles[i].Letter != '\0')
+                if (tile.Letter != '\0')
                 {
-                    UI.DrawCenterChar(Fonts.Montserrat_Bold_Smaller, Tiles[i].Letter.ToString(), new Vector2(Tiles[i].X, Tiles[i].Y), Color.White, (int)Tiles[i].W, (int)Tiles[i].H);
+                    UI.DrawCenterChar(Fonts.Montserrat_Bold_Smaller, tile.Letter.ToString(), new Vector2(tile.X, tile.Y), Color.White, (int)tile.W, (int)tile.H);
                 }
             }
         }
 
-        public static int RowIndex(int index)
-        {
-            float test = index / XTiles;
-            return (int)(Math.Round(test));
-        }
         public static int ColumnIndex(int index) => (index % YTiles);
 
-        private static Dictionary<int, Tile> GetRow(int index)
+        private static Tile[] GetRow(int index)
         {
-            Dictionary<int, Tile> temp = new Dictionary<int, Tile>();
-
-            int startingPoint = index - (index % XTiles);
-            for(int i = startingPoint; i < startingPoint + XTiles; i++)
+            Tile[] temp = new Tile[XTiles];
+            
+            for(int i = 0; i < XTiles; i++)
             {
-                temp[i] = Tiles[i];
-            }
-
-            return temp;
-        }
-
-        private static Dictionary<int, Tile> GetColumn(int index)
-        {
-            Dictionary<int, Tile> temp = new Dictionary<int, Tile>();
-
-            for(int i = 0; i < XTiles * YTiles; i += XTiles)
-            {
-                if (Tiles[i].Letter == '\0')
-                    continue;
-
-                temp[i] = Tiles[i];
-            }
-
-            return temp;
-        }
-
-        public static bool IsValidWord(int index, char letter)
-        {
-            Dictionary<int, Tile> row = GetRow(index);
-            Dictionary<int, Tile> column = GetColumn(index);
-
-            string _word = "";
-
-            if(Tiles[index - XTiles].Letter != '\0')
-            {
-                System.Diagnostics.Debug.WriteLine("gets here1");
-                foreach (var tile in column)
-                {
-                    _word += tile.Value.Letter;
-                }
-                _word += letter;
-                if (Dictionaries.IsWord(_word))
-                    return true;
-            }
-            else if(Tiles[index + XTiles].Letter != '\0')
-            {
-                System.Diagnostics.Debug.WriteLine("gets here2");
-                _word = letter.ToString();
-                foreach (var tile in column)
-                {
-                    _word += tile.Value.Letter;
-                }
-                if (Dictionaries.IsWord(_word))
-                    return true;
+                temp[i] = Tiles[index, i];
             }
             
-                
+            return temp;
+        }
 
+        private static Tile[] GetColumn(int index)
+        {
+            Tile[] temp = new Tile[XTiles];
 
-            /*for(int i = 0; i < column.Count; i++)
+            for (int i = 0; i < XTiles; i++)
             {
-            //    System.Diagnostics.Debug.WriteLine(i);
+                temp[i] = Tiles[i, index];
             }
 
+            return temp;
+        }
 
+        public static bool IsValidWord(int x, int y, char letter)
+        {
+            Tile[] row = GetRow(y);
+            Tile[] column = GetColumn(ColumnIndex(x));
 
-           // for (int i = 0; column[i].Letter != '\0'; i++) { }
-            if (ColumnIndex(column.First().Key) == ColumnIndex(index)) // 
+            string word = "";
+
+            bool columnUp = (y - 1  < 0) ? false : (Tiles[y - 1, x].Letter != '\0'); // Om bokstaven över Y har en bokstav
+            bool columnDown = (y + 1 > YTiles) ? false : (Tiles[y + 1, x].Letter != '\0'); // Om bokstaven under Y har en bokstav
+
+            if (columnUp && columnDown) // Om Y är emellan två bokstaver
             {
-                string _word = letter.ToString();
-
-                foreach(var tile in column)
+                for(int i = 0; i < column.Length; i++) // Loopa egenom kolumnen
                 {
-                    if (tile.Value.Letter == '\0') { continue; }
-
-                    _word += tile.Value.Letter.ToString();
+                    if (i == y) // Om I är Y (tomma bokstaven i mellan), lägg till bokstaven som ska placeras, i ordet och gå vidare
+                    {
+                        word += letter;
+                        continue;
+                    }
+                    else if (Tiles[i, x].Letter != '\0') // Annars om brickan inte är tom, lägg till karaktären i ordet
+                        word += Tiles[i, x].Letter;
                 }
-                System.Diagnostics.Debug.WriteLine(_word);
-            }*/
+            }
+            else if(columnUp || columnDown) // Annars om det finns en bokstav över eller under Y
+            {
+                if (columnDown) // Om man lägger bokstaven över en annan, lägg till karaktären i början av ordet
+                    word += letter;
+
+                for (int i = 0; i < column.Length; i++) // Loopa igenom kolumnen och lägg till bokstäverna i ordet
+                {
+                    if (Tiles[i, x].Letter == '\0')
+                    {
+                        // Om I är mindre än tillagda bokstavens plats och ordets längd är över 1 (man har lagt till en bokstav från ett annat ord på brädan), sätt tillbaka ordet till placerade bokstaven
+                        if (i < y && word.Length > 1)
+                            word = letter.ToString();
+                        else if (i > y) // Annars om man är på en tom bokstav och i är större än y, är ordet slut
+                            break;
+                        else
+                            continue;
+                    }
+                    word += Tiles[i, x].Letter;
+                }
+
+                if(columnUp) // Om man lägger bokstaven under en annan, lägg till karaktären i slutet på ordet
+                    word += letter;
+            }
+            
+
+            System.Diagnostics.Debug.WriteLine("WORD: " + word);
 
             return true;
         }

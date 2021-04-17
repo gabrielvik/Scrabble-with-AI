@@ -15,18 +15,22 @@ namespace Alfapet
 
             Tile tile = Hand.Tiles[index];
 
-            for (int i = 0; i < Board.Tiles.Length; i++)
+            for(int y = 0; y < Board.YTiles; y++)
             {
-                if (Alfapet_Util.IsHovering(Board.Tiles[i].GetPos(), new Vector2(tile.W, tile.H), window))
+                for (int x = 0; x < Board.XTiles; x++)
                 {
-                    if (Board.Tiles[i].Letter != '\0') // Om platsen inte är tom returnar man
-                        return;
+                    Tile _tile = Board.Tiles[y, x];
+                    if (Alfapet_Util.IsHovering(_tile.GetPos(), new Vector2(tile.W, tile.H), window))
+                    {
+                        if (_tile.Letter != '\0') // Om platsen inte är tom returnar man
+                            return;
 
-                    if (!Board.IsValidWord(i, tile.Letter))
-                        return;
+                        if (!Board.IsValidWord(x, y, tile.Letter))
+                            return;
 
-                    Board.Tiles[i].Letter = tile.Letter;
-                    Hand.Tiles[index] = null;
+                        _tile.Letter = tile.Letter;
+                        Hand.Tiles[index] = null;
+                    }
                 }
             }
 

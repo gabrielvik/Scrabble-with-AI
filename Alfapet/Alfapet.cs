@@ -10,7 +10,7 @@ namespace Alfapet
         public static GraphicsDeviceManager _graphics;
         public static SpriteBatch _spriteBatch;
 
-        private Button btn = new Button();
+        //private Button btn = new Button();
 
         //private List<Tile> objects;
 
@@ -34,11 +34,7 @@ namespace Alfapet
             Board.Build();
             Hand.Build();
             Dictionaries.Initialize("english");
-
-            btn.SetPos(5, _graphics.GraphicsDevice.Viewport.Height - Hand.TilesHeight * 1.5f - 5f);
-            btn.SetSize(125f, 45f);
-            btn.DrawFunc = () => UI.StylishRectangle(new Rectangle((int)btn.X, (int)btn.Y, (int)btn.W, (int)btn.H));
-            btn.ClickEvent = () => Debug.WriteLine("CLICKED");
+            ButtonRig.Initialize();
 
             base.Initialize();
         }

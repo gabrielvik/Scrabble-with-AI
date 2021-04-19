@@ -11,6 +11,7 @@ namespace Alfapet
         public float W, H;
         public char Letter = '\0';
         public SpriteFont Font;
+        public bool TempPlaced = true;
 
         public bool Dragging = false;
 

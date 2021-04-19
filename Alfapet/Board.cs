@@ -19,8 +19,6 @@ namespace Alfapet
 
         public static void Build() // Bygger brädan, kallas i Initalize()
         {
-            int tiles = XTiles * YTiles;
-
             Tiles = new Tile[YTiles, XTiles];
 
             TilesWidth = (Alfapet._graphics.GraphicsDevice.Viewport.Width - (TilesMargin * (XTiles + 1))) / XTiles;

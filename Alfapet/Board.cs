@@ -17,6 +17,8 @@ namespace Alfapet
         static public int XTiles = 15;
         static public int YTiles = 15;
 
+        static public bool PlacedValidWord = false;
+
         public static void Build() // Bygger brädan, kallas i Initalize()
         {
             Tiles = new Tile[YTiles, XTiles];
@@ -113,7 +115,7 @@ namespace Alfapet
             return temp;
         }
 
-        public static bool IsValidWord(int x, int y, char letter)
+        public static void CacheWordPlacement(int x, int y, char letter)
         {
             Tile[] row = GetRow(y);
             Tile[] column = GetColumn(ColumnIndex(x));
@@ -209,13 +211,11 @@ namespace Alfapet
             System.Diagnostics.Debug.WriteLine("columnWord: " + columnWord + ";\n");
 
             if (columnWord != null && rowWord != null)
-                return Dictionaries.IsWord(columnWord) && Dictionaries.IsWord(rowWord);
+                PlacedValidWord = Dictionaries.IsWord(columnWord) && Dictionaries.IsWord(rowWord);
             else if (columnWord != null)
-                return Dictionaries.IsWord(columnWord);
+                PlacedValidWord = Dictionaries.IsWord(columnWord);
             else if (rowWord != null)
-                return Dictionaries.IsWord(rowWord);
-            else
-                return false;
+                PlacedValidWord = Dictionaries.IsWord(rowWord);
         }
     }
 }

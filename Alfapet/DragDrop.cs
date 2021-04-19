@@ -25,8 +25,7 @@ namespace Alfapet
                         if (_tile.Letter != '\0') // Om platsen inte är tom returnar man
                             return;
 
-                        //if (!Board.IsValidWord(x, y, tile.Letter))
-                          //  return;
+                        Board.CacheWordPlacement(x, y, tile.Letter);
 
                         _tile.Letter = tile.Letter;
 

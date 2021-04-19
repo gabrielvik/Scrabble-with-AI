@@ -20,8 +20,6 @@ namespace Alfapet
 
         public static bool IsWord(string word)
         {
-            Debug.WriteLine(word);
-            Debug.WriteLine(Current.ContainsKey(word));
             return Current.ContainsKey(word);
         }
 

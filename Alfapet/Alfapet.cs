@@ -10,6 +10,8 @@ namespace Alfapet
         public static GraphicsDeviceManager _graphics;
         public static SpriteBatch _spriteBatch;
 
+        private Button btn = new Button();
+
         //private List<Tile> objects;
 
         public static Texture2D TransparentBack;
@@ -33,6 +35,11 @@ namespace Alfapet
             Hand.Build();
             Dictionaries.Initialize("english");
 
+            btn.SetPos(5, _graphics.GraphicsDevice.Viewport.Height - Hand.TilesHeight * 1.5f - 5f);
+            btn.SetSize(125f, 45f);
+            btn.DrawFunc = () => UI.StylishRectangle(new Rectangle((int)btn.X, (int)btn.Y, (int)btn.W, (int)btn.H));
+            btn.ClickEvent = () => Debug.WriteLine("CLICKED");
+
             base.Initialize();
         }
 
@@ -53,6 +60,7 @@ namespace Alfapet
             */
             
             DragDrop.Think(Window);
+            Button.Think(Window);
 
             base.Update(gameTime);
         }
@@ -64,6 +72,7 @@ namespace Alfapet
             _spriteBatch.Begin();
                 Board.Draw();
                 Hand.Draw();
+                Button.Draw();
             _spriteBatch.End();
 
             base.Draw(gameTime);

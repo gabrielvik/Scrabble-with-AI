@@ -15,12 +15,11 @@ namespace Alfapet
         {
             string json = File.ReadAllText(@"dictionaries/" + language + ".json"); // Få JSON från vilket språk man kallar funktionen
 
-            Current = JsonConvert.DeserializeObject<Dictionary<string, string>>(json); // Gör om JSON till ett dictionary
+            Current = new Dictionary<string, string>(JsonConvert.DeserializeObject<Dictionary<string, string>>(json), System.StringComparer.OrdinalIgnoreCase); // Gör om JSON till ett dictionary
         }
 
         public static bool IsWord(string word)
         {
-            // TODO: CHECK IF LOWER CCAES
             Debug.WriteLine(word);
             Debug.WriteLine(Current.ContainsKey(word));
             return Current.ContainsKey(word);

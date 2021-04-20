@@ -15,11 +15,13 @@ namespace Alfapet
                 return;
             }
             
-            foreach(var tile in Board.Tiles)
+            foreach(Tile tile in Board.Tiles)
             {
                 if (tile.TempPlaced)
                     tile.TempPlaced = false;
             }
+
+
         }
     }
 }

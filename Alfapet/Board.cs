@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using System.Linq;
+using Microsoft.Xna.Framework.Input;
 
 namespace Alfapet
 {
@@ -19,8 +20,35 @@ namespace Alfapet
 
         static public bool PlacedValidWord = false;
 
+        static public Action<dynamic, Vector2, Tile, Tile> TempDragCallback;
+        static public Action<dynamic, Tile> FailDragCallback;
+
         public static void Build() // Bygger brädan, kallas i Initalize()
         {
+            // TODO: hand positionerna resetas inte vid ändring
+            TempDragCallback = (index, pos, tile, destinationTile) =>
+            {
+                destinationTile.Letter = tile.Letter;
+                destinationTile.TempPlaced = true;
+
+                tile.SetPos(tile.originalPos.X, tile.originalPos.Y);
+                tile.TempPlaced = false;
+
+                tile.Letter = '\0';
+
+                Board.CacheWordPlacement((int)pos.X, (int)pos.Y, tile.Letter);
+            };
+
+            FailDragCallback = (index, tile) =>
+            {
+                System.Diagnostics.Debug.WriteLine("ges he000");
+                // g;r klart
+                if (Mouse.GetState().Y > YTiles * TilesHeight)
+                {
+                    Hand.Tiles.Append(tile);
+                }
+            };
+
             Tiles = new Tile[YTiles, XTiles];
 
             TilesWidth = (Alfapet._graphics.GraphicsDevice.Viewport.Width - (TilesMargin * (XTiles + 1))) / XTiles;

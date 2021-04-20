@@ -13,9 +13,9 @@ namespace Alfapet
             return (char)new Random().Next(65, 90); // Random från 65-90 (värden för stora bokstäver i ASCII) och sedan gör om till char
         }
 
-        public static bool IsHovering(Vector2 pos, Vector2 size, GameWindow window)
+        public static bool IsHovering(Vector2 pos, Vector2 size)
         {
-            MouseState mouse = Mouse.GetState(window);
+            MouseState mouse = Mouse.GetState(Alfapet._window);
 
             return (mouse.X >= pos.X && mouse.X <= pos.X + size.X && mouse.Y >= pos.Y && mouse.Y <= pos.Y + size.Y);
         }

@@ -55,7 +55,7 @@ namespace Alfapet
         {
             for (int i = 0; i < buttons.Count; i++)
             {
-                if (Alfapet_Util.IsHovering(buttons[i].GetPos(), buttons[i].GetSize(), window))
+                if (Alfapet_Util.IsHovering(buttons[i].GetPos(), buttons[i].GetSize()))
                 {
                     MouseState mouse = Mouse.GetState(window);
 

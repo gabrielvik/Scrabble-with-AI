@@ -11,9 +11,11 @@ namespace Alfapet
         public float W, H;
         public char Letter = '\0';
         public SpriteFont Font;
-        public bool TempPlaced = true;
+        public bool TempPlaced = false;
 
         public bool Dragging = false;
+
+        public Vector2 originalPos = default(Vector2);
 
         public Tile()
         {
@@ -24,6 +26,10 @@ namespace Alfapet
         {
             this.X = x;
             this.Y = y;
+            if(originalPos == Vector2.Zero)
+            {
+                originalPos = new Vector2(x, y);
+            }
         }
 
         public void SetFont(SpriteFont font)

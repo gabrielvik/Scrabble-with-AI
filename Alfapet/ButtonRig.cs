@@ -19,7 +19,7 @@ namespace Alfapet
             for (int i = 0; i < Buttons.Length; i++)
             {
                 Buttons[i].SetPos(x, Alfapet._graphics.GraphicsDevice.Viewport.Height - Hand.TilesHeight * 1.5f - 5f);
-                Buttons[i].SetSize(w, 50);
+                Buttons[i].SetSize(w, 47.5f);
 
                 x += w + 5;
             }

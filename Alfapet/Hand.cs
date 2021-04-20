@@ -15,14 +15,29 @@ namespace Alfapet
         public static float TilesWidth = ((Alfapet._graphics.GraphicsDevice.Viewport.Width - (TilesMargin * (Tiles.Length + 1))) / Tiles.Length);
         public static float TilesHeight = TilesWidth;
 
-        public static bool BeingDragged = false;
+        public static Action<dynamic, Vector2, Tile, Tile> DragCallback;
 
         public static void Build() // Körs i Initialize()
         {
+            DragCallback = (index, pos, tile, destinationTile) =>
+            {
+                Board.CacheWordPlacement((int)pos.X, (int)pos.Y, tile.Letter);
+
+                destinationTile.Letter = tile.Letter;
+                destinationTile.TempPlaced = true;  
+
+                Hand.Tiles[index] = null;
+            };
+
+            float _w = 5f;
+
             for (int i = 0; i < Tiles.Length; i++) // Populera arrayen med nya objekt
             {
                 Tiles[i] = new Tile();
                 Tiles[i].Letter = Alfapet_Util.GenerateRandomLetter();
+                Tiles[i].SetPos(_w, Alfapet._graphics.GraphicsDevice.Viewport.Height - TilesHeight + 5);
+
+                _w += TilesWidth + TilesMargin;
             }
         }
 
@@ -39,7 +54,6 @@ namespace Alfapet
 
                 if (!Tiles[i].Dragging)
                 {
-                    Tiles[i].SetPos(_w, Alfapet._graphics.GraphicsDevice.Viewport.Height - TilesHeight + 5);
                     Tiles[i].SetSize(TilesWidth, TilesHeight - 10);
                     Tiles[i].SetFont(Fonts.Montserrat_Bold);
                 }
@@ -52,8 +66,6 @@ namespace Alfapet
                 UI.StylishRectangle(new Rectangle((int)Tiles[i].X, (int)Tiles[i].Y, (int)Tiles[i].W, (int)Tiles[i].H));
 
                 UI.DrawCenterChar(Tiles[i].Font, Tiles[i].Letter.ToString(), new Vector2(Tiles[i].X, Tiles[i].Y), Color.White, (int)Tiles[i].W, (int)Tiles[i].H);
-
-                _w += TilesWidth + TilesMargin;
             }
         }
     }

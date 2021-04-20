@@ -9,6 +9,7 @@ namespace Alfapet
     {
         public static GraphicsDeviceManager _graphics;
         public static SpriteBatch _spriteBatch;
+        public static GameWindow _window;
 
         //private Button btn = new Button();
 
@@ -30,6 +31,8 @@ namespace Alfapet
             IsFixedTimeStep = false; // tar bort FPS cap
             //Window.Position = new Point(-1500, 0);
             _graphics.ApplyChanges();
+
+            _window = Window;
 
             Board.Build();
             Hand.Build();

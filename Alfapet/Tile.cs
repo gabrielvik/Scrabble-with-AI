@@ -26,10 +26,8 @@ namespace Alfapet
         {
             this.X = x;
             this.Y = y;
-            if(originalPos == Vector2.Zero)
-            {
+            if (originalPos == Vector2.Zero)
                 originalPos = new Vector2(x, y);
-            }
         }
 
         public void SetFont(SpriteFont font)

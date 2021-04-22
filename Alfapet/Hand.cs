@@ -1,6 +1,7 @@
 ﻿using System;
 using Microsoft.Xna.Framework;
 using System.Diagnostics;
+using System.Collections.Generic;
 
 namespace Alfapet
 {
@@ -17,6 +18,20 @@ namespace Alfapet
 
         public static Action<dynamic, Vector2, Tile, Tile> DragCallback;
 
+        public static void SetPositions()
+        {
+            float _w = 5f;
+            foreach (Tile tile in Tiles)
+            {
+                if (tile == null)
+                    continue;
+
+                tile.SetPos(_w, Alfapet._graphics.GraphicsDevice.Viewport.Height - TilesHeight + 5);
+
+                _w += TilesWidth + TilesMargin;
+            }
+        }
+
         public static void Build() // Körs i Initialize()
         {
             DragCallback = (index, pos, tile, destinationTile) =>
@@ -29,23 +44,17 @@ namespace Alfapet
                 Hand.Tiles[index] = null;
             };
 
-            float _w = 5f;
-
             for (int i = 0; i < Tiles.Length; i++) // Populera arrayen med nya objekt
             {
                 Tiles[i] = new Tile();
                 Tiles[i].Letter = Alfapet_Util.GenerateRandomLetter();
-                Tiles[i].SetPos(_w, Alfapet._graphics.GraphicsDevice.Viewport.Height - TilesHeight + 5);
-
-                _w += TilesWidth + TilesMargin;
             }
+            SetPositions();
         }
 
         public static void Draw()
         {
             Alfapet._spriteBatch.Draw(Alfapet.TransparentBack, new Rectangle(0, (int)(Alfapet._graphics.GraphicsDevice.Viewport.Height - TilesHeight), Alfapet._graphics.GraphicsDevice.Viewport.Width, (int)TilesHeight), Color.Black * 0.5f);
-
-            float _w = 5f;
 
             for (int i = 0; i < Tiles.Length; i++)
             {

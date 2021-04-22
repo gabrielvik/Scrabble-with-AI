@@ -58,8 +58,8 @@ namespace Alfapet
                 Exit(); 
             */
             
-            DragDrop.Think(Window);
-            Button.Think(Window);
+            DragDrop.Think();
+            Button.Think();
 
             base.Update(gameTime);
         }

@@ -51,13 +51,13 @@ namespace Alfapet
             }
         }
 
-        public static void Think(GameWindow window)
+        public static void Think()
         {
             for (int i = 0; i < buttons.Count; i++)
             {
                 if (Alfapet_Util.IsHovering(buttons[i].GetPos(), buttons[i].GetSize()))
                 {
-                    MouseState mouse = Mouse.GetState(window);
+                    MouseState mouse = Mouse.GetState(Alfapet._window);
 
                     if(!buttons[i].pressed && mouse.LeftButton == ButtonState.Pressed)
                     {

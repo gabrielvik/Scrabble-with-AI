@@ -10,7 +10,13 @@ namespace Alfapet
     public class DragDrop : Game
     {
         public static bool Dragging = false;
-        static private void DoDrop(dynamic index, Tile tile, Action<dynamic, Vector2, Tile, Tile> callback = null, Action<dynamic, Tile> failCallback = null) // Kallas när användaren släppt
+        public enum MOVE 
+        { 
+            PLACE,
+            CHANGE
+        }
+
+        static private void DoDrop(dynamic index, Tile tile, MOVE moveType) // Kallas när användaren släppt
         {
             bool foundReceiver = false;
             for(int y = 0; y < Board.YTiles; y++)
@@ -18,27 +24,54 @@ namespace Alfapet
                 for (int x = 0; x < Board.XTiles; x++)
                 {
                     Tile _tile = Board.Tiles[y, x];
-                    if (Alfapet_Util.IsHovering(_tile.GetPos(), new Vector2(tile.W, tile.H)))
+                    if (Alfapet_Util.IsHovering(_tile.GetPos(), new Vector2(_tile.W, _tile.H)))
                     {
-                        if (_tile.Letter != '\0') // Om platsen inte är tom returnar man
+                        if (_tile.Letter != '\0')
+                        { // Om platsen inte är tom returnar man
+                            // TODO: positionsf ick
                             continue;
+                        }
                         else
+                        {
+                            System.Diagnostics.Debug.WriteLine("gets here");
                             foundReceiver = true;
-                            callback?.Invoke(index, new Vector2(x, y), tile, _tile);
+                            switch (moveType)
+                            {
+                                case MOVE.PLACE:
+                                    Board.CacheWordPlacement((int)x, (int)y, tile.Letter);
+
+                                    _tile.Letter = tile.Letter;
+                                    _tile.TempPlaced = true;
+
+                                    Hand.Tiles[index] = null;
+
+                                    break;
+                                case MOVE.CHANGE:
+                                    _tile.Letter = tile.Letter;
+                                    _tile.TempPlaced = true;
+
+                                    tile.SetPos(tile.originalPos.X, tile.originalPos.Y);
+                                    tile.TempPlaced = false;
+
+                                    tile.Letter = '\0';
+
+                                    Board.CacheWordPlacement((int)x, (int)y, tile.Letter);
+
+                                    break;
+                            }
+                            Hand.SetPositions();
+                        }
                     }
                 }
             }
             if (!foundReceiver)
             {
-                System.Diagnostics.Debug.WriteLine("no receiver");
-                tile.SetPos(tile.originalPos.X, tile.originalPos.Y);
-                if(failCallback != null)
-                    failCallback?.Invoke(index, tile);
+                tile.SetPos(tile.originalPos.X,tile.originalPos.Y);
             }
 
         }
 
-        public static void CheckDrag(dynamic index, Tile tile, Action<dynamic, Vector2, Tile, Tile> callback = null, Action<dynamic, Tile> failCallback = null)
+        public static void CheckDrag(dynamic index, Tile tile, MOVE moveType)
         {
             MouseState mouse = Mouse.GetState(Alfapet._window);
                 if (tile == null)
@@ -55,7 +88,7 @@ namespace Alfapet
                     {
                         Dragging = false;
                         tile.Dragging = false;
-                        DoDrop(index, tile, callback, failCallback);
+                        DoDrop(index, tile, moveType);
                     }
                     return;
                 }
@@ -69,11 +102,11 @@ namespace Alfapet
                 }
         }
 
-        static public void Think(GameWindow window)
+        static public void Think()
         {
             for(int i = 0; i < Hand.Tiles.Length; i++)
             {
-                CheckDrag(i, Hand.Tiles[i], Hand.DragCallback);
+                CheckDrag(i, Hand.Tiles[i], MOVE.PLACE);
             }
             for(int y = 0; y < Board.YTiles; y++)
             {
@@ -82,7 +115,7 @@ namespace Alfapet
                     if (!Board.Tiles[y, x].TempPlaced)
                         continue;
                     else
-                        CheckDrag(new Vector2(x, y), Board.Tiles[y, x], Board.TempDragCallback, Board.FailDragCallback);
+                        CheckDrag(new Vector2(x, y), Board.Tiles[y, x], MOVE.CHANGE);
                 }
             }
         }

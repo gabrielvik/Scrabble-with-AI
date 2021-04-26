@@ -46,9 +46,7 @@ namespace Alfapet
         public static void Draw()
         {
             for(int i = 0; i < buttons.Count; i++)
-            {
                 buttons[i].DrawFunc();
-            }
         }
 
         public static void Think()

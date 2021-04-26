@@ -34,6 +34,9 @@ namespace Alfapet
         }
         public static void DrawCenterChar(SpriteFont font, string text, Vector2 pos, Color color, int rec_width, int rec_height)
         {
+            if (text == '\0'.ToString())
+                return;
+
             Vector2 font_size = font.MeasureString(text);
             int offset_x = (int)(rec_width / 2 - font_size.X / 2);
             int offset_y = (int)(rec_height / 2 - font_size.Y / 2);

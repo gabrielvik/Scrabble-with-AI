@@ -13,12 +13,28 @@ namespace Alfapet
         public enum MOVE 
         { 
             PLACE,
-            CHANGE
+            CHANGE,
+            REMOVE
         }
 
         static private void DoDrop(dynamic index, Tile tile, MOVE moveType) // Kallas när användaren släppt
         {
-            bool foundReceiver = false;
+            if(moveType == MOVE.REMOVE)
+            {
+                tile.SetPos(tile.originalPos.X, tile.originalPos.Y);
+                foreach(Tile _tile in Hand.Tiles)
+                {
+                    if (_tile.Letter == '\0')
+                    {
+                        _tile.Letter = tile.Letter;
+                        break;
+                    }
+                }
+                Hand.SetPositions();
+                tile.Letter = '\0';
+                tile.TempPlaced = false;
+                return;
+            }
             for(int y = 0; y < Board.YTiles; y++)
             {
                 for (int x = 0; x < Board.XTiles; x++)
@@ -28,47 +44,48 @@ namespace Alfapet
                     {
                         if (_tile.Letter != '\0')
                         { // Om platsen inte är tom returnar man
-                            // TODO: positionsf ick
-                            continue;
+                            Hand.SetPositions();
+                            break;
                         }
                         else
                         {
-                            System.Diagnostics.Debug.WriteLine("gets here");
-                            foundReceiver = true;
+                            //System.Diagnostics.Debug.WriteLine("gets here");
                             switch (moveType)
                             {
                                 case MOVE.PLACE:
-                                    Board.CacheWordPlacement((int)x, (int)y, tile.Letter);
+                                    Board.CacheWordPlacement(x, y, tile.Letter);
 
                                     _tile.Letter = tile.Letter;
                                     _tile.TempPlaced = true;
 
-                                    Hand.Tiles[index] = null;
+                                    Hand.Tiles[index].Letter = '\0';
 
                                     break;
                                 case MOVE.CHANGE:
+                                    Board.CacheWordPlacement(x, y, tile.Letter, true);
+
                                     _tile.Letter = tile.Letter;
                                     _tile.TempPlaced = true;
+
+                                    //Board.CacheWordPlacement((int)index.X, (int)index.Y, tile.Letter, true);
 
                                     tile.SetPos(tile.originalPos.X, tile.originalPos.Y);
                                     tile.TempPlaced = false;
 
                                     tile.Letter = '\0';
 
-                                    Board.CacheWordPlacement((int)x, (int)y, tile.Letter);
-
+                                    break;
+                                case MOVE.REMOVE:
+                                    Debug.WriteLine("awwdawawawd");
                                     break;
                             }
                             Hand.SetPositions();
                         }
                     }
+                    else
+                        tile.SetPos(tile.originalPos.X, tile.originalPos.Y);
                 }
             }
-            if (!foundReceiver)
-            {
-                tile.SetPos(tile.originalPos.X,tile.originalPos.Y);
-            }
-
         }
 
         public static void CheckDrag(dynamic index, Tile tile, MOVE moveType)
@@ -115,9 +132,10 @@ namespace Alfapet
                     if (!Board.Tiles[y, x].TempPlaced)
                         continue;
                     else
-                        CheckDrag(new Vector2(x, y), Board.Tiles[y, x], MOVE.CHANGE);
+                        CheckDrag(new Vector2(x, y), Board.Tiles[y, x], Mouse.GetState(Alfapet._window).Y > (Board.YTiles + 2) * Board.TilesHeight ? MOVE.REMOVE : MOVE.CHANGE);
                 }
             }
+
         }
     }
 }

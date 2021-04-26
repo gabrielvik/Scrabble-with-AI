@@ -23,6 +23,8 @@ namespace Alfapet
         static public Action<dynamic, Vector2, Tile, Tile> TempDragCallback;
         static public Action<dynamic, Tile> FailDragCallback;
 
+        static private int PlacedWords = 0;
+
         public static void Build() // Bygger brädan, kallas i Initalize()
         {
             Tiles = new Tile[YTiles, XTiles];
@@ -119,8 +121,9 @@ namespace Alfapet
             return temp;
         }
 
-        public static void CacheWordPlacement(int x, int y, char letter)
+        public static void CacheWordPlacement(int x, int y, char letter, bool change = false)
         {
+            System.Diagnostics.Debug.WriteLine("gets called");
             Tile[] row = GetRow(y);
             Tile[] column = GetColumn(ColumnIndex(x));
 
@@ -132,7 +135,7 @@ namespace Alfapet
             if (columnUp && columnDown) // Om Y är emellan två bokstaver
             {
                 columnWord = "";
-                for(int i = 0; i < column.Length; i++) // Loopa egenom kolumnen
+                for (int i = 0; i < column.Length; i++) // Loopa egenom kolumnen
                 {
                     if (i == y) // Om I är Y (tomma bokstaven i mellan), lägg till bokstaven som ska placeras, i ordet och gå vidare
                     {
@@ -143,7 +146,7 @@ namespace Alfapet
                         columnWord += Tiles[i, x].Letter;
                 }
             }
-            else if(columnUp || columnDown) // Annars om det finns en bokstav över eller under Y
+            else if (columnUp || columnDown) // Annars om det finns en bokstav över eller under Y
             {
                 columnWord = "";
                 if (columnDown) // Om man lägger bokstaven över en annan, lägg till karaktären i början av ordet
@@ -163,8 +166,7 @@ namespace Alfapet
                     }
                     columnWord += Tiles[i, x].Letter;
                 }
-
-                if(columnUp) // Om man lägger bokstaven under en annan, lägg till karaktären i slutet på ordet
+                if (columnUp) // Om man lägger bokstaven under en annan, lägg till karaktären i slutet på ordet
                     columnWord += letter;
             }
 
@@ -211,8 +213,13 @@ namespace Alfapet
                 if (rowLeft)
                     rowWord += letter;
             }
-            System.Diagnostics.Debug.WriteLine("rowWord: " + rowWord + ";\n");
-            System.Diagnostics.Debug.WriteLine("columnWord: " + columnWord + ";\n");
+            if(rowWord != null)
+                System.Diagnostics.Debug.WriteLine('"' + rowWord + '"');
+            if(columnWord != null)
+                foreach(char c in columnWord)
+                {
+                    System.Diagnostics.Debug.WriteLine("char is:" + c);
+                }
 
             if (columnWord != null && rowWord != null)
                 PlacedValidWord = Dictionaries.IsWord(columnWord) && Dictionaries.IsWord(rowWord);
@@ -220,6 +227,24 @@ namespace Alfapet
                 PlacedValidWord = Dictionaries.IsWord(columnWord);
             else if (rowWord != null)
                 PlacedValidWord = Dictionaries.IsWord(rowWord);
+
+
+            // TODO: cache alla ord i int, kolla så att bokstäver run om inte räknas som en bokstav fast dom är tomma
+
+
+            if (columnWord != null || rowWord != null)
+            {
+                if (!change)
+                    PlacedWords++;
+            }
+            else
+            {
+                if (change)
+                {
+                    PlacedWords++;
+                }
+            }
+            System.Diagnostics.Debug.WriteLine("\n" + PlacedWords);
         }
     }
 }

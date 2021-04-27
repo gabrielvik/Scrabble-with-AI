@@ -31,8 +31,7 @@ namespace Alfapet
             };
             Buttons[0].ClickEvent = delegate ()
             {
-                System.Diagnostics.Debug.WriteLine(Board.PlacedValidWord);
-                Rounds.DoMove();
+                Board.CacheWordPlacement();
             };
 
             Buttons[1].DrawFunc = delegate ()

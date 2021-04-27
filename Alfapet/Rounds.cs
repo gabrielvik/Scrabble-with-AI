@@ -9,19 +9,11 @@ namespace Alfapet
     {
         public static void DoMove()
         {
-            if (!Board.PlacedValidWord)
-            {
-                // notifier
-                return;
-            }
-            
             foreach(Tile tile in Board.Tiles)
             {
                 if (tile.TempPlaced)
                     tile.TempPlaced = false;
             }
-
-
         }
     }
 }

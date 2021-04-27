@@ -36,7 +36,7 @@ namespace Alfapet
         {
             DragCallback = (index, pos, tile, destinationTile) =>
             {
-                Board.CacheWordPlacement((int)pos.X, (int)pos.Y, tile.Letter);
+                Board.CacheWordPlacement();
 
                 destinationTile.Letter = tile.Letter;
                 destinationTile.TempPlaced = true;  

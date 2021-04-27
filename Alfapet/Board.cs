@@ -18,12 +18,10 @@ namespace Alfapet
         static public int XTiles = 15;
         static public int YTiles = 15;
 
-        static public bool PlacedValidWord = false;
-
         static public Action<dynamic, Vector2, Tile, Tile> TempDragCallback;
         static public Action<dynamic, Tile> FailDragCallback;
 
-        static private int PlacedWords = 0;
+        static private bool PlacedValidWord = true;
 
         public static void Build() // Bygger brädan, kallas i Initalize()
         {
@@ -42,16 +40,16 @@ namespace Alfapet
                     x = 5;
                 }
 
-                for(int z = 0; z < XTiles; z++)
+                for (int z = 0; z < XTiles; z++)
                 {
                     Tiles[i, z] = new Tile();
                     Tiles[i, z].SetSize(TilesWidth, TilesHeight);
                     Tiles[i, z].SetPos(x, y);
-                    if(i == 1 && z == 3)
+                    if (i == 1 && z == 3)
                     {
                         Tiles[i, z].Letter = 'P';
                     }
-                    else if(i == 2 && z == 3)
+                    else if (i == 2 && z == 3)
                     {
                         Tiles[i, z].Letter = 'A';
                     }
@@ -84,7 +82,7 @@ namespace Alfapet
 
         public static void Draw()
         {
-            foreach(var tile in Tiles)
+            foreach (var tile in Tiles)
             {
                 UI.StylishRectangle(new Rectangle((int)tile.X, (int)tile.Y, (int)tile.W, (int)tile.H));
 
@@ -100,12 +98,12 @@ namespace Alfapet
         private static Tile[] GetRow(int index)
         {
             Tile[] temp = new Tile[XTiles];
-            
-            for(int i = 0; i < XTiles; i++)
+
+            for (int i = 0; i < XTiles; i++)
             {
                 temp[i] = Tiles[index, i];
             }
-            
+
             return temp;
         }
 
@@ -121,130 +119,60 @@ namespace Alfapet
             return temp;
         }
 
-        public static void CacheWordPlacement(int x, int y, char letter, bool change = false)
+        public static void CacheWordPlacement()
         {
-            System.Diagnostics.Debug.WriteLine("gets called");
-            Tile[] row = GetRow(y);
-            Tile[] column = GetColumn(ColumnIndex(x));
+            // TODO:::
+            List<string> words = new List<string>();
 
-            string columnWord = null;
-
-            bool columnUp = (y - 1  < 0) ? false : (Tiles[y - 1, x].Letter != '\0'); // Om man är på första raden returna false, annars returna om övre raden har bokstav
-            bool columnDown = (y + 1 >= YTiles) ? false : (Tiles[y + 1, x].Letter != '\0'); // Om man är på sista raden returna false, annars returna om undre raden har bokstav
-
-            if (columnUp && columnDown) // Om Y är emellan två bokstaver
+            for (int x = 0; x < XTiles; x++)
             {
-                columnWord = "";
-                for (int i = 0; i < column.Length; i++) // Loopa egenom kolumnen
+                string _word = "";
+                for (int y = 0; y < YTiles; y++)
                 {
-                    if (i == y) // Om I är Y (tomma bokstaven i mellan), lägg till bokstaven som ska placeras, i ordet och gå vidare
+                    if (Tiles[y, x].Letter == '\0')
                     {
-                        columnWord += letter;
-                        continue;
+                        if (_word.Length == 1)
+                        {
+                            if (Tiles[y, x + 1].Letter == '\0' || Tiles[y, x - 1].Letter == '\0')
+                                continue;
+                        }
+                        else if (_word.Length > 0)
+                        {
+                            words.Add(_word);
+                        }
+                        _word = "";
                     }
-                    else if (Tiles[i, x].Letter != '\0') // Annars om brickan inte är tom, lägg till karaktären i ordet
-                        columnWord += Tiles[i, x].Letter;
+                    else
+                        _word += Tiles[y, x].Letter;
                 }
             }
-            else if (columnUp || columnDown) // Annars om det finns en bokstav över eller under Y
+            for(int y = 0; y < YTiles; y++)
             {
-                columnWord = "";
-                if (columnDown) // Om man lägger bokstaven över en annan, lägg till karaktären i början av ordet
-                    columnWord += letter;
-
-                for (int i = 0; i < column.Length; i++) // Loopa igenom kolumnen och lägg till bokstäverna i ordet
+                string _word = "";
+                for(int x = 0; x < XTiles; x++)
                 {
-                    if (Tiles[i, x].Letter == '\0')
+                    if (Tiles[y, x].Letter == '\0')
                     {
-                        // Om I är mindre än tillagda bokstavens plats och ordets längd är över 1 (man har lagt till en bokstav från ett annat ord på brädan), sätt tillbaka ordet till placerade bokstaven
-                        if (i < y && columnWord.Length > 1)
-                            columnWord = letter.ToString();
-                        else if (i > y) // Annars om man är på en tom bokstav och i är större än y, är ordet slut
-                            break;
-                        else
-                            continue;
+                        if (_word.Length == 1)
+                        {
+                            if (Tiles[y + 1, x].Letter == '\0' || Tiles[y - 1, x].Letter == '\0')
+                                continue;
+                        }
+                        else if (_word.Length > 0)
+                        {
+                            words.Add(_word);
+                        }
+                        _word = "";
                     }
-                    columnWord += Tiles[i, x].Letter;
+                    else
+                        _word += Tiles[y, x].Letter;
                 }
-                if (columnUp) // Om man lägger bokstaven under en annan, lägg till karaktären i slutet på ordet
-                    columnWord += letter;
             }
 
-            bool rowLeft = (x - 1 < 0) ? false : (Tiles[y, x - 1].Letter != '\0');
-            bool rowRight = (x + 1 >= XTiles) ? false : (Tiles[y, x + 1].Letter != '\0');
-            string rowWord = null;
-
-            if(rowLeft && rowRight)
+            foreach(string word in words)
             {
-                rowWord = "";
-                for(int i = 0; i < row.Length; i++)
-                {
-                    if(i == x)
-                    {
-                        rowWord += letter;
-                        continue;
-                    }
-                    else if(Tiles[y, i].Letter != '\0')
-                    {
-                        rowWord += Tiles[y, i].Letter;
-                    }
-                }
+                System.Diagnostics.Debug.WriteLine(word);
             }
-            else if(rowLeft || rowRight)
-            {
-                rowWord = "";
-                if (rowRight)
-                    rowWord += letter; 
-
-                for(int i = 0; i < row.Length; i++)
-                {
-                    if (Tiles[y, i].Letter == '\0')
-                    {
-                        if (i < x && rowWord.Length > 1)
-                            rowWord = letter.ToString();
-                        else if (i > x)
-                            break;
-                        else
-                            continue;
-                    }
-                    rowWord += Tiles[y, i].Letter;
-                }
-
-                if (rowLeft)
-                    rowWord += letter;
-            }
-            if(rowWord != null)
-                System.Diagnostics.Debug.WriteLine('"' + rowWord + '"');
-            if(columnWord != null)
-                foreach(char c in columnWord)
-                {
-                    System.Diagnostics.Debug.WriteLine("char is:" + c);
-                }
-
-            if (columnWord != null && rowWord != null)
-                PlacedValidWord = Dictionaries.IsWord(columnWord) && Dictionaries.IsWord(rowWord);
-            else if (columnWord != null)
-                PlacedValidWord = Dictionaries.IsWord(columnWord);
-            else if (rowWord != null)
-                PlacedValidWord = Dictionaries.IsWord(rowWord);
-
-
-            // TODO: cache alla ord i int, kolla så att bokstäver run om inte räknas som en bokstav fast dom är tomma
-
-
-            if (columnWord != null || rowWord != null)
-            {
-                if (!change)
-                    PlacedWords++;
-            }
-            else
-            {
-                if (change)
-                {
-                    PlacedWords++;
-                }
-            }
-            System.Diagnostics.Debug.WriteLine("\n" + PlacedWords);
         }
     }
 }

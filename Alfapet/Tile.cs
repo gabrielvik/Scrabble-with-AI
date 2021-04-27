@@ -14,6 +14,7 @@ namespace Alfapet
         public bool TempPlaced = false;
 
         public bool Dragging = false;
+        public bool Changed = false;
 
         public Vector2 originalPos = default(Vector2);
 

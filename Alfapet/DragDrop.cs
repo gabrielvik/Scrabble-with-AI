@@ -53,7 +53,7 @@ namespace Alfapet
                             switch (moveType)
                             {
                                 case MOVE.PLACE:
-                                    Board.CacheWordPlacement(x, y, tile.Letter);
+                                   
 
                                     _tile.Letter = tile.Letter;
                                     _tile.TempPlaced = true;
@@ -62,12 +62,10 @@ namespace Alfapet
 
                                     break;
                                 case MOVE.CHANGE:
-                                    Board.CacheWordPlacement(x, y, tile.Letter, true);
+                                   
 
                                     _tile.Letter = tile.Letter;
                                     _tile.TempPlaced = true;
-
-                                    //Board.CacheWordPlacement((int)index.X, (int)index.Y, tile.Letter, true);
 
                                     tile.SetPos(tile.originalPos.X, tile.originalPos.Y);
                                     tile.TempPlaced = false;

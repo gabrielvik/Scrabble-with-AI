@@ -23,7 +23,7 @@ namespace Alfapet
             float _w = 5f;
             foreach (Tile tile in Tiles)
             {
-                if (tile == null)
+                if (tile.Letter == '\0')
                     continue;
 
                 tile.SetPos(_w, Alfapet._graphics.GraphicsDevice.Viewport.Height - TilesHeight + 5);
@@ -34,16 +34,6 @@ namespace Alfapet
 
         public static void Build() // Körs i Initialize()
         {
-            DragCallback = (index, pos, tile, destinationTile) =>
-            {
-                Board.CacheWordPlacement();
-
-                destinationTile.Letter = tile.Letter;
-                destinationTile.TempPlaced = true;  
-
-                Hand.Tiles[index] = null;
-            };
-
             for (int i = 0; i < Tiles.Length; i++) // Populera arrayen med nya objekt
             {
                 Tiles[i] = new Tile();
@@ -58,7 +48,7 @@ namespace Alfapet
 
             for (int i = 0; i < Tiles.Length; i++)
             {
-                if(Tiles[i] == null)
+                if(Tiles[i].Letter == '\0')
                     continue;
 
                 if (!Tiles[i].Dragging)

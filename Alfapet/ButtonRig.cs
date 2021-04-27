@@ -23,21 +23,15 @@ namespace Alfapet
 
                 x += w + 5;
             }
-
-            Buttons[0].DrawFunc = delegate ()
-            {
-                UI.StylishRectangle(new Rectangle((int)Buttons[0].X, (int)Buttons[0].Y, (int)Buttons[0].W, (int)Buttons[0].H));
-                UI.DrawCenterChar(Fonts.Montserrat_Bold_Smaller, "DoMove()", Buttons[0].GetPos(), Color.White, (int)Buttons[0].W, (int)Buttons[0].H);
-            };
+            Buttons[0].SetText("DoMove()");
             Buttons[0].ClickEvent = delegate ()
             {
-                Board.CacheWordPlacement();
+                Rounds.DoMove();
             };
 
-            Buttons[1].DrawFunc = delegate ()
+            Buttons[1].ClickEvent = delegate ()
             {
-                UI.StylishRectangle(new Rectangle((int)Buttons[1].X, (int)Buttons[1].Y, (int)Buttons[1].W, (int)Buttons[1].H));
-                UI.DrawCenterChar(Fonts.Montserrat_Bold_Smaller, "Something_else()", Buttons[1].GetPos(), Color.White, (int)Buttons[1].W, (int)Buttons[1].H);
+                Alfapet_Util.SortHand();
             };
         }
     }

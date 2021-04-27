@@ -89,7 +89,7 @@ namespace Alfapet
         public static void CheckDrag(dynamic index, Tile tile, MOVE moveType)
         {
             MouseState mouse = Mouse.GetState(Alfapet._window);
-                if (tile == null)
+                if (tile == null || tile.Letter == '\0')
                     return;
 
                 if (tile.Dragging)

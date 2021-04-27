@@ -6,7 +6,7 @@ namespace Alfapet
 {
     class UI : Game
     {
-        public static void StylishRectangle(Rectangle rec)
+        public static void StylishRectangle(Rectangle rec, Color? colorOverwrite = null)
         {
             int thickness = 2;
             int width = rec.Width / 5;
@@ -14,7 +14,7 @@ namespace Alfapet
 
             Color border_color = Color.White;
 
-            Alfapet._spriteBatch.Draw(Alfapet.TransparentBack, rec, Color.Black * 0.5f);
+            Alfapet._spriteBatch.Draw(Alfapet.TransparentBack, rec, (colorOverwrite == null) ? (Color.Black * 0.5f) : (Color)(colorOverwrite));
 
             // Vänster top
             Alfapet._spriteBatch.Draw(Alfapet.TransparentBack, new Rectangle(rec.X, rec.Y, width, thickness), border_color);

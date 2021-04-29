@@ -14,8 +14,8 @@ namespace Alfapet
             Buttons[0] = new Button();
             Buttons[1] = new Button();
 
-            int x = 5;
-            int w = Alfapet._graphics.GraphicsDevice.Viewport.Width / Buttons.Length - 10;
+            float x = 5;
+            float w = Alfapet._graphics.GraphicsDevice.Viewport.Width / Buttons.Length - x * (Buttons.Length + 1);
             for (int i = 0; i < Buttons.Length; i++)
             {
                 Buttons[i].SetPos(x, Alfapet._graphics.GraphicsDevice.Viewport.Height - Hand.TilesHeight * 1.5f - 5f);
@@ -23,12 +23,12 @@ namespace Alfapet
 
                 x += w + 5;
             }
-            Buttons[0].SetText("DoMove()");
+            Buttons[0].SetText("Skip");
             Buttons[0].ClickEvent = delegate ()
             {
                 Rounds.DoMove();
             };
-
+            Buttons[1].SetText("Sort Alphabeticely");
             Buttons[1].ClickEvent = delegate ()
             {
                 Alfapet_Util.SortHand();

@@ -18,10 +18,7 @@ namespace Alfapet
         static public int XTiles = 15;
         static public int YTiles = 15;
 
-        static public Action<dynamic, Vector2, Tile, Tile> TempDragCallback;
-        static public Action<dynamic, Tile> FailDragCallback;
-
-        static private bool PlacedValidWord = true;
+        static public int TilesPlaced = 0;
 
         public static void Build() // Bygger brädan, kallas i Initalize()
         {
@@ -84,12 +81,13 @@ namespace Alfapet
         {
             foreach (var tile in Tiles)
             {
-                UI.StylishRectangle(new Rectangle((int)tile.X, (int)tile.Y, (int)tile.W, (int)tile.H));
+                if (tile.TempPlaced)
+                    UI.StylishRectangle(new Rectangle((int)tile.X, (int)tile.Y, (int)tile.W, (int)tile.H), Color.White * 0.5f);
+                else
+                    UI.StylishRectangle(new Rectangle((int)tile.X, (int)tile.Y, (int)tile.W, (int)tile.H));
 
                 if (tile.Letter != '\0')
-                {
                     UI.DrawCenterChar(Fonts.Montserrat_Bold_Smaller, tile.Letter.ToString(), new Vector2(tile.X, tile.Y), Color.White, (int)tile.W, (int)tile.H);
-                }
             }
         }
     }

@@ -34,6 +34,7 @@ namespace Alfapet
 
             _window = Window;
 
+            Alfapet_Config.Load();
             Board.Build();
             Hand.Build();
             Dictionaries.Initialize("english");

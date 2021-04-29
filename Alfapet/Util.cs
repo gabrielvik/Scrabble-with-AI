@@ -30,7 +30,7 @@ namespace Alfapet
                 while (Hand.Tiles[right].Letter > pivot) // hitta höger som ska bli vänster
                     right--;
 
-                if(left < right) // partition är kollad, byt vänster med höger
+                if(left < right)    
                 {
                     if (Hand.Tiles[right].Letter == Hand.Tiles[left].Letter) // om det är samma bokstav, returna
                         return right;
@@ -60,11 +60,6 @@ namespace Alfapet
         {
             SortHand(0, Alfapet_Config.HandAmount-1);
             Hand.SetPositions();
-
-            foreach(Tile tile in Hand.Tiles)
-            {
-                System.Diagnostics.Debug.WriteLine((int)tile.Letter);
-            }
         }
     }
 }

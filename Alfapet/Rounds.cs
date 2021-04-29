@@ -2,14 +2,15 @@
 using System.Collections.Generic;
 using System.Text;
 using Microsoft.Xna.Framework;
+using System.Threading.Tasks;
 
 namespace Alfapet
 {
     class Rounds : Game
     {
+        public static int PlayerPoints = 0;
         public static bool PlacedValidWords()
         {
-            // TODO:::
             List<string> words = new List<string>();
 
             for (int x = 0; x < Board.XTiles; x++)
@@ -21,8 +22,7 @@ namespace Alfapet
                     {
                         if (_word.Length == 1)
                         {
-                            if (Board.Tiles[y, x + 1].Letter == '\0' || Board.Tiles[y, x - 1].Letter == '\0')
-                                continue;
+                            continue;
                         }
                         else if (_word.Length > 0)
                         {
@@ -41,10 +41,10 @@ namespace Alfapet
                 {
                     if (Board.Tiles[y, x].Letter == '\0')
                     {
+                        // TODO: FIX length
                         if (_word.Length == 1)
                         {
-                            if (Board.Tiles[y + 1, x].Letter == '\0' || Board.Tiles[y - 1, x].Letter == '\0')
-                                continue;
+                            continue;
                         }
                         else if (_word.Length > 0)
                         {
@@ -64,19 +64,40 @@ namespace Alfapet
             }
             return true;
         }
-        public static void DoMove()
+        public async static void DoMove()
         {
-            if (!PlacedValidWords())
+            if (Board.TilesPlaced <= 0)
+                return;
+            else if (!PlacedValidWords())
             {
-                System.Diagnostics.Debug.WriteLine("didnt place valid");
+                Button moveBtn = ButtonRig.Buttons[0];
+                if (moveBtn.DrawFunc != null) // Om draw functionen redan finns (man har klickat nyligen), returna
+                    return;
+
+                long lerpStart = DateTimeOffset.Now.ToUnixTimeMilliseconds();
+                int delay = 4;
+                ButtonRig.Buttons[0].DrawFunc = delegate ()
+                {
+                    // Sätter färgen till röd och lerpar färgens transparitet 
+                    UI.StylishRectangle(new Rectangle((int)moveBtn.X, (int)moveBtn.Y, (int)moveBtn.W, (int)moveBtn.H), Color.Red * MathHelper.Lerp(1f, 0.95f, (DateTimeOffset.Now.ToUnixTimeMilliseconds() - lerpStart) * delay / 1000));
+                    UI.DrawCenterChar(Fonts.Montserrat_Bold_Smaller, "Invalid Words", moveBtn.GetPos(), Color.White, (int)moveBtn.W, (int)moveBtn.H);
+                };
+                await Task.Delay(delay * 1000); // Efter x sekunder, sätt draw funktionen till null och återgå till normalt
+                moveBtn.DrawFunc = null;
                 return;
             }
+            Board.TilesPlaced = 0;
 
             foreach(Tile tile in Board.Tiles)
             {
-                if (tile.TempPlaced)
-                    tile.TempPlaced = false;
+                if (!tile.TempPlaced || tile.Letter == '\0')
+                    continue;
+
+                tile.TempPlaced = false;
+                PlayerPoints += Alfapet_Config.CharactherPoints[tile.Letter];
             }
+
+            System.Diagnostics.Debug.WriteLine(PlayerPoints);
         }
     }
 }

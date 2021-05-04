@@ -13,43 +13,45 @@ namespace Alfapet
         {
             List<string> words = new List<string>();
 
-            for (int x = 0; x < Board.XTiles; x++)
+            // TODO: organisera till en funktion
+
+
+            for (int x = 0; x < Board.XTiles; x++) // Kollar ord på Y axeln
             {
-                string _word = "";
+                string _word = ""; // Temp variabel som lagrar ord
                 for (int y = 0; y < Board.YTiles; y++)
                 {
-                    if (Board.Tiles[y, x].Letter == '\0')
+                    if (_word.Length == 1) // Om ordet är bara en karaktär, kolla så den inte är isolerad från andra karaktärer och om den är, returna false
                     {
-                        if (_word.Length == 1)
-                        {
-                            continue;
-                        }
-                        else if (_word.Length > 0)
-                        {
-                            words.Add(_word);
-                        }
-                        _word = "";
+                        char letterUp = Board.Tiles[Math.Max(y - 1, 0), Math.Max(x - 1, 0)].Letter;
+                        char letterDown = Board.Tiles[Math.Min(y + 1, Board.YTiles - 1), Math.Max(x - 1, 0)].Letter;
+                        if (letterUp == '\0' && letterDown == '\0')
+                            return false;
                     }
                     else
-                        _word += Board.Tiles[y, x].Letter;
+                        words.Add(_word); // Annars om det är ett komplett ord, lägg till i listan
+
+                    _word = ""; // töm temp variabeln
                 }
             }
-            for (int y = 0; y < Board.YTiles; y++)
+            for (int y = 0; y < Board.YTiles; y++) // Samma som förra men kollar på X axeln
             {
                 string _word = "";
                 for (int x = 0; x < Board.XTiles; x++)
                 {
+
                     if (Board.Tiles[y, x].Letter == '\0')
                     {
-                        // TODO: FIX length
                         if (_word.Length == 1)
                         {
-                            continue;
+                            char letterUp = Board.Tiles[Math.Max(y - 1, 0), Math.Max(x - 1, 0)].Letter;
+                            char letterDown = Board.Tiles[Math.Min(y + 1, Board.YTiles - 1), Math.Max(x - 1, 0)].Letter;
+                            if (letterUp == '\0' && letterDown == '\0')
+                                return false;
                         }
-                        else if (_word.Length > 0)
-                        {
+                        else
                             words.Add(_word);
-                        }
+
                         _word = "";
                     }
                     else
@@ -60,14 +62,15 @@ namespace Alfapet
             foreach (string word in words)
             {
                 if (!Dictionaries.IsWord(word))
-                    return false;
+                    return false; // Så fort man hittar ett ogilitigt ord returna false, behöver inte kolla längre
             }
             return true;
         }
         public async static void DoMove()
         {
-            if (Board.TilesPlaced <= 0)
+            if (Board.TilesPlaced <= 0) // Måste ha placerat minst en bokstav
                 return;
+
             else if (!PlacedValidWords())
             {
                 Button moveBtn = ButtonRig.Buttons[0];
@@ -86,6 +89,7 @@ namespace Alfapet
                 moveBtn.DrawFunc = null;
                 return;
             }
+
             Board.TilesPlaced = 0;
 
             foreach(Tile tile in Board.Tiles)
@@ -95,6 +99,7 @@ namespace Alfapet
 
                 tile.TempPlaced = false;
                 PlayerPoints += Alfapet_Config.CharactherPoints[tile.Letter];
+                await Task.Delay(100); // vänta 0.1s innan nästa loop så användaren kan se allting hända
             }
 
             System.Diagnostics.Debug.WriteLine(PlayerPoints);

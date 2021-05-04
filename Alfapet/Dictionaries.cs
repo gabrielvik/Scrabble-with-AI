@@ -20,7 +20,10 @@ namespace Alfapet
 
         public static bool IsWord(string word)
         {
-            return Current.ContainsKey(word);
+            if (word.Length < 1)
+                return false;
+            else
+                return Current.ContainsKey(word);
         }
 
         public static string GetDefinition(string word)

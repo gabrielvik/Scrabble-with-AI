@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
+using System.Threading.Tasks;
 
 namespace Alfapet
 {
@@ -22,18 +23,24 @@ namespace Alfapet
             IsMouseVisible = true;
         }
 
-        public static void Start()
+        async public static Task<int> Start()
         {
-            Alfapet_Config.Initialize();
-            StartScreen.LoadString = "1";
-            Board.Initialize();
-            System.Diagnostics.Debug.WriteLine("2");
-            Hand.Initialize();
-            System.Diagnostics.Debug.WriteLine("3");
-            Dictionaries.Initialize("english");
-            System.Diagnostics.Debug.WriteLine("4");
-            ButtonRig.Initialize();
-            System.Diagnostics.Debug.WriteLine("5");
+            await Task.Run(() =>
+            {
+                Alfapet_Config.Initialize();
+                StartScreen.LoadString = "Loading Config";
+                Board.Initialize();
+                StartScreen.LoadString = "Creating Board";
+                Hand.Initialize();
+                StartScreen.LoadString = "Creating Hand";
+                Dictionaries.Initialize("english");
+                StartScreen.LoadString = "Unpacking JSON";
+                ButtonRig.Initialize();
+                StartScreen.LoadString = "Creating Button Rig";
+
+                return 1;
+            });
+            return 0;
         }
 
         protected override void Initialize()

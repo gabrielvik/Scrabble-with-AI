@@ -13,26 +13,26 @@ namespace Alfapet
         public static Tile[] Tiles = new Tile[Alfapet_Config.HandAmount];
 
         public static float TilesMargin = 5f;
-        public static float TilesWidth = ((Alfapet._graphics.GraphicsDevice.Viewport.Width - (TilesMargin * (Tiles.Length + 1))) / Tiles.Length);
+        public static float TilesWidth = (Alfapet._graphics.GraphicsDevice.Viewport.Width - ((Tiles.Length + 1) * TilesMargin)) / Tiles.Length;
         public static float TilesHeight = TilesWidth;
 
         public static Action<dynamic, Vector2, Tile, Tile> DragCallback;
 
         public static void SetPositions()
         {
-            float _w = 5f;
+            float w = 5f;
             foreach (Tile tile in Tiles)
             {
                 if (tile.Letter == '\0')
                     continue;
 
-                tile.SetPos(_w, Alfapet._graphics.GraphicsDevice.Viewport.Height - TilesHeight + 5);
+                tile.SetPos(w, Alfapet._graphics.GraphicsDevice.Viewport.Height - TilesHeight + 5);
 
-                _w += TilesWidth + TilesMargin;
+                w += TilesWidth + TilesMargin;
             }
         }
 
-        public static void Build() // Körs i Initialize()
+        public static void Initialize() // Körs i Initialize()
         {
             for (int i = 0; i < Tiles.Length; i++) // Populera arrayen med nya objekt
             {
@@ -64,7 +64,7 @@ namespace Alfapet
 
                 UI.StylishRectangle(new Rectangle((int)Tiles[i].X, (int)Tiles[i].Y, (int)Tiles[i].W, (int)Tiles[i].H));
 
-                UI.DrawCenterChar(Tiles[i].Font, Tiles[i].Letter.ToString(), new Vector2(Tiles[i].X, Tiles[i].Y), Color.White, (int)Tiles[i].W, (int)Tiles[i].H);
+                UI.DrawCenterText(Tiles[i].Font, Tiles[i].Letter.ToString(), new Vector2(Tiles[i].X, Tiles[i].Y), Color.White, (int)Tiles[i].W, (int)Tiles[i].H);
             }
         }
     }

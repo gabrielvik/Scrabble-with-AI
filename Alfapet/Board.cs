@@ -20,12 +20,12 @@ namespace Alfapet
 
         static public int TilesPlaced = 0;
 
-        public static void Build() // Bygger brädan, kallas i Initalize()
+        public async static void Initialize() // Bygger brädan, kallas i Initalize()
         {
             Tiles = new Tile[YTiles, XTiles];
-
-            TilesWidth = (Alfapet._graphics.GraphicsDevice.Viewport.Width - (TilesMargin * (XTiles + 1))) / XTiles;
-            TilesHeight = (Alfapet._graphics.GraphicsDevice.Viewport.Height - Hand.TilesHeight - (TilesMargin * (YTiles + 1))) / YTiles - 3;
+            
+            TilesWidth = (Alfapet._graphics.GraphicsDevice.Viewport.Width - ((XTiles + 1) * TilesMargin)) / XTiles;
+            TilesHeight = (Alfapet._graphics.GraphicsDevice.Viewport.Width - (Hand.TilesHeight + ButtonRig.ButtonHeight) - ((YTiles + 1) * TilesMargin)) / YTiles;
 
             float x = 5, y = 5;
 
@@ -43,38 +43,18 @@ namespace Alfapet
                     Tiles[i, z].SetSize(TilesWidth, TilesHeight);
                     Tiles[i, z].SetPos(x, y);
                     if (i == 1 && z == 3)
-                    {
                         Tiles[i, z].Letter = 'P';
-                    }
                     else if (i == 2 && z == 3)
-                    {
                         Tiles[i, z].Letter = 'A';
-                    }
 
                     x += TilesWidth + TilesMargin;
                 }
             }
+        }
 
-            /*int XTiles = Alfapet._graphics.GraphicsDevice.Viewport.TilesWidth / 100;
-            int YTiles = (Alfapet._graphics.GraphicsDevice.Viewport.TilesHeight - (int)Hand.TilesTilesHeight - 5) / 100;
-
-            int TilesMargin = 5;
-
-            int TilesWidth = XTiles;
-            int TilesHeight = YTiles;
-
-            int x = 5, y = 5;
-
-            for (int i = 0; i < XTiles * YTiles; i++)
-            {
-                if(i % YTiles == 0)
-                {
-                    y += TilesHeight + TilesMargin;
-                }
-                x += TilesWidth + TilesMargin;
-
-                Debug.WriteLine("x: " + x + " y:" + y);
-            }*/
+        public static void GetBestWords()
+        {
+            // ..
         }
 
         public static void Draw()
@@ -84,10 +64,10 @@ namespace Alfapet
                 if (tile.TempPlaced)
                     UI.StylishRectangle(new Rectangle((int)tile.X, (int)tile.Y, (int)tile.W, (int)tile.H), Color.White * 0.5f);
                 else
-                    UI.StylishRectangle(new Rectangle((int)tile.X, (int)tile.Y, (int)tile.W, (int)tile.H));
+                    UI.StylishRectangle(new Rectangle((int)tile.X, (int)tile.Y, (int)tile.W, (int)tile.H), null);
 
                 if (tile.Letter != '\0')
-                    UI.DrawCenterChar(Fonts.Montserrat_Bold_Smaller, tile.Letter.ToString(), new Vector2(tile.X, tile.Y), Color.White, (int)tile.W, (int)tile.H);
+                    UI.DrawCenterText(Fonts.Montserrat_Bold_Smaller, tile.Letter.ToString(), new Vector2(tile.X, tile.Y), Color.White, (int)tile.W, (int)tile.H);
             }
         }
     }

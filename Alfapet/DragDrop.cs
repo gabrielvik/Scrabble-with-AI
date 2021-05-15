@@ -17,7 +17,10 @@ namespace Alfapet
             REMOVE // Lägger tillbaka brickan i handen från bordet
         }
 
-        static private void DoDrop(dynamic index, Tile tile, MOVE moveType) // Kallas när användaren släppt
+        /*
+         * Kallas när användaren släppt en bricka
+         */
+        static private void DoDrop(dynamic index, Tile tile, MOVE moveType)
         {
             if(moveType == MOVE.REMOVE) // Om man stoppar tillbaka brickan i handen
             {
@@ -43,10 +46,10 @@ namespace Alfapet
                 {
                     for (int x = 0; x < Board.XTiles; x++)
                     {
-                        Tile _tile = Board.Tiles[y, x];
-                        if (Alfapet_Util.IsHovering(_tile.GetPos(), new Vector2(_tile.W, _tile.H))) // Om muspekaren är över brickan
+                        Tile destinationTile = Board.Tiles[y, x];
+                        if (Alfapet_Util.IsHovering(destinationTile.GetPos(), new Vector2(destinationTile.W, destinationTile.H))) // Om muspekaren är över brickan
                         {
-                            if (_tile.Letter != '\0') // Om platsen inte är tom returnar man
+                            if (destinationTile.Letter != '\0') // Om platsen inte är tom returnar man
                             {
                                 Hand.SetPositions();
                                 break;
@@ -56,16 +59,16 @@ namespace Alfapet
                                 switch (moveType)
                                 {
                                     case MOVE.PLACE:
-                                        _tile.Letter = tile.Letter; // Byt bordets brickas bokstav till handens bokstav
-                                        _tile.TempPlaced = true; // Nya brickor måste markeras som temporärt placerade
+                                        destinationTile.Letter = tile.Letter; // Byt bordets brickas bokstav till handens bokstav
+                                        destinationTile.TempPlaced = true; // Nya brickor måste markeras som temporärt placerade
 
                                         Hand.Tiles[index].Letter = '\0'; // Sätt handens brickas bokstav till tomm
                                         Board.TilesPlaced++;
                                         ButtonRig.Buttons[0].SetText("Move"); // Man kommer ha placerat mer än 1 bokstav
                                         break;
                                     case MOVE.CHANGE:
-                                        _tile.Letter = tile.Letter;
-                                        _tile.TempPlaced = true;
+                                        destinationTile.Letter = tile.Letter;
+                                        destinationTile.TempPlaced = true;
 
                                         tile.SetPos(tile.originalPos.X, tile.originalPos.Y);
                                         tile.TempPlaced = false;

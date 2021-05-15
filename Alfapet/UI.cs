@@ -9,8 +9,8 @@ namespace Alfapet
         public static void StylishRectangle(Rectangle rec, Color? colorOverwrite = null)
         {
             int thickness = 2;
-            int width = rec.Width / 5;
-            int height = rec.Height / 5;
+            int width = 10;
+            int height = 10;
 
             Color border_color = Color.White;
 
@@ -32,9 +32,9 @@ namespace Alfapet
             Alfapet._spriteBatch.Draw(Alfapet.TransparentBack, new Rectangle(rec.X + rec.Width - width, rec.Y + rec.Height - thickness, width, thickness), border_color);
             Alfapet._spriteBatch.Draw(Alfapet.TransparentBack, new Rectangle(rec.X + rec.Width - thickness, rec.Y + rec.Height - height, thickness, height - thickness), border_color);
         }
-        public static void DrawCenterChar(SpriteFont font, string text, Vector2 pos, Color color, int rec_width, int rec_height)
+        public static void DrawCenterText(SpriteFont font, string text, Vector2 pos, Color color, int rec_width, int rec_height)
         {
-            if (text == '\0'.ToString())
+            if (text == "\0")
                 return;
 
             Vector2 font_size = font.MeasureString(text);

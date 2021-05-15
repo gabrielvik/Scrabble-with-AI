@@ -13,12 +13,16 @@ namespace Alfapet
         public float W, H;
         public Action DrawFunc;
         public Action ClickEvent;
-        private static List<Button> buttons = new List<Button>();
+        public static List<Button> List = new List<Button>();
         private bool pressed = false;
         private string DrawText;
         public Button()
         {
-            buttons.Add(this);
+            List.Add(this);
+        }
+        ~Button()
+        {
+            System.Diagnostics.Debug.WriteLine("aasd");
         }
 
         public void SetPos(float x, float y)
@@ -59,42 +63,42 @@ namespace Alfapet
             else
                 UI.StylishRectangle(new Rectangle((int)X, (int)Y, (int)W, (int)H));
 
-            UI.DrawCenterChar(Fonts.Montserrat_Bold_Smaller, (DrawText == null) ? "Button" : DrawText, GetPos(), Color.White, (int)W, (int)H);
+            UI.DrawCenterText(Fonts.Montserrat_Bold_Smaller, (DrawText == null) ? "Button" : DrawText, GetPos(), Color.White, (int)W, (int)H);
         }
 
         public static void Draw()
         {
-            for (int i = 0; i < buttons.Count; i++)
-                if(buttons[i].DrawFunc == null)
-                    buttons[i].DefaultDraw();
+            for (int i = 0; i < List.Count; i++)
+                if(List[i].DrawFunc == null)
+                    List[i].DefaultDraw();
                 else
-                    buttons[i].DrawFunc();
+                    List[i].DrawFunc();
         }
 
         public static void Think()
         {
-            for (int i = 0; i < buttons.Count; i++)
+            for (int i = 0; i < List.Count; i++)
             {
-                if (buttons[i].ClickEvent == null) // Om man inte har en click funktion är det onödigt att äns kolla
+                if (List[i].ClickEvent == null) // Om man inte har en click funktion är det onödigt att äns kolla
                     continue;
 
-                if (Alfapet_Util.IsHovering(buttons[i].GetPos(), buttons[i].GetSize()))
+                if (Alfapet_Util.IsHovering(List[i].GetPos(), List[i].GetSize()))
                 {
                     MouseState mouse = Mouse.GetState(Alfapet._window);
 
-                    if(!buttons[i].pressed && mouse.LeftButton == ButtonState.Pressed)
+                    if(!List[i].pressed && mouse.LeftButton == ButtonState.Pressed)
                     {
-                        buttons[i].pressed = true;
+                        List[i].pressed = true;
                     }
-                    if(buttons[i].pressed && mouse.LeftButton == ButtonState.Released)
+                    if(List[i].pressed && mouse.LeftButton == ButtonState.Released)
                     {
-                        buttons[i].ClickEvent();
-                        buttons[i].pressed = false;
+                        List[i].ClickEvent();
+                        List[i].pressed = false;
                     }
                 }
-                else if (buttons[i].pressed)
+                else if (List[i].pressed)
                 {
-                    buttons[i].pressed = false;
+                    List[i].pressed = false;
                 }
             }
         }

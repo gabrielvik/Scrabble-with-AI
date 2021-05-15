@@ -1,7 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System.Diagnostics;
-using System.Collections.Generic;
+using System;
 
 namespace Alfapet
 {
@@ -11,17 +10,30 @@ namespace Alfapet
         public static SpriteBatch _spriteBatch;
         public static GameWindow _window;
 
-        //private Button btn = new Button();
-
-        //private List<Tile> objects;
-
         public static Texture2D TransparentBack;
+
+        public static Action UpdateFunction;
+        public static Action DrawFunction;
 
         public Alfapet()
         {
             _graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
+        }
+
+        public static void Start()
+        {
+            Alfapet_Config.Initialize();
+            StartScreen.LoadString = "1";
+            Board.Initialize();
+            System.Diagnostics.Debug.WriteLine("2");
+            Hand.Initialize();
+            System.Diagnostics.Debug.WriteLine("3");
+            Dictionaries.Initialize("english");
+            System.Diagnostics.Debug.WriteLine("4");
+            ButtonRig.Initialize();
+            System.Diagnostics.Debug.WriteLine("5");
         }
 
         protected override void Initialize()
@@ -34,11 +46,7 @@ namespace Alfapet
 
             _window = Window;
 
-            Alfapet_Config.Load();
-            Board.Build();
-            Hand.Build();
-            Dictionaries.Initialize("english");
-            ButtonRig.Initialize();
+            StartScreen.Initialize();
 
             base.Initialize();
         }
@@ -55,12 +63,7 @@ namespace Alfapet
 
         protected override void Update(GameTime gameTime)
         {
-            /*if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
-                Exit(); 
-            */
-            
-            DragDrop.Think();
-            Button.Think();
+            UpdateFunction?.Invoke();
 
             base.Update(gameTime);
         }
@@ -70,9 +73,7 @@ namespace Alfapet
             GraphicsDevice.Clear(new Color(47, 54, 64));
 
             _spriteBatch.Begin();
-                Board.Draw();
-                Hand.Draw();
-                Button.Draw();
+                DrawFunction?.Invoke();
             _spriteBatch.End();
 
             base.Draw(gameTime);

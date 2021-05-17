@@ -1,8 +1,4 @@
 ﻿using Microsoft.Xna.Framework;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Text;
 using Microsoft.Xna.Framework.Input;
 
 namespace Alfapet
@@ -10,8 +6,8 @@ namespace Alfapet
     public class DragDrop : Game
     {
         public static bool Dragging = false;
-        public enum MOVE 
-        { 
+        public enum MOVE
+        {
             PLACE, // Placerar en bricka på brädan (från handen)
             CHANGE, // Byter brickor i brädan 
             REMOVE // Lägger tillbaka brickan i handen från bordet
@@ -20,12 +16,12 @@ namespace Alfapet
         /*
          * Kallas när användaren släppt en bricka
          */
-        static private void DoDrop(dynamic index, Tile tile, MOVE moveType)
+        private static void DoDrop(dynamic index, Tile tile, MOVE moveType)
         {
-            if(moveType == MOVE.REMOVE) // Om man stoppar tillbaka brickan i handen
+            if (moveType == MOVE.REMOVE) // Om man stoppar tillbaka brickan i handen
             {
                 tile.SetPos(tile.originalPos.X, tile.originalPos.Y); // Sätt brickan som var på bordet tillbaka
-                foreach(Tile _tile in Hand.Tiles) // Loopa igenom handen tills man hittar en tomm bricka
+                foreach (Tile _tile in Hand.Tiles) // Loopa igenom handen tills man hittar en tomm bricka
                 {
                     if (_tile.Letter == '\0')
                     {
@@ -38,10 +34,11 @@ namespace Alfapet
                 tile.TempPlaced = false;
 
                 Board.TilesPlaced--;
-                if(Board.TilesPlaced <= 0) // Om man har placerat mindre än 1 bricka på bordet, sätt text till "skip"
-                    ButtonRig.Buttons[0].SetText("Skip"); 
+                if (Board.TilesPlaced <= 0) // Om man har placerat mindre än 1 bricka på bordet, sätt text till "skip"
+                    ButtonRig.Buttons[0].SetText("Skip");
             }
-            else {
+            else
+            {
                 for (int y = 0; y < Board.YTiles; y++) // Loop igenom bordets brickor med y, x
                 {
                     for (int x = 0; x < Board.XTiles; x++)
@@ -109,7 +106,7 @@ namespace Alfapet
             }
             else if (Dragging) // Om detta objekt inte blir draggen fast någon annan blir det, fortsätt till nästa
                 return;
-            
+
             // Om man håller leftclick och är över en bricka, börja dra på brickan
             if (mouse.LeftButton == ButtonState.Pressed && Alfapet_Util.IsHovering(tile.GetPos(), new Vector2(Hand.TilesWidth, Hand.TilesHeight)))
             {
@@ -118,15 +115,15 @@ namespace Alfapet
             }
         }
 
-        static public void Think()
+        public static void Think()
         {
-            for(int i = 0; i < Hand.Tiles.Length; i++)
+            for (int i = 0; i < Hand.Tiles.Length; i++)
             {
                 CheckDrag(i, Hand.Tiles[i], MOVE.PLACE);
             }
-            for(int y = 0; y < Board.YTiles; y++)
+            for (int y = 0; y < Board.YTiles; y++)
             {
-                for(int x = 0; x < Board.XTiles; x++)
+                for (int x = 0; x < Board.XTiles; x++)
                 {
                     if (!Board.Tiles[y, x].TempPlaced) // Man ska bara kunna ta bort och byta plats på brickor som är temporerade placerade
                         continue;

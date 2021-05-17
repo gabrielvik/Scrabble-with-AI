@@ -1,7 +1,6 @@
-﻿using System;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
-using System.Diagnostics;
+using System;
 
 
 namespace Alfapet
@@ -25,12 +24,12 @@ namespace Alfapet
             int pivot = Hand.Tiles[left].Letter; // pivot börjar som längst till vänster som man inte sorterat
             while (true)
             {
-                while(Hand.Tiles[left].Letter < pivot) // hitta vänster som ska bli höger
+                while (Hand.Tiles[left].Letter < pivot) // hitta vänster som ska bli höger
                     left++;
                 while (Hand.Tiles[right].Letter > pivot) // hitta höger som ska bli vänster
                     right--;
 
-                if(left < right)    
+                if (left < right)
                 {
                     if (Hand.Tiles[right].Letter == Hand.Tiles[left].Letter) // om det är samma bokstav, returna
                         return right;
@@ -46,19 +45,19 @@ namespace Alfapet
 
         private static void SortHand(int left, int right)
         {
-            if(left < right) 
+            if (left < right)
             {
                 int pivot = Partition(left, right);
 
-                if(pivot > 1)
+                if (pivot > 1)
                     SortHand(left, pivot - 1);
-                if(pivot + 1 < right)
+                if (pivot + 1 < right)
                     SortHand(pivot + 1, right);
             }
         }
         public static void SortHand()
         {
-            SortHand(0, Alfapet_Config.HandAmount-1);
+            SortHand(0, Alfapet_Config.HandAmount - 1);
             Hand.SetPositions();
         }
     }

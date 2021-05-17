@@ -1,7 +1,5 @@
-﻿using System;
-using Microsoft.Xna.Framework;
-using System.Diagnostics;
-using System.Collections.Generic;
+﻿using Microsoft.Xna.Framework;
+using System;
 
 namespace Alfapet
 {
@@ -14,7 +12,7 @@ namespace Alfapet
 
         public static float TilesMargin = 5f;
         public static float TilesWidth = (Alfapet._graphics.GraphicsDevice.Viewport.Width - ((Tiles.Length + 1) * TilesMargin)) / Tiles.Length;
-        public static float TilesHeight = TilesWidth;
+        public static float TilesHeight = (Alfapet._graphics.GraphicsDevice.Viewport.Height - ((Tiles.Length + 1) * TilesMargin)) / Tiles.Length;
 
         public static Action<dynamic, Vector2, Tile, Tile> DragCallback;
 
@@ -48,7 +46,7 @@ namespace Alfapet
 
             for (int i = 0; i < Tiles.Length; i++)
             {
-                if(Tiles[i].Letter == '\0')
+                if (Tiles[i].Letter == '\0')
                     continue;
 
                 if (!Tiles[i].Dragging)

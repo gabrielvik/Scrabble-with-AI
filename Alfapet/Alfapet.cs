@@ -23,7 +23,7 @@ namespace Alfapet
             IsMouseVisible = true;
         }
 
-        async public static Task<int> Start()
+        public static async Task<int> Start()
         {
             await Task.Run(() =>
             {
@@ -80,7 +80,7 @@ namespace Alfapet
             GraphicsDevice.Clear(new Color(47, 54, 64));
 
             _spriteBatch.Begin();
-                DrawFunction?.Invoke();
+            DrawFunction?.Invoke();
             _spriteBatch.End();
 
             base.Draw(gameTime);

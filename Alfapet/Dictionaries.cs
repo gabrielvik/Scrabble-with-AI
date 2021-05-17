@@ -1,14 +1,13 @@
 ﻿using Microsoft.Xna.Framework;
-using System.IO;
-using System.Collections.Generic;
 using Newtonsoft.Json;
-using System.Diagnostics;
+using System.Collections.Generic;
+using System.IO;
 
 namespace Alfapet
 {
     class Dictionaries : Game
     {
-        
+
         public static Dictionary<string, string> Current;
 
         public static void Initialize(string language)

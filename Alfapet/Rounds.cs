@@ -1,6 +1,6 @@
-﻿using System;
+﻿using Microsoft.Xna.Framework;
+using System;
 using System.Collections.Generic;
-using Microsoft.Xna.Framework;
 using System.Threading.Tasks;
 
 namespace Alfapet
@@ -79,7 +79,7 @@ namespace Alfapet
          * Säkerställer att man placerat riktiga ord
          * Om övre är sant, ger poäng or återställer variabler som behövs
          */
-        public async static void DoMove()
+        public static async void DoMove()
         {
             if (Board.TilesPlaced <= 0) // Måste ha placerat minst en bokstav
                 return;
@@ -103,8 +103,9 @@ namespace Alfapet
             }
 
             Board.TilesPlaced = 0;
+            Board.GetBestWords();
 
-            foreach(Tile tile in Board.Tiles)
+            foreach (Tile tile in Board.Tiles)
             {
                 if (!tile.TempPlaced || tile.Letter == '\0')
                     continue;

@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Microsoft.Xna.Framework;
-using System;
-using System.Threading.Tasks;
+﻿using Microsoft.Xna.Framework;
 
 namespace Alfapet
 {
@@ -11,9 +6,10 @@ namespace Alfapet
     {
         public static string LoadString = "";
         private static Button playBtn;
-        async private static void Start()
+        private static async void Start()
         {
             await Alfapet.Start();
+
             Alfapet.UpdateFunction = delegate ()
             {
                 DragDrop.Think();
@@ -31,12 +27,13 @@ namespace Alfapet
             playBtn = null;
         }
 
-        static public void Initialize()
+        public static void Initialize()
         {
             Alfapet.DrawFunction = delegate ()
             {
                 Button.Draw();
-                UI.DrawCenterText(Fonts.Montserrat_Bold_Smaller, LoadString, new Vector2(0, 0), Color.White, (int)Alfapet._graphics.GraphicsDevice.Viewport.Width, (int)Alfapet._graphics.GraphicsDevice.Viewport.Height);
+                UI.DrawCenterText(Fonts.Montserrat_Bold, "GameTitle", new Vector2(0, 0), Color.White, Alfapet._graphics.GraphicsDevice.Viewport.Width, Alfapet._graphics.GraphicsDevice.Viewport.Height / 2);
+                UI.DrawCenterText(Fonts.Montserrat_Bold_Smaller, LoadString, new Vector2(0, 0), Color.White, Alfapet._graphics.GraphicsDevice.Viewport.Width, Alfapet._graphics.GraphicsDevice.Viewport.Height);
             };
             Alfapet.UpdateFunction = delegate ()
             {

@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 
 namespace Alfapet
 {
@@ -20,7 +17,7 @@ namespace Alfapet
             float w = (Alfapet._graphics.GraphicsDevice.Viewport.Width - ((Buttons.Length + 1) * x)) / Buttons.Length;
             for (int i = 0; i < Buttons.Length; i++)
             {
-                Buttons[i].SetPos(x, Alfapet._graphics.GraphicsDevice.Viewport.Height - Hand.TilesHeight * 1.5f - 5f);
+                Buttons[i].SetPos(x, Alfapet._graphics.GraphicsDevice.Viewport.Height - Hand.TilesHeight - ButtonHeight - 2.5f);
                 Buttons[i].SetSize(w, ButtonHeight);
 
                 x += w + 5;

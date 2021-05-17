@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
+using System;
+using System.Collections.Generic;
 
 namespace Alfapet
 {
@@ -58,7 +56,7 @@ namespace Alfapet
 
             if (Mouse.GetState(Alfapet._window).LeftButton == ButtonState.Pressed && hovering)
                 UI.StylishRectangle(new Rectangle((int)X, (int)Y, (int)W, (int)H), Color.White * 0.85f);
-            else if(hovering)
+            else if (hovering)
                 UI.StylishRectangle(new Rectangle((int)X, (int)Y, (int)W, (int)H), Color.White * 0.5f);
             else
                 UI.StylishRectangle(new Rectangle((int)X, (int)Y, (int)W, (int)H));
@@ -69,7 +67,7 @@ namespace Alfapet
         public static void Draw()
         {
             for (int i = 0; i < List.Count; i++)
-                if(List[i].DrawFunc == null)
+                if (List[i].DrawFunc == null)
                     List[i].DefaultDraw();
                 else
                     List[i].DrawFunc();
@@ -86,11 +84,11 @@ namespace Alfapet
                 {
                     MouseState mouse = Mouse.GetState(Alfapet._window);
 
-                    if(!List[i].pressed && mouse.LeftButton == ButtonState.Pressed)
+                    if (!List[i].pressed && mouse.LeftButton == ButtonState.Pressed)
                     {
                         List[i].pressed = true;
                     }
-                    if(List[i].pressed && mouse.LeftButton == ButtonState.Released)
+                    if (List[i].pressed && mouse.LeftButton == ButtonState.Released)
                     {
                         List[i].ClickEvent();
                         List[i].pressed = false;

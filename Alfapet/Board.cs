@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
+using System;
 using System.Linq;
-using Microsoft.Xna.Framework.Input;
 
 namespace Alfapet
 {
@@ -10,22 +8,22 @@ namespace Alfapet
     {
         public static Tile[,] Tiles;
 
-        static public float TilesMargin = 5;
+        public static float TilesMargin = 5;
 
-        static public float TilesWidth;
-        static public float TilesHeight;
+        public static float TilesWidth;
+        public static float TilesHeight;
 
-        static public int XTiles = 15;
-        static public int YTiles = 15;
+        public static int XTiles = 15;
+        public static int YTiles = 15;
 
-        static public int TilesPlaced = 0;
+        public static int TilesPlaced = 0;
 
-        public async static void Initialize() // Bygger brädan, kallas i Initalize()
+        public static async void Initialize() // Bygger brädan, kallas i Initalize()
         {
             Tiles = new Tile[YTiles, XTiles];
-            
+
             TilesWidth = (Alfapet._graphics.GraphicsDevice.Viewport.Width - ((XTiles + 1) * TilesMargin)) / XTiles;
-            TilesHeight = (Alfapet._graphics.GraphicsDevice.Viewport.Width - (Hand.TilesHeight + ButtonRig.ButtonHeight) - ((YTiles + 1) * TilesMargin)) / YTiles;
+            TilesHeight = (Alfapet._graphics.GraphicsDevice.Viewport.Height - (Hand.TilesHeight + ButtonRig.ButtonHeight) - ((YTiles + 1) * TilesMargin)) / YTiles;
 
             float x = 5, y = 5;
 
@@ -54,7 +52,10 @@ namespace Alfapet
 
         public static void GetBestWords()
         {
-            // ..
+            System.Diagnostics.Stopwatch sw = System.Diagnostics.Stopwatch.StartNew();
+
+            sw.Stop();
+            System.Diagnostics.Debug.WriteLine("ELAPSED: " + (sw.ElapsedMilliseconds).ToString());
         }
 
         public static void Draw()
@@ -70,5 +71,8 @@ namespace Alfapet
                     UI.DrawCenterText(Fonts.Montserrat_Bold_Smaller, tile.Letter.ToString(), new Vector2(tile.X, tile.Y), Color.White, (int)tile.W, (int)tile.H);
             }
         }
+
+
+
     }
 }

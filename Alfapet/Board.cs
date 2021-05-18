@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using System;
 using System.Linq;
+using System.Collections.Generic;
 
 namespace Alfapet
 {
@@ -53,6 +54,66 @@ namespace Alfapet
         public static void GetBestWords()
         {
             System.Diagnostics.Stopwatch sw = System.Diagnostics.Stopwatch.StartNew();
+
+            string hand = "";
+
+            foreach(Tile tile in Hand.Tiles)
+            {
+                if (tile.Letter == '\0')
+                    continue;
+
+                hand += tile.Letter.ToString().ToLower();
+            }
+           /* for(int y = 0; y < YTiles; y++)
+            {
+
+                for(int x = 0; x < XTiles; x++)
+                {
+                    if (Tiles[y, x].Letter != '\0')
+                    {
+                        if (Tiles[y, Math.Max(x - 1, 0)].Letter == '\0')
+                        {
+                            hand += Tiles[y, x].Letter;
+                        }
+                        if (Tiles[y, Math.Min(x - 1, XTiles - 1)].Letter == '\0')
+                        {
+                            hand += Tiles[y, x].Letter;
+                        }
+                        if (Tiles[Math.Max(y - 1, 0), x].Letter == '\0')
+                        {
+                            hand += Tiles[y, x].Letter;
+                        }
+                        if (Tiles[Math.Min(y + 1, YTiles - 1), x].Letter == '\0')
+                        {
+                            hand += Tiles[y, x].Letter;
+                        }
+                    }
+                }
+            }
+           */
+            System.Diagnostics.Debug.WriteLine(hand);
+
+            foreach(var words in Dictionaries.Current)
+            {
+                string word = words.Key;
+                if(word.Length <= 1)
+                    continue;
+
+                bool found = true;
+                // TODO: gör att man jämför hand strängen men ordet istället för tvärtom
+                for(int i = 0; i < hand.Length; i++)
+                {
+                    //System.Diagnostics.Debug.WriteLine(hand[i]);
+                    if (!word.ToLower().Contains(hand[i]))
+                        found = false;
+                }
+                if(found)
+                {
+                    System.Diagnostics.Debug.WriteLine(word);
+                }
+            }
+
+
 
             sw.Stop();
             System.Diagnostics.Debug.WriteLine("ELAPSED: " + (sw.ElapsedMilliseconds).ToString());

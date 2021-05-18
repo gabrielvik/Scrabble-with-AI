@@ -29,9 +29,11 @@ namespace Alfapet
                 {
                     if (word.Length == 1) // Om ordet är bara en karaktär, kolla så den inte är isolerad från andra karaktärer och om den är, returna false
                     {
-                        char letterUp = Board.Tiles[Math.Max(y - 1, 0), Math.Max(x - 1, 0)].Letter;
-                        char letterDown = Board.Tiles[Math.Min(y + 1, Board.YTiles - 1), Math.Max(x - 1, 0)].Letter;
-                        if (letterUp == '\0' && letterDown == '\0')
+                        char letterUp = Board.Tiles[Math.Max(y - 1, 0), x].Letter;
+                        char letterDown = Board.Tiles[Math.Min(y + 1, Board.YTiles - 1), x].Letter;
+                        char letterLeft = Board.Tiles[y, Math.Max(x - 1, 0)].Letter;
+                        char letterRight = Board.Tiles[y, Math.Max(x - 1, 0)].Letter;
+                        if (letterUp == '\0' && letterDown == '\0' && letterLeft == '\0' && letterRight == '\0')
                             ok = false;
                     }
                     else if (word.Length > 1)
@@ -52,7 +54,10 @@ namespace Alfapet
                 {
                     CorrectWordPlacement(y, x, out bool ok); // Gör en lokal bool till loopen, om inkorrekt placering, returna false
                     if (!ok)
+                    {
+                        System.Diagnostics.Debug.WriteLine("here");
                         return false;
+                    }
                 }
             }
 

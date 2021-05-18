@@ -57,6 +57,8 @@ namespace Alfapet
 
             string hand = "";
 
+            List<char> boardWords = new List<char>();
+
             foreach(Tile tile in Hand.Tiles)
             {
                 if (tile.Letter == '\0')
@@ -64,34 +66,24 @@ namespace Alfapet
 
                 hand += tile.Letter.ToString().ToLower();
             }
-           /* for(int y = 0; y < YTiles; y++)
-            {
 
-                for(int x = 0; x < XTiles; x++)
+            for(int y = 0; y < YTiles; y++)
+            {
+                for (int x = 0; x < XTiles; x++)
                 {
-                    if (Tiles[y, x].Letter != '\0')
-                    {
-                        if (Tiles[y, Math.Max(x - 1, 0)].Letter == '\0')
-                        {
-                            hand += Tiles[y, x].Letter;
-                        }
-                        if (Tiles[y, Math.Min(x - 1, XTiles - 1)].Letter == '\0')
-                        {
-                            hand += Tiles[y, x].Letter;
-                        }
-                        if (Tiles[Math.Max(y - 1, 0), x].Letter == '\0')
-                        {
-                            hand += Tiles[y, x].Letter;
-                        }
-                        if (Tiles[Math.Min(y + 1, YTiles - 1), x].Letter == '\0')
-                        {
-                            hand += Tiles[y, x].Letter;
-                        }
-                    }
+                    char letterUp = Tiles[Math.Max(y - 1, 0), x].Letter;
+                    char letterDown = Tiles[Math.Min(y + 1, Board.YTiles - 1), x].Letter;
+                    char letterLeft = Tiles[y, Math.Max(x - 1, 0)].Letter;
+                    char letterRight = Tiles[y, Math.Max(x - 1, 0)].Letter;
+
+                    if (letterUp != '\0' || letterDown != '\0' || letterLeft != '\0' || letterRight != '\0')
+                        boardWords.Add(Tiles[y, x].Letter);
                 }
             }
-           */
+           
             System.Diagnostics.Debug.WriteLine(hand);
+
+            List<string> wordList = new List<string>();
 
             foreach(var words in Dictionaries.Current)
             {
@@ -99,21 +91,32 @@ namespace Alfapet
                 if(word.Length <= 1)
                     continue;
 
-                bool found = true;
-                // TODO: gör att man jämför hand strängen men ordet istället för tvärtom
-                for(int i = 0; i < hand.Length; i++)
+                foreach (var boardWord in boardWords)
                 {
-                    //System.Diagnostics.Debug.WriteLine(hand[i]);
-                    if (!word.ToLower().Contains(hand[i]))
-                        found = false;
-                }
-                if(found)
-                {
-                    System.Diagnostics.Debug.WriteLine(word);
+                    bool found = true;
+                    string _hand = hand + boardWord.ToString().ToLower();
+
+                    for (int i = 0; i < word.Length; i++)
+                    {
+                        //System.Diagnostics.Debug.WriteLine(hand[i]);
+                        int index = _hand.IndexOf(word[i]);
+
+                        if (index == -1)
+                        {
+                            found = false;
+                            break;
+                        }
+                        else
+                            _hand = _hand.Remove(index);
+                    }
+                    if (found && !wordList.Contains(word))
+                    {
+                        wordList.Add(word);
+                        System.Diagnostics.Debug.WriteLine(word);
+                        continue;
+                    }
                 }
             }
-
-
 
             sw.Stop();
             System.Diagnostics.Debug.WriteLine("ELAPSED: " + (sw.ElapsedMilliseconds).ToString());

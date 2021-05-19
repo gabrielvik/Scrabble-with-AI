@@ -57,7 +57,7 @@ namespace Alfapet
 
             string hand = "";
 
-            List<char> boardWords = new List<char>();
+            List<string> boardWords = new List<string>();
 
             foreach(Tile tile in Hand.Tiles)
             {
@@ -69,19 +69,36 @@ namespace Alfapet
 
             for(int y = 0; y < YTiles; y++)
             {
+                string xWord = "";
+                string yWord = "";
                 for (int x = 0; x < XTiles; x++)
                 {
-                    char letterUp = Tiles[Math.Max(y - 1, 0), x].Letter;
-                    char letterDown = Tiles[Math.Min(y + 1, Board.YTiles - 1), x].Letter;
-                    char letterLeft = Tiles[y, Math.Max(x - 1, 0)].Letter;
-                    char letterRight = Tiles[y, Math.Max(x - 1, 0)].Letter;
+                    if(xWord.Length > 0 && Tiles[y, x].Letter == '\0')
+                    {
+                        System.Diagnostics.Debug.WriteLine(xWord);
+                        boardWords.Add(xWord.ToLower());
+                        xWord = "";
+                    }
+                    if (yWord.Length > 0 && Tiles[x, y].Letter == '\0')
+                    {
+                        System.Diagnostics.Debug.WriteLine(yWord);
+                        boardWords.Add(yWord.ToLower());
+                        yWord = "";
+                    }
+                    if (Tiles[y, x].Letter != '\0')
+                    {
+                        xWord += Tiles[y, x].Letter;
 
-                    if (letterUp != '\0' || letterDown != '\0' || letterLeft != '\0' || letterRight != '\0')
-                        boardWords.Add(Tiles[y, x].Letter);
+                    }
+                    if (Tiles[x, y].Letter != '\0')
+                    {
+                        yWord += Tiles[x, y].Letter;
+                    }
                 }
             }
            
-            System.Diagnostics.Debug.WriteLine(hand);
+
+            // TODO: kolla så att ordens längd stämmer, till exempel att om ordet börjar på 0 kan man inte lägga en bokstav innan
 
             List<string> wordList = new List<string>();
 
@@ -93,33 +110,36 @@ namespace Alfapet
 
                 foreach (var boardWord in boardWords)
                 {
-                    bool found = true;
-                    string _hand = hand + boardWord.ToString().ToLower();
+                    if (!word.Contains(boardWord) || word == boardWord)
+                        break;
 
-                    for (int i = 0; i < word.Length; i++)
+                    string _hand = hand + boardWord;
+                    string _word = word;
+                    int l = 0;
+
+                    for (int i = 0; i < _hand.Length; i++)
                     {
-                        //System.Diagnostics.Debug.WriteLine(hand[i]);
-                        int index = _hand.IndexOf(word[i]);
-
-                        if (index == -1)
+                        
+                        int index = _word.IndexOf(_hand[i]);
+                        
+                        if (index != -1)
                         {
-                            found = false;
-                            break;
+                            _word = _word.Remove(index, 1);
+                            l++;
                         }
-                        else
-                            _hand = _hand.Remove(index);
-                    }
-                    if (found && !wordList.Contains(word))
-                    {
-                        wordList.Add(word);
-                        System.Diagnostics.Debug.WriteLine(word);
-                        continue;
+
+                        if (l >= word.Length && !wordList.Contains(word))
+                        {
+                            wordList.Add(word);
+                            System.Diagnostics.Debug.WriteLine(word + ":" + boardWord);
+                            continue;
+                        }
                     }
                 }
             }
 
             sw.Stop();
-            System.Diagnostics.Debug.WriteLine("ELAPSED: " + (sw.ElapsedMilliseconds).ToString());
+            System.Diagnostics.Debug.WriteLine("ELAPSED: " + (sw.ElapsedMilliseconds / 1000).ToString());
         }
 
         public static void Draw()

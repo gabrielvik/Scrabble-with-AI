@@ -41,9 +41,9 @@ namespace Alfapet
                     Tiles[i, z] = new Tile();
                     Tiles[i, z].SetSize(TilesWidth, TilesHeight);
                     Tiles[i, z].SetPos(x, y);
-                    if (i == 1 && z == 3)
+                    if (i == 1 && z == 1)
                         Tiles[i, z].Letter = 'P';
-                    else if (i == 2 && z == 3)
+                    else if (i == 2 && z == 1)
                         Tiles[i, z].Letter = 'A';
 
                     x += TilesWidth + TilesMargin;
@@ -57,9 +57,9 @@ namespace Alfapet
 
             string hand = "";
 
-            List<string> boardWords = new List<string>();
+            var boardWords = new Dictionary<string, Tuple<int, int, bool>>();
 
-            foreach(Tile tile in Hand.Tiles)
+            foreach (Tile tile in Hand.Tiles)
             {
                 if (tile.Letter == '\0')
                     continue;
@@ -67,22 +67,23 @@ namespace Alfapet
                 hand += tile.Letter.ToString().ToLower();
             }
 
-            for(int y = 0; y < YTiles; y++)
+            for (int y = 0; y < YTiles; y++)
             {
                 string xWord = "";
                 string yWord = "";
+
                 for (int x = 0; x < XTiles; x++)
                 {
-                    if(xWord.Length > 0 && Tiles[y, x].Letter == '\0')
+                    if (xWord.Length > 0 && Tiles[y, x].Letter == '\0')
                     {
                         System.Diagnostics.Debug.WriteLine(xWord);
-                        boardWords.Add(xWord.ToLower());
+                        boardWords[xWord.ToLower()] = new Tuple<int, int, bool>(y, x - 1, true);
                         xWord = "";
                     }
                     if (yWord.Length > 0 && Tiles[x, y].Letter == '\0')
                     {
                         System.Diagnostics.Debug.WriteLine(yWord);
-                        boardWords.Add(yWord.ToLower());
+                        boardWords[yWord.ToLower()] = new Tuple<int, int, bool>(x - 1, y, false);
                         yWord = "";
                     }
                     if (Tiles[y, x].Letter != '\0')
@@ -96,32 +97,31 @@ namespace Alfapet
                     }
                 }
             }
-           
+
 
             // TODO: kolla så att ordens längd stämmer, till exempel att om ordet börjar på 0 kan man inte lägga en bokstav innan
 
             List<string> wordList = new List<string>();
 
-            foreach(var words in Dictionaries.Current)
+            foreach (var words in Dictionaries.Current)
             {
                 string word = words.Key;
-                if(word.Length <= 1)
+                if (word.Length <= 1)
                     continue;
 
                 foreach (var boardWord in boardWords)
                 {
-                    if (!word.Contains(boardWord) || word == boardWord)
-                        break;
+                    if (!word.Contains(boardWord.Key) || word == boardWord.Key)
+                        continue;
 
-                    string _hand = hand + boardWord;
+                    string _hand = hand + boardWord.Key;
                     string _word = word;
                     int l = 0;
 
                     for (int i = 0; i < _hand.Length; i++)
                     {
-                        
                         int index = _word.IndexOf(_hand[i]);
-                        
+
                         if (index != -1)
                         {
                             _word = _word.Remove(index, 1);
@@ -130,16 +130,34 @@ namespace Alfapet
 
                         if (l >= word.Length && !wordList.Contains(word))
                         {
+                            string[] splittedWord = word.Split(boardWord.Key);
+                            if (boardWord.Value.Item1 - splittedWord[0].Length < 0 || boardWord.Value.Item1 + splittedWord[1].Length > XTiles)
+                                continue;
+                            if (boardWord.Value.Item2 - splittedWord[0].Length < 0 || boardWord.Value.Item1 + splittedWord[1].Length > YTiles)
+                                continue;
+
+                            var t = new List<Tuple<char, int, int>>();
+                            foreach (var _t in splittedWord)
+                            {
+                                if (boardWord.Value.Item3)
+                                {
+
+                                }
+                                if (!boardWord.Value.Item3)
+                                {
+
+                                }
+                            }
                             wordList.Add(word);
                             System.Diagnostics.Debug.WriteLine(word + ":" + boardWord);
-                            continue;
                         }
                     }
-                }
-            }
 
-            sw.Stop();
-            System.Diagnostics.Debug.WriteLine("ELAPSED: " + (sw.ElapsedMilliseconds / 1000).ToString());
+                }
+
+                sw.Stop();
+                System.Diagnostics.Debug.WriteLine("ELAPSED: " + (sw.ElapsedMilliseconds / 1000).ToString());
+            }
         }
 
         public static void Draw()

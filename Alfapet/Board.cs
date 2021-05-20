@@ -99,7 +99,7 @@ namespace Alfapet
             }
            
 
-            // TODO: kolla så att ordens längd stämmer, till exempel att om ordet börjar på 0 kan man inte lägga en bokstav innan
+            // TODO: ord på en axel stämmer inte överens med den andra TEX AL på y axeln blir WL på x axeln, tror att bokstäver också kan sättas mitt i ord
 
             List<string> wordList = new List<string>();
 
@@ -131,35 +131,51 @@ namespace Alfapet
                         if (l >= word.Length && !wordList.Contains(word))
                         {
                             string[] splittedWord = word.Split(boardWord.Key);
-                            if (boardWord.Value.Item1 - splittedWord[0].Length < 0 || boardWord.Value.Item1 + splittedWord[1].Length > XTiles)
+                            if (splittedWord[0].Length - boardWord.Value.Item2 + boardWord.Key.Length > 1 || boardWord.Value.Item2 + splittedWord[1].Length > XTiles)
                                 continue;
-                            if (boardWord.Value.Item1 - splittedWord[0].Length < 0 || boardWord.Value.Item1 + splittedWord[1].Length > YTiles)
+                            if (splittedWord[0].Length - boardWord.Value.Item1 + boardWord.Key.Length > 1 || boardWord.Value.Item1 + splittedWord[1].Length > YTiles)
                                 continue;
 
                             var t = new List<Tuple<char, int, int>>();
 
                             if (boardWord.Value.Item3)
                             {
-                                int left = splittedWord[0].Length - boardWord.Key.Length;
+                                int left = splittedWord[0].Length;
   
                                 for (int x = 0; x < splittedWord[0].Length; x++)
                                 {
-                                    //if(left >= 0)
-                                       // t.Add(new Tuple<char, int, int>(splittedWord[0][x], boardWord.Value.Item1, boardWord.Value.Item2 - splittedWord[0].Length + x));
-                                    //else
-                                     //   t.Add(new Tuple<char, int, int>(splittedWord[0][x], boardWord.Value.Item1, boardWord.Value.Item2 + 1 + x));
+                                    t.Add(new Tuple<char, int, int>(splittedWord[0][x], boardWord.Value.Item1, boardWord.Value.Item2 - boardWord.Key.Length + x));
                                 }
                                 for (int x = 0; x < splittedWord[1].Length; x++)
                                 {
-                                   // t.Add(new Tuple<char, int, int>(splittedWord[1][x], boardWord.Value.Item1, boardWord.Value.Item2 + 1 + x));
+                                    t.Add(new Tuple<char, int, int>(splittedWord[1][x], boardWord.Value.Item1, boardWord.Value.Item2 + 1 + x));
                                 }
 
-                                //System.Diagnostics.Debug.WriteLine(word + ":" + boardWord + (boardWord.Value.Item3 ? " - From X" : " - From Y"));
+
+                                foreach(var _t in t)
+                                {
+                                    System.Diagnostics.Debug.WriteLine(_t.Item1 + ", Y: " + _t.Item2 + ", X: " + _t.Item3);
+                                }
+                                System.Diagnostics.Debug.WriteLine(word + ":" + boardWord + (boardWord.Value.Item3 ? " - From X" : " - From Y"));
                             }
                             else
                             {
-                                // Funkar inte för y axeln, bara X, kommenterad X för testa Y
-                                
+                                int left = splittedWord[0].Length;
+                                for (int x = 0; x < splittedWord[0].Length; x++)
+                                {
+                                    t.Add(new Tuple<char, int, int>(splittedWord[0][x], boardWord.Value.Item2 - boardWord.Key.Length + x, boardWord.Value.Item1));
+                                }
+                                for (int x = 0; x < splittedWord[1].Length; x++)
+                                {
+                                    t.Add(new Tuple<char, int, int>(splittedWord[1][x], boardWord.Value.Item2 + 1 + x, boardWord.Value.Item1));
+                                }
+
+
+                                foreach (var _t in t)
+                                {
+                                    System.Diagnostics.Debug.WriteLine(_t.Item1 + ", Y: " + _t.Item2 + ", X: " + _t.Item3);
+                                }
+                                System.Diagnostics.Debug.WriteLine(word + ":" + boardWord + (boardWord.Value.Item3 ? " - From X" : " - From Y"));
                             }
 
                             wordList.Add(word);

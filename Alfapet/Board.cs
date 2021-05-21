@@ -90,10 +90,43 @@ namespace Alfapet
                     {
                         xWord += Tiles[y, x].Letter;
 
+                        // TODO: säkerställ att omringande bokstäver räknas som ord i både X och Y axlen
+
+                        if (Tiles[y, x - 1].Letter != '\0')
+                        {
+                            if(Tiles[y - 1, x - 1].Letter != '\0')
+                                xWord += Tiles[y - 1, x - 1].Letter;
+                            if (Tiles[y + 1, x - 1].Letter != '\0')
+                                xWord += Tiles[y + 1, x - 1].Letter;
+                        }
+                        if (Tiles[y, x + 1].Letter != '\0')
+                        {
+                            if(Tiles[y + 1, x + 1].Letter != '\0')
+                                xWord += Tiles[y + 1, x + 1].Letter;
+                            if (Tiles[y - 1, x + 1].Letter != '\0')
+                                xWord += Tiles[y - 1, x + 1].Letter;
+                        }
+                        
                     }
                     if (Tiles[x, y].Letter != '\0')
                     {
                         yWord += Tiles[x, y].Letter;
+
+                        if (Tiles[x, y - 1].Letter != '\0')
+                        {
+                            if(Tiles[x - 1, y - 1].Letter != '\0')
+                                yWord += Tiles[x - 1, y - 1].Letter;
+                            if (Tiles[x + 1, y - 1].Letter != '\0')
+                                yWord += Tiles[x + 1, y - 1].Letter;
+                        }
+                        if (Tiles[x, y + 1].Letter != '\0')
+                        {
+                            if(Tiles[x + 1, y + 1].Letter != '\0')
+                                yWord += Tiles[x + 1, y + 1].Letter;
+                            if (Tiles[x - 1, y + 1].Letter != '\0')
+                                yWord += Tiles[x - 1, y + 1].Letter;
+                        }
+                        
                     }
                 }
             }
@@ -154,20 +187,20 @@ namespace Alfapet
 
                                 foreach(var _t in t)
                                 {
-                                    System.Diagnostics.Debug.WriteLine(_t.Item1 + ", Y: " + _t.Item2 + ", X: " + _t.Item3);
+                                 //   System.Diagnostics.Debug.WriteLine(_t.Item1 + ", Y: " + _t.Item2 + ", X: " + _t.Item3);
                                 }
-                                System.Diagnostics.Debug.WriteLine(word + ":" + boardWord + (boardWord.Value.Item3 ? " - From X" : " - From Y"));
+                               // System.Diagnostics.Debug.WriteLine(word + ":" + boardWord + (boardWord.Value.Item3 ? " - From X" : " - From Y"));
                             }
                             else
                             {
                                 int left = splittedWord[0].Length;
                                 for (int x = 0; x < splittedWord[0].Length; x++)
                                 {
-                                    t.Add(new Tuple<char, int, int>(splittedWord[0][x], boardWord.Value.Item2 - boardWord.Key.Length + x, boardWord.Value.Item1));
+                                    t.Add(new Tuple<char, int, int>(splittedWord[0][x], boardWord.Value.Item1 - boardWord.Key.Length + x - 1, boardWord.Value.Item2));
                                 }
                                 for (int x = 0; x < splittedWord[1].Length; x++)
                                 {
-                                    t.Add(new Tuple<char, int, int>(splittedWord[1][x], boardWord.Value.Item2 + 1 + x, boardWord.Value.Item1));
+                                    t.Add(new Tuple<char, int, int>(splittedWord[1][x], boardWord.Value.Item1 + 1 + x, boardWord.Value.Item2));
                                 }
 
 

@@ -142,7 +142,19 @@ namespace Alfapet
                             if (splittedWord[0].Length - boardWord.Key.Item1 + boardWord.Value.Length > 1 || boardWord.Key.Item1 + splittedWord[1].Length > YTiles)
                                 continue;
 
-
+                            /*
+                             * . . . . . . . . . .
+                                . . . . . . . . . .
+                                . f d r d w d . . .
+                                . f w 1 a a . . . .
+                                . f g . g f . . . .
+                                . . . . . . . . . .
+                                . . . . . . . . . .
+                                . . . . . . . . . .
+                                . . . . . . . . . .
+                                . . . . . . . . . .
+                                1 - Kan kolla ordet på vänster, men inte på höger eftersom ordet börjar på högerledet och inte slutar.
+                             */
 
                             if (boardWord.Key.Item3)
                             {

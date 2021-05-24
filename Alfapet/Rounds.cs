@@ -88,7 +88,7 @@ namespace Alfapet
         {
             if (Board.TilesPlaced <= 0) // Måste ha placerat minst en bokstav
                 return;
-            else if (!PlacedValidWords())
+            else if (false)
             {
                 Button moveBtn = ButtonRig.Buttons[0];
                 if (moveBtn.DrawFunc != null) // Om draw functionen redan finns (man har klickat nyligen), returna
@@ -108,7 +108,13 @@ namespace Alfapet
             }
 
             Board.TilesPlaced = 0;
-            Board.GetBestWords();
+            foreach (var t in Board.GetBestWords())
+            {
+                foreach(var _t in t)
+                {
+                    Board.Tiles[_t.Item2, _t.Item3].Letter = char.ToUpper(_t.Item1);
+                }
+            }
 
             foreach (Tile tile in Board.Tiles)
             {

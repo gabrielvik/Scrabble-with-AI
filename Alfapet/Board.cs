@@ -143,17 +143,22 @@ namespace Alfapet
                                 continue;
 
                             /*
-                             * . . . . . . . . . .
+                                . . . . . . . . . .
                                 . . . . . . . . . .
                                 . f d r d w d . . .
-                                . f w 1 a a . . . .
+                                . f w ? a a . . . .
                                 . f g . g f . . . .
                                 . . . . . . . . . .
                                 . . . . . . . . . .
                                 . . . . . . . . . .
                                 . . . . . . . . . .
                                 . . . . . . . . . .
-                                1 - Kan kolla ordet på vänster, men inte på höger eftersom ordet börjar på högerledet och inte slutar.
+
+                                ? - Kan kolla ordet på vänster, men inte på höger eftersom ordet börjar på högerledet och inte slutar.
+
+                                Lösningar:
+                                    Dålig - kolla om det finns en bokstav till höger, om det gör det, loopa tills man hittar slutet på ordet
+                                    
                              */
 
                             if (boardWord.Key.Item3)

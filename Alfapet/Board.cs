@@ -1,7 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using System;
-using System.Linq;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Alfapet
 {
@@ -19,6 +19,16 @@ namespace Alfapet
 
         public static int TilesPlaced = 0;
 
+        private struct Word
+        {
+            public int? YEnd { get; set; }
+            public int? XStart { get; set; }
+            public int? XEnd { get; set; }
+
+            public bool Axis { get; set; }
+
+            public string Value { get; set; }
+        }
         public static async void Initialize() // Bygger brädan, kallas i Initalize()
         {
             Tiles = new Tile[YTiles, XTiles];
@@ -41,10 +51,14 @@ namespace Alfapet
                     Tiles[i, z] = new Tile();
                     Tiles[i, z].SetSize(TilesWidth, TilesHeight);
                     Tiles[i, z].SetPos(x, y);
-                    if (i == 1 && z == 3)
+                    if (i == 4 && z == 7)
                         Tiles[i, z].Letter = 'P';
-                    else if (i == 2 && z == 3)
+                    else if (i == 4 && z == 6)
+                        Tiles[i, z].Letter = 'E';
+                    else if (i == 3 && z == 6)
                         Tiles[i, z].Letter = 'A';
+                    else if (i == 2 && z == 6)
+                        Tiles[i, z].Letter = 'R';
 
                     x += TilesWidth + TilesMargin;
                 }
@@ -57,9 +71,9 @@ namespace Alfapet
 
             string hand = "";
 
-            var boardWords = new Dictionary<Tuple<int, int, bool>, string>();
+            var boardWords = new List<Word>();
 
-            foreach(Tile tile in Hand.Tiles)    
+            foreach (Tile tile in Hand.Tiles)
             {
                 if (tile.Letter == '\0')
                     continue;
@@ -67,31 +81,49 @@ namespace Alfapet
                 hand += tile.Letter.ToString().ToLower();
             }
 
-            for(int y = 0; y < YTiles; y++)
+            for (int y = 0; y < YTiles; y++)
             {
                 string xWord = "";
                 string yWord = "";
 
+                int xStart = -1;
+
                 for (int x = 0; x < XTiles; x++)
                 {
-                    if(xWord.Length > 0 && Tiles[y, x].Letter == '\0')
+                    if (xWord.Length > 0 && Tiles[y, x].Letter == '\0')
                     {
                         System.Diagnostics.Debug.WriteLine(xWord);
-                        boardWords[new Tuple<int, int, bool>(y, x - 1, true)] = xWord.ToLower();
+                        var xWordObj = new Word()
+                        {
+                            YEnd = y,
+                            XEnd = x - 1,
+                            XStart = xStart,
+                            Axis = true,
+                            Value = xWord.ToLower()
+                        };
+                        boardWords.Add(xWordObj);
                         xWord = "";
                     }
                     if (yWord.Length > 0 && Tiles[x, y].Letter == '\0')
                     {
                         System.Diagnostics.Debug.WriteLine(yWord);
-                        boardWords[new Tuple<int, int, bool>(x - 1, y, false)] = yWord.ToLower();
+                        var yWordObj = new Word()
+                        {
+                            YEnd = x - 1,
+                            XEnd = y,
+                            Axis = false,
+                            Value = yWord.ToLower()
+                        };
+                        boardWords.Add(yWordObj);
+
                         yWord = "";
                     }
                     if (Tiles[y, x].Letter != '\0')
                     {
-                        xWord += Tiles[y, x].Letter;
+                        if (xWord.Length <= 0)
+                            xStart = x;
 
-                        
-                        // TODO: säkerställ att omringande bokstäver räknas som ord i både X och Y axlen
+                        xWord += Tiles[y, x].Letter;
                     }
                     if (Tiles[x, y].Letter != '\0')
                     {
@@ -99,7 +131,7 @@ namespace Alfapet
                     }
                 }
             }
-           
+
 
             // TODO: ord på en axel stämmer inte överens med den andra TEX AL på y axeln blir WL på x axeln, tror att bokstäver också kan sättas mitt i ord
 
@@ -109,7 +141,7 @@ namespace Alfapet
             foreach (var words in Dictionaries.Current)
             {
                 string word = words.Key;
-                if(word.Length <= 1)
+                if (word.Length <= 1)
                     continue;
 
                 var _t_ = new List<Tuple<char, int, int>>();
@@ -119,15 +151,15 @@ namespace Alfapet
                     if (!word.Contains(boardWord.Value) || word == boardWord.Value)
                         continue;
 
-                    string _hand = hand + boardWord.Key;
+                    string _hand = hand + boardWord.Value;
                     string _word = word;
                     int l = 0;
-                    
+
 
                     for (int i = 0; i < _hand.Length; i++)
                     {
                         int index = _word.IndexOf(_hand[i]);
-                        
+
                         if (index != -1)
                         {
                             _word = _word.Remove(index, 1);
@@ -137,9 +169,9 @@ namespace Alfapet
                         if (l >= word.Length && !wordList.Contains(word))
                         {
                             string[] splittedWord = word.Split(boardWord.Value);
-                            if (splittedWord[0].Length - boardWord.Key.Item2 + boardWord.Value.Length > 1 || boardWord.Key.Item2 + splittedWord[1].Length > XTiles)
+                            if (splittedWord[0].Length - boardWord.XEnd + boardWord.Value.Length > 1 || boardWord.XEnd + splittedWord[1].Length > XTiles)
                                 continue;
-                            if (splittedWord[0].Length - boardWord.Key.Item1 + boardWord.Value.Length > 1 || boardWord.Key.Item1 + splittedWord[1].Length > YTiles)
+                            if (splittedWord[0].Length - boardWord.YEnd + boardWord.Value.Length > 1 || boardWord.YEnd + splittedWord[1].Length > YTiles)
                                 continue;
 
                             /*
@@ -161,17 +193,17 @@ namespace Alfapet
                                     
                              */
 
-                            if (boardWord.Key.Item3)
+                            if (boardWord.Axis)
                             {
                                 int left = splittedWord[0].Length;
-  
+
                                 for (int x = 0; x < splittedWord[0].Length; x++)
                                 {
-                                    _t_.Add(new Tuple<char, int, int>(splittedWord[0][x], boardWord.Key.Item1, boardWord.Key.Item2 - boardWord.Value.Length + x));
+                                    // _t_.Add(new Tuple<char, int, int>(splittedWord[0][x], (int)boardWord.YEnd, (int)boardWord.XEnd - boardWord.Value.Length + x));
                                 }
                                 for (int x = 0; x < splittedWord[1].Length; x++)
                                 {
-                                    _t_.Add(new Tuple<char, int, int>(splittedWord[1][x], boardWord.Key.Item1, boardWord.Key.Item2 + 1 + x));
+                                    //  _t_.Add(new Tuple<char, int, int>(splittedWord[1][x], (int)boardWord.YEnd, (int)boardWord.XEnd + 1 + x));
                                 }
 
 
@@ -189,21 +221,26 @@ namespace Alfapet
                                 int left = splittedWord[0].Length;
                                 for (int x = 0; x < splittedWord[0].Length; x++)
                                 {
-                                    _t_.Add(new Tuple<char, int, int>(splittedWord[0][x], boardWord.Key.Item1 + x - 1, boardWord.Key.Item2));
+                                    // Inkorrekt placering på Y axeln, ordets placering blir för mycket uppåt eller vanligast för mycket nedåt
+                                    var rightWord = boardWords.Any((word) => word.XEnd == boardWord.XEnd - 1 && word.YEnd == boardWord.YEnd + x - 1 - 1);
+                                    if (rightWord)
+                                    {
+                                        System.Diagnostics.Debug.WriteLine(Tiles[(int)boardWord.YEnd + x - 1 - 1, (int)boardWord.XEnd - 1].Letter + "conflicting with " + splittedWord[0][x] + " " + word + ": " + "(" + boardWord.XEnd + ", " + boardWord.YEnd + ")" + (boardWord.Axis ? " - From X" : " - From Y"));
+                                    }
+                                    _t_.Add(new Tuple<char, int, int>(splittedWord[0][x], (int)boardWord.YEnd + x - 1 - 1, (int)boardWord.XEnd));
                                 }
                                 for (int x = 0; x < splittedWord[1].Length; x++)
                                 {
-                                    _t_.Add(new Tuple<char, int, int>(splittedWord[1][x], boardWord.Key.Item1 + 1 + x, boardWord.Key.Item2));
+                                     //_t_.Add(new Tuple<char, int, int>(splittedWord[1][x], (int)boardWord.YEnd + 1 + x, (int)boardWord.XEnd));
                                 }
 
-                                if (t.Count <= 1)
+
+                                foreach (var _t in _t_)
                                 {
-                                    foreach (var _t in _t_)
-                                    {
-                                        //System.Diagnostics.Debug.WriteLine(_t.Item1 + ", Y: " + _t.Item2 + ", X: " + _t.Item3);
-                                    }
-                                    //System.Diagnostics.Debug.WriteLine(word + ":" + boardWord + (boardWord.Value.Item3 ? " - From X" : " - From Y"));
+                                    //System.Diagnostics.Debug.WriteLine(_t.Item1 + ", Y: " + _t.Item2 + ", X: " + _t.Item3);
                                 }
+                                //System.Diagnostics.Debug.WriteLine(word + ":" + boardWord + (boardWord.Axis ? " - From X" : " - From Y"));
+
                             }
 
                             wordList.Add(word);

@@ -108,12 +108,17 @@ namespace Alfapet
             }
 
             Board.TilesPlaced = 0;
+
             foreach (var t in Board.GetBestWords())
             {
-                foreach(var _t in t)
+                bool placed = false;
+                foreach (var _t in t)
                 {
-                    Board.Tiles[_t.Item2, _t.Item3].Letter = char.ToUpper(_t.Item1);
+                    //Board.Tiles[_t.Item2, _t.Item3].Letter = char.ToUpper(_t.Item1);
+                    placed = true;
                 }
+                if(placed)
+                 break;
             }
 
             foreach (Tile tile in Board.Tiles)

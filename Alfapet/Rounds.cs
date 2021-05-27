@@ -109,7 +109,16 @@ namespace Alfapet
 
             Board.TilesPlaced = 0;
 
-            foreach (var t in Board.GetBestWords())
+            var words = Board.GetBestWords();
+            if (words.Count <= 0) { 
+                for (int i = 0; i < Hand.Tiles.Length; i++) // Populera arrayen med nya objekt
+                {
+                    Hand.Tiles[i] = new Tile();
+                    Hand.Tiles[i].Letter = Alfapet_Util.GenerateRandomLetter();
+                }
+            }
+            words = Board.GetBestWords();
+            foreach (var t in words)
             {
                 bool placed = false;
                 foreach (var _t in t)

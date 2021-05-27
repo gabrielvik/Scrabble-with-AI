@@ -114,6 +114,7 @@ namespace Alfapet
                 {
                     Board.Tiles[_t.Item2, _t.Item3].Letter = char.ToUpper(_t.Item1);
                 }
+                break;
             }
 
             foreach (Tile tile in Board.Tiles)

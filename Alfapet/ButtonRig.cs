@@ -6,7 +6,7 @@ namespace Alfapet
     {
         public static Button[] Buttons;
         public static float ButtonHeight = 47.5f;
-        public static void Initialize()
+        new public static void Initialize()
         {
             Buttons = new Button[2];
             Buttons[0] = new Button();

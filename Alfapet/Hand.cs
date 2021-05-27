@@ -14,8 +14,6 @@ namespace Alfapet
         public static float TilesWidth = (Alfapet._graphics.GraphicsDevice.Viewport.Width - ((Tiles.Length + 1) * TilesMargin)) / Tiles.Length;
         public static float TilesHeight = (Alfapet._graphics.GraphicsDevice.Viewport.Height - ((Tiles.Length + 1) * TilesMargin)) / Tiles.Length;
 
-        public static Action<dynamic, Vector2, Tile, Tile> DragCallback;
-
         public static void SetPositions()
         {
             float w = 5f;
@@ -30,7 +28,7 @@ namespace Alfapet
             }
         }
 
-        public static void Initialize() // Körs i Initialize()
+        new public static void Initialize() // Körs i Initialize()
         {
             for (int i = 0; i < Tiles.Length; i++) // Populera arrayen med nya objekt
             {

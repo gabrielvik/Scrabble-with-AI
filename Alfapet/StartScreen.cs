@@ -6,6 +6,7 @@ namespace Alfapet
     {
         public static string LoadString = "";
         private static Button playBtn;
+        
         private static async void Start()
         {
             await Alfapet.Start();
@@ -27,7 +28,7 @@ namespace Alfapet
             playBtn = null;
         }
 
-        public static void Initialize()
+        new public static void Initialize()
         {
             Alfapet.DrawFunction = delegate ()
             {
@@ -47,6 +48,7 @@ namespace Alfapet
 
             playBtn.ClickEvent = delegate ()
             {
+                
                 Start();
             };
         }

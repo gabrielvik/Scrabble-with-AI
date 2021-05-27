@@ -9,7 +9,7 @@ namespace Alfapet
 
         public static Dictionary<char, int> CharactherPoints;
 
-        public static void Initialize()
+        new async public static void Initialize()
         {
             CharactherPoints = new Dictionary<char, int>()
             {

@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Threading.Tasks;
+using System.Collections.Generic;
 
 namespace Alfapet
 {
@@ -25,18 +26,35 @@ namespace Alfapet
 
         public static async Task<int> Start()
         {
+
+            var asd = new Dictionary<Action, string>()
+            {
+                { Alfapet_Config.Initialize, "Loading config"},
+                { Board.Initialize, "Creating Board" },
+                { Hand.Initialize, "Creating Hand" },
+                { () => Dictionaries.Initialize("english"), "Unpacking JSON" },
+                { ButtonRig.Initialize, "Creating Buttons" }
+            };
+
             await Task.Run(() =>
             {
+                /*StartScreen.LoadString = "Loading Config";
                 Alfapet_Config.Initialize();
-                StartScreen.LoadString = "Loading Config";
-                Board.Initialize();
                 StartScreen.LoadString = "Creating Board";
-                Hand.Initialize();
+                Board.Initialize();
                 StartScreen.LoadString = "Creating Hand";
-                Dictionaries.Initialize("english");
+                Hand.Initialize();
                 StartScreen.LoadString = "Unpacking JSON";
-                ButtonRig.Initialize();
+                Dictionaries.Initialize("english");
                 StartScreen.LoadString = "Creating Button Rig";
+                ButtonRig.Initialize();*/
+
+                foreach(var func in asd)
+                {
+                    StartScreen.LoadString = func.Value;
+                    func.Key.Invoke();
+                }
+
 
                 return 1;
             });

@@ -150,8 +150,6 @@ namespace Alfapet
                 if (word.Length <= 1)
                     continue;
 
-                var _t_ = new List<Tuple<char, int, int>>();
-
                 foreach (var boardWord in boardWords)
                 {
                     if (!word.Contains(boardWord.Value) || word == boardWord.Value)
@@ -180,6 +178,8 @@ namespace Alfapet
                             if (splittedWord[0].Length - boardWord.YEnd + boardWord.Value.Length > 1 || boardWord.YEnd + splittedWord[1].Length > YTiles)
                                 continue;
 
+                            var _t_ = new List<Tuple<char, int, int>>();
+
                             /*
                                 . . . . . . . . . .
                                 . . . . . . . . . .
@@ -206,15 +206,18 @@ namespace Alfapet
                                 string currentSeperator = "";
                                 bool seperated = false;
                                 int seperatedIterator = 0;
-
                                 for (int x = 0; x < word.Length; x++)
                                 {
+                                    
                                     if (!seperated)
                                     {
                                         currentSeperator += word[x];
                                         if (word.IndexOf(boardWord.Value) == x)
                                         {
                                             seperated = true;
+                                            // Mistänkt problem, man kollar y och x ord vilket fuckar up längden på nedan if check, lösning är att kolla om det är y ord och om det är det, lägg bara till enstaka ord
+                                            if (boardWord.Value.Length > 1)
+                                                x += boardWord.Value.Length - 1;
                                             continue;
                                         }
                                     }
@@ -253,6 +256,7 @@ namespace Alfapet
 
                                     if (rightWord != null)
                                     {
+                                        System.Diagnostics.Debug.WriteLine(">:"+rightWord);
                                         if (!Dictionaries.IsWord(Tiles[(int)boardWord.YEnd, (int)_x].Letter + leftWord))
                                         {
                                             fuck = true;
@@ -288,10 +292,13 @@ namespace Alfapet
                                         if (word.IndexOf(boardWord.Value) == x)
                                         {
                                             seperated = true;
+
+                                            if(boardWord.Value.Length > 1)
+                                                x += boardWord.Value.Length-1;
+
                                             continue;
                                         }
                                     }
-
                                     int y;
                                     if (seperated)
                                     {

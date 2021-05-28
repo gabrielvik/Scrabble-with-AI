@@ -29,7 +29,6 @@ namespace Alfapet
                         break;
                     }
                 }
-                Hand.SetPositions(); // Organizera handen
                 tile.Letter = '\0'; // Brickan på bordet borde vara tomm
                 tile.TempPlaced = false;
 
@@ -48,7 +47,6 @@ namespace Alfapet
                         {
                             if (destinationTile.Letter != '\0') // Om platsen inte är tom returnar man
                             {
-                                Hand.SetPositions();
                                 break;
                             }
                             else
@@ -74,7 +72,6 @@ namespace Alfapet
 
                                         break;
                                 }
-                                Hand.SetPositions();
                             }
                         }
                         else
@@ -82,6 +79,7 @@ namespace Alfapet
                     }
                 }
             }
+            Hand.SetPositions();
         }
 
         public static void CheckDrag(dynamic index, Tile tile, MOVE moveType)

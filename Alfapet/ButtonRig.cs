@@ -8,9 +8,10 @@ namespace Alfapet
         public static float ButtonHeight = 47.5f;
         new public static void Initialize()
         {
-            Buttons = new Button[2];
+            Buttons = new Button[3];
             Buttons[0] = new Button();
             Buttons[1] = new Button();
+            Buttons[2] = new Button();
             // Buttons[2] = new Button();
 
             float x = 5;
@@ -25,12 +26,21 @@ namespace Alfapet
             Buttons[0].SetText("Skip");
             Buttons[0].ClickEvent = delegate ()
             {
-                Rounds.DoMove();
+                Rounds.DoMove(Board.TilesPlaced <= 0);
             };
             Buttons[1].SetText("Sort Alphabeticely");
             Buttons[1].ClickEvent = delegate ()
             {
                 Alfapet_Util.SortHand();
+            };
+            Buttons[2].SetText("New Hand (skip)");
+            Buttons[2].ClickEvent = delegate ()
+            {
+                foreach(var tile in Hand.Tiles)
+                {
+                    tile.Letter = Alfapet_Util.GenerateRandomLetter();
+                }
+                Hand.SetPositions();
             };
         }
     }

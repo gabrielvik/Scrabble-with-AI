@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Alfapet
 {
@@ -50,6 +51,27 @@ namespace Alfapet
             DrawText = text;
         }
 
+        async public void InvalidClick(string text = null)
+        {
+            if (DrawFunc != null) // Om draw functionen redan finns (man har klickat nyligen), returna
+                return;
+
+            var tempDrawFunc = DrawFunc;
+            var tempClickEvent = ClickEvent;
+
+            long lerpStart = DateTimeOffset.Now.ToUnixTimeMilliseconds();
+            int delay = 4;
+            DrawFunc = delegate ()
+            {
+                // Sätter färgen till röd och lerpar färgens transparitet 
+                UI.StylishRectangle(new Rectangle((int)X, (int)Y, (int)W, (int)H), Color.Red * MathHelper.Lerp(1f, 0.95f, (DateTimeOffset.Now.ToUnixTimeMilliseconds() - lerpStart) * delay / 1000));
+                UI.DrawCenterText(Fonts.Montserrat_Bold_Smaller, text == null ? "Invalid" : text, GetPos(), Color.White, (int)W, (int)H);
+            };
+
+            await Task.Delay(delay * 1000); // Efter x sekunder, sätt draw funktionen till null och återgå till normalt
+            DrawFunc = tempDrawFunc;
+            ClickEvent = tempClickEvent;
+        }
         private void DefaultDraw()
         {
             bool hovering = Alfapet_Util.IsHovering(GetPos(), GetSize()); // För att inte behöva köra funktionen 2 gånger
@@ -77,7 +99,7 @@ namespace Alfapet
         {
             for (int i = 0; i < List.Count; i++)
             {
-                if (List[i].ClickEvent == null) // Om man inte har en click funktion är det onödigt att äns kolla
+                if (List[i].ClickEvent == null || List[i] == null) // Om man inte har en click funktion är det onödigt att äns kolla
                     continue;
 
                 if (Alfapet_Util.IsHovering(List[i].GetPos(), List[i].GetSize()))

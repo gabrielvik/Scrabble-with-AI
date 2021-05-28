@@ -199,11 +199,11 @@ namespace Alfapet
 
                                 for (int x = 0; x < splittedWord[0].Length; x++)
                                 {
-                                    // _t_.Add(new Tuple<char, int, int>(splittedWord[0][x], (int)boardWord.YEnd, (int)boardWord.XEnd - boardWord.Value.Length + x));
+                                    _t_.Add(new Tuple<char, int, int>(splittedWord[0][x], (int)boardWord.YEnd, (int)boardWord.XEnd - boardWord.Value.Length + x));
                                 }
                                 for (int x = 0; x < splittedWord[1].Length; x++)
                                 {
-                                    //  _t_.Add(new Tuple<char, int, int>(splittedWord[1][x], (int)boardWord.YEnd, (int)boardWord.XEnd + 1 + x));
+                                     _t_.Add(new Tuple<char, int, int>(splittedWord[1][x], (int)boardWord.YEnd, (int)boardWord.XEnd + 1 + x));
                                 }
 
 
@@ -235,11 +235,11 @@ namespace Alfapet
                                         System.Diagnostics.Debug.WriteLine(Tiles[(int)boardWord.YEnd - splittedWord[0].Length + x, (int)boardWord.XEnd + 1].Letter + "conflicting with " + splittedWord[0][x] + " " + word + ": " + "(" + boardWord.XEnd + ", " + boardWord.YEnd + ")" + (boardWord.Axis ? " - From X" : " - From Y"));
                                     }
                                     _t_.Add(new Tuple<char, int, int>(splittedWord[0][x], (int)boardWord.YEnd - splittedWord[0].Length + x, (int)boardWord.XEnd));
-                                    System.Diagnostics.Debug.WriteLine("Adds here 0" + word);
+                                    //System.Diagnostics.Debug.WriteLine("Adds here 0" + word);
                                 }
                                 for (int x = 0; x < splittedWord[1].Length; x++)
                                 {
-                                    System.Diagnostics.Debug.WriteLine("Adds here 1"+word);
+                                    //System.Diagnostics.Debug.WriteLine("Adds here 1"+word);
                                     _t_.Add(new Tuple<char, int, int>(splittedWord[1][x], (int)boardWord.YEnd + 1 + x, (int)boardWord.XEnd));
                                 }
                             }
@@ -252,7 +252,7 @@ namespace Alfapet
             }
 
             sw.Stop();
-            System.Diagnostics.Debug.WriteLine("ELAPSED: " + (sw.ElapsedMilliseconds / 1000).ToString());
+            System.Diagnostics.Debug.WriteLine("ELAPSED: " + (sw.ElapsedMilliseconds).ToString());
             return t;
         }
 

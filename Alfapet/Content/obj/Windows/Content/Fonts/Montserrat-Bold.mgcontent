@@ -3,7 +3,11 @@
   <SourceFile>C:/Users/dator/source/repos/alfapet_school/Alfapet/Content/Fonts/File.spritefont</SourceFile>
   <SourceTime>2021-03-26T12:32:57.1717916+01:00</SourceTime>
   <DestFile>C:/Users/dator/source/repos/alfapet_school/Alfapet/Content/bin/Windows/Content/Fonts/Montserrat-Bold.xnb</DestFile>
+<<<<<<< HEAD
   <DestTime>2021-05-27T19:07:06.8030955+02:00</DestTime>
+=======
+  <DestTime>2021-05-25T18:56:33.9034151+02:00</DestTime>
+>>>>>>> parent of 5efa107... 2021/05/27 02
   <Importer>FontDescriptionImporter</Importer>
   <ImporterTime>2020-08-10T16:17:54+02:00</ImporterTime>
   <Processor>FontDescriptionProcessor</Processor>

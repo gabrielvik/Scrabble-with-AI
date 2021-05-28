@@ -23,7 +23,6 @@ namespace Alfapet
         {
             public int? YEnd { get; set; }
             public int? XStart { get; set; }
-            public int? YStart { get; set; }
             public int? XEnd { get; set; }
 
             public bool Axis { get; set; }
@@ -88,13 +87,12 @@ namespace Alfapet
                 string yWord = "";
 
                 int xStart = -1;
-                int yStart = -1;
 
                 for (int x = 0; x < XTiles; x++)
                 {
                     if (xWord.Length > 0 && Tiles[y, x].Letter == '\0')
                     {
-                        //System.Diagnostics.Debug.WriteLine(xWord);
+                        System.Diagnostics.Debug.WriteLine(xWord);
                         var xWordObj = new Word()
                         {
                             YEnd = y,
@@ -108,11 +106,10 @@ namespace Alfapet
                     }
                     if (yWord.Length > 0 && Tiles[x, y].Letter == '\0')
                     {
-                        //System.Diagnostics.Debug.WriteLine(yWord);
+                        System.Diagnostics.Debug.WriteLine(yWord);
                         var yWordObj = new Word()
                         {
                             YEnd = x - 1,
-                            YStart = yStart,
                             XEnd = y,
                             Axis = false,
                             Value = yWord.ToLower()
@@ -130,9 +127,6 @@ namespace Alfapet
                     }
                     if (Tiles[x, y].Letter != '\0')
                     {
-                        if (yWord.Length <= 0)
-                            yStart = x;
-                        
                         yWord += Tiles[x, y].Letter;
                     }
                 }
@@ -173,10 +167,10 @@ namespace Alfapet
                         if (l >= word.Length && !wordList.Contains(word))
                         {
                             string[] splittedWord = word.Split(boardWord.Value);
-                            if (splittedWord[0].Length - boardWord.XEnd + boardWord.Value.Length > 1 || boardWord.XEnd + splittedWord[1].Length > XTiles)
+                            /*if (splittedWord[0].Length - boardWord.XEnd + boardWord.Value.Length > 1 || boardWord.XEnd + splittedWord[1].Length > XTiles)
                                 continue;
                             if (splittedWord[0].Length - boardWord.YEnd + boardWord.Value.Length > 1 || boardWord.YEnd + splittedWord[1].Length > YTiles)
-                                continue;
+                                continue;*/
 
                             var _t_ = new List<Tuple<char, int, int>>();
 
@@ -187,9 +181,9 @@ namespace Alfapet
                                 . f w ? a a . . . .
                                 . f g . g f . . . .
                                 . . . . . . . . . .
-                                . . . a . . . . . .
-                                . . . n . . . . . .
-                                . . . a . . . . . .
+                                . . . . . . . . . .
+                                . . . . . . . . . .
+                                . . . . . . . . . .
                                 . . . . . . . . . .
 
                                 ? - Kan kolla ordet på vänster, men inte på höger eftersom ordet börjar på högerledet och inte slutar.
@@ -199,10 +193,9 @@ namespace Alfapet
                                     
                              */
 
-                            bool fuck = false;
-
                             if (boardWord.Axis)
                             {
+<<<<<<< HEAD
                                 string currentSeperator = "";
                                 bool seperated = false;
                                 int seperatedIterator = 0;
@@ -267,6 +260,17 @@ namespace Alfapet
 
                                     _t_.Add(new Tuple<char, int, int>(word[x], (int)boardWord.YEnd, _x));
                                     System.Diagnostics.Debug.WriteLine("Adds here x:" + word);
+=======
+                                int left = splittedWord[0].Length;
+
+                                for (int x = 0; x < splittedWord[0].Length; x++)
+                                {
+                                    // _t_.Add(new Tuple<char, int, int>(splittedWord[0][x], (int)boardWord.YEnd, (int)boardWord.XEnd - boardWord.Value.Length + x));
+                                }
+                                for (int x = 0; x < splittedWord[1].Length; x++)
+                                {
+                                    //  _t_.Add(new Tuple<char, int, int>(splittedWord[1][x], (int)boardWord.YEnd, (int)boardWord.XEnd + 1 + x));
+>>>>>>> parent of 5efa107... 2021/05/27 02
                                 }
 
 
@@ -281,13 +285,14 @@ namespace Alfapet
                             }
                             else
                             {
-                                string currentSeperator = "";
-                                bool seperated = false;
-                                int seperatedIterator = 0;
-                                for (int x = 0; x < word.Length; x++)
+                                int left = splittedWord[0].Length;
+                                for (int x = 0; x < splittedWord[0].Length; x++)
                                 {
-                                    if (!seperated)
+                                    // Inkorrekt placering på Y axeln, ordets placering blir för mycket uppåt eller vanligast för mycket nedåt
+                                    var leftWord = boardWords.Any((wordObj) => wordObj.XEnd == boardWord.XEnd - 1 && wordObj.YEnd == boardWord.YEnd - splittedWord[0].Length + x);
+                                    if (leftWord)
                                     {
+<<<<<<< HEAD
                                         currentSeperator += word[x];
                                         if (word.IndexOf(boardWord.Value) == x)
                                         {
@@ -304,47 +309,29 @@ namespace Alfapet
                                     {
                                         y = (int)boardWord.YEnd + 1 + seperatedIterator;
                                         seperatedIterator++;
-                                    }
-                                    else
-                                    {
-                                        y = (int)boardWord.YEnd - word.IndexOf(boardWord.Value) + x;
-                                    }
+=======
 
-                                    string leftWord = boardWords.Where((wordObj) => wordObj.XEnd == boardWord.XEnd - 1 && wordObj.YEnd == y)
-                                        .Select((wordObj) => wordObj.Value)
-                                        .FirstOrDefault();
+                                        //System.Diagnostics.Debug.WriteLine(Tiles[(int)boardWord.YEnd - splittedWord[0].Length + x, (int)boardWord.XEnd - 1].Letter + "conflicting with " + splittedWord[0][x] + " " + word + ": " + "(" + boardWord.XEnd + ", " + boardWord.YEnd + ")" + (boardWord.Axis ? " - From X" : " - From Y"));
+>>>>>>> parent of 5efa107... 2021/05/27 02
+                                    }
+                                    var rightWord = boardWords.Any((wordObj) => wordObj.XStart == boardWord.XEnd + 1 && wordObj.YEnd == boardWord.YEnd - splittedWord[0].Length + x);
+                                    if (rightWord)
+                                    {
 
-                                    if (leftWord != null)
-                                    {
-                                        if (!Dictionaries.IsWord(leftWord + Tiles[(int)y, (int)boardWord.XEnd].Letter))
-                                        {
-                                            fuck = true;
-                                            break;
-                                        }
-                                        //System.Diagnostics.Debug.WriteLine(Tiles[(int)y, (int)boardWord.XEnd - 1].Letter + "conflicting with " + word[x] + " " + word + ": " + "(" + boardWord.XEnd + ", " + boardWord.YEnd + ")" + (boardWord.Axis ? " - From X" : " - From Y"));
+                                        System.Diagnostics.Debug.WriteLine(Tiles[(int)boardWord.YEnd - splittedWord[0].Length + x, (int)boardWord.XEnd + 1].Letter + "conflicting with " + splittedWord[0][x] + " " + word + ": " + "(" + boardWord.XEnd + ", " + boardWord.YEnd + ")" + (boardWord.Axis ? " - From X" : " - From Y"));
                                     }
-                                    string rightWord = boardWords.Where((wordObj) => wordObj.XStart == boardWord.XEnd + 1 && wordObj.YEnd == y)
-                                        .Select((wordObj) => wordObj.Value)
-                                        .FirstOrDefault();
-                                    if (rightWord != null)
-                                    {
-                                        if (!Dictionaries.IsWord(Tiles[(int)y, (int)boardWord.XEnd].Letter + leftWord))
-                                        {
-                                            fuck = true;
-                                            break;
-                                        }
-                                        // System.Diagnostics.Debug.WriteLine(Tiles[(int)y, (int)boardWord.XEnd + 1].Letter + "conflicting with " + word[x] + " " + word + ": " + "(" + boardWord.XEnd + ", " + boardWord.YEnd + ")" + (boardWord.Axis ? " - From X" : " - From Y"));
-                                    }
-                                    _t_.Add(new Tuple<char, int, int>(word[x], (int)y, (int)boardWord.XEnd));
-                                    System.Diagnostics.Debug.WriteLine("Adds here y:" + word);
+                                    _t_.Add(new Tuple<char, int, int>(splittedWord[0][x], (int)boardWord.YEnd - splittedWord[0].Length + x, (int)boardWord.XEnd));
+                                    System.Diagnostics.Debug.WriteLine("Adds here 0" + word);
+                                }
+                                for (int x = 0; x < splittedWord[1].Length; x++)
+                                {
+                                    System.Diagnostics.Debug.WriteLine("Adds here 1"+word);
+                                    _t_.Add(new Tuple<char, int, int>(splittedWord[1][x], (int)boardWord.YEnd + 1 + x, (int)boardWord.XEnd));
                                 }
                             }
 
-                            if (!fuck)
-                            {
-                                wordList.Add(word);
-                                t.Add(_t_);
-                            }
+                            wordList.Add(word);
+                            t.Add(_t_);
                         }
                     }
                 }

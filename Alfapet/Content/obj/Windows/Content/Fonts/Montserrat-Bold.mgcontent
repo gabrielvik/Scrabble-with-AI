@@ -1,13 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PipelineBuildEvent xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <SourceFile>C:/Users/dator/source/repos/alfapet_school/Alfapet/Content/Fonts/File.spritefont</SourceFile>
-  <SourceTime>2021-03-26T12:32:57.1717916+01:00</SourceTime>
-  <DestFile>C:/Users/dator/source/repos/alfapet_school/Alfapet/Content/bin/Windows/Content/Fonts/Montserrat-Bold.xnb</DestFile>
-<<<<<<< HEAD
-  <DestTime>2021-05-27T19:07:06.8030955+02:00</DestTime>
-=======
-  <DestTime>2021-05-25T18:56:33.9034151+02:00</DestTime>
->>>>>>> parent of 5efa107... 2021/05/27 02
+  <SourceFile>C:/Users/tissto19gabvik/source/repos/alfapet_school/Alfapet/Content/Fonts/File.spritefont</SourceFile>
+  <SourceTime>2021-03-21T19:09:18.6542061+01:00</SourceTime>
+  <DestFile>C:/Users/tissto19gabvik/source/repos/alfapet_school/Alfapet/Content/bin/Windows/Content/Fonts/Montserrat-Bold.xnb</DestFile>
+  <DestTime>2021-05-28T12:25:46.4133311+02:00</DestTime>
   <Importer>FontDescriptionImporter</Importer>
   <ImporterTime>2020-08-10T16:17:54+02:00</ImporterTime>
   <Processor>FontDescriptionProcessor</Processor>

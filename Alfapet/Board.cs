@@ -195,6 +195,68 @@ namespace Alfapet
 
                             if (boardWord.Axis)
                             {
+<<<<<<< HEAD
+                                string currentSeperator = "";
+                                bool seperated = false;
+                                int seperatedIterator = 0;
+
+                                for (int x = 0; x < word.Length; x++)
+                                {
+                                    if (!seperated)
+                                    {
+                                        currentSeperator += word[x];
+                                        if (word.IndexOf(boardWord.Value) == x)
+                                        {
+                                            seperated = true;
+                                            continue;
+                                        }
+                                    }
+
+
+
+                                    int _x;
+                                    if (seperated)
+                                    {
+
+                                        _x = (int)boardWord.XEnd + 1 + seperatedIterator;
+                                        seperatedIterator++;
+                                    }
+                                    else
+                                    {
+                                        _x = (int)boardWord.XEnd - word.IndexOf(boardWord.Value) + x;
+                                    }
+
+                                    string leftWord = boardWords.Where((wordObj) => wordObj.XEnd == _x && wordObj.YEnd == boardWord.YEnd - 1)
+                                        .Select((wordObj) => wordObj.Value)
+                                        .FirstOrDefault();
+
+                                    if (leftWord != null)
+                                    {
+                                        if (!Dictionaries.IsWord(leftWord + Tiles[(int)boardWord.YEnd, (int)_x].Letter))
+                                        {
+                                            fuck = true;
+                                            break;
+                                        }
+                                       // System.Diagnostics.Debug.WriteLine(Tiles[(int)boardWord.YEnd - 1, (int)_x].Letter + "conflicting with " + word[x] + " " + word + ": " + "(" + boardWord.XEnd + ", " + boardWord.YEnd + ")" + (boardWord.Axis ? " - From X" : " - From Y"));
+                                    }
+
+                                    string rightWord = boardWords.Where((wordObj) => wordObj.XEnd == _x && wordObj.YEnd == boardWord.YEnd + 1)
+                                        .Select((wordObj) => wordObj.Value)
+                                        .FirstOrDefault();
+
+                                    if (rightWord != null)
+                                    {
+                                        if (!Dictionaries.IsWord(Tiles[(int)boardWord.YEnd, (int)_x].Letter + leftWord))
+                                        {
+                                            fuck = true;
+                                            break;
+                                        }
+                                        //System.Diagnostics.Debug.WriteLine(Tiles[(int)boardWord.YEnd + 1, (int)_x].Letter + "conflicting with " + word[x] + " " + word + ": " + "(" + boardWord.XEnd + ", " + boardWord.YEnd + ")" + (boardWord.Axis ? " - From X" : " - From Y"));
+                                    }
+
+                                    _t_.Add(new Tuple<char, int, int>(word[x], (int)boardWord.YEnd, _x));
+                                    System.Diagnostics.Debug.WriteLine("Adds here x:" + word);
+=======
                                 int left = splittedWord[0].Length;
 
                                 for (int x = 0; x < splittedWord[0].Length; x++)
@@ -204,6 +266,7 @@ namespace Alfapet
                                 for (int x = 0; x < splittedWord[1].Length; x++)
                                 {
                                     //  _t_.Add(new Tuple<char, int, int>(splittedWord[1][x], (int)boardWord.YEnd, (int)boardWord.XEnd + 1 + x));
+>>>>>>> parent of 5efa107... 2021/05/27 02
                                 }
 
 
@@ -225,8 +288,24 @@ namespace Alfapet
                                     var leftWord = boardWords.Any((wordObj) => wordObj.XEnd == boardWord.XEnd - 1 && wordObj.YEnd == boardWord.YEnd - splittedWord[0].Length + x);
                                     if (leftWord)
                                     {
+<<<<<<< HEAD
+                                        currentSeperator += word[x];
+                                        if (word.IndexOf(boardWord.Value) == x)
+                                        {
+                                            seperated = true;
+                                            continue;
+                                        }
+                                    }
+
+                                    int y;
+                                    if (seperated)
+                                    {
+                                        y = (int)boardWord.YEnd + 1 + seperatedIterator;
+                                        seperatedIterator++;
+=======
 
                                         //System.Diagnostics.Debug.WriteLine(Tiles[(int)boardWord.YEnd - splittedWord[0].Length + x, (int)boardWord.XEnd - 1].Letter + "conflicting with " + splittedWord[0][x] + " " + word + ": " + "(" + boardWord.XEnd + ", " + boardWord.YEnd + ")" + (boardWord.Axis ? " - From X" : " - From Y"));
+>>>>>>> parent of 5efa107... 2021/05/27 02
                                     }
                                     var rightWord = boardWords.Any((wordObj) => wordObj.XStart == boardWord.XEnd + 1 && wordObj.YEnd == boardWord.YEnd - splittedWord[0].Length + x);
                                     if (rightWord)

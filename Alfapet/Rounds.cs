@@ -84,26 +84,14 @@ namespace Alfapet
          * Säkerställer att man placerat riktiga ord
          * Om övre är sant, ger poäng or återställer variabler som behövs
          */
-        public static async void DoMove()
+        public static async void DoMove(bool skip = false)
         {
-            if (Board.TilesPlaced <= 0) // Måste ha placerat minst en bokstav
+            if (skip) // Måste ha placerat minst en bokstav
                 return;
-            else if (false)
-            {
-                Button moveBtn = ButtonRig.Buttons[0];
-                if (moveBtn.DrawFunc != null) // Om draw functionen redan finns (man har klickat nyligen), returna
-                    return;
 
-                long lerpStart = DateTimeOffset.Now.ToUnixTimeMilliseconds();
-                int delay = 4;
-                ButtonRig.Buttons[0].DrawFunc = delegate ()
-                {
-                    // Sätter färgen till röd och lerpar färgens transparitet 
-                    UI.StylishRectangle(new Rectangle((int)moveBtn.X, (int)moveBtn.Y, (int)moveBtn.W, (int)moveBtn.H), Color.Red * MathHelper.Lerp(1f, 0.95f, (DateTimeOffset.Now.ToUnixTimeMilliseconds() - lerpStart) * delay / 1000));
-                    UI.DrawCenterText(Fonts.Montserrat_Bold_Smaller, "Invalid Words", moveBtn.GetPos(), Color.White, (int)moveBtn.W, (int)moveBtn.H);
-                };
-                await Task.Delay(delay * 1000); // Efter x sekunder, sätt draw funktionen till null och återgå till normalt
-                moveBtn.DrawFunc = null;
+            else if (true)
+            {
+                ButtonRig.Buttons[0].InvalidClick("Invalid Words");
                 return;
             }
 
@@ -139,6 +127,16 @@ namespace Alfapet
                 PlayerPoints += Alfapet_Config.CharactherPoints[tile.Letter];
                 await Task.Delay(150); // vänta 0.15s innan nästa loop så användaren kan se allting hända
             }
+
+            foreach(var tile in Hand.Tiles)
+            {
+                if (tile.Letter == '\0')
+                    tile.Letter = Alfapet_Util.GenerateRandomLetter();
+            }
+
+            Hand.SetPositions();
+            ButtonRig.Buttons[0].SetText("Skip");
+
 
             System.Diagnostics.Debug.WriteLine(PlayerPoints);
         }

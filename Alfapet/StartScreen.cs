@@ -6,6 +6,7 @@ namespace Alfapet
     {
         public static string LoadString = "";
         private static Button playBtn;
+        private static Button settingsBtn;
         
         private static async void Start()
         {
@@ -28,6 +29,19 @@ namespace Alfapet
             playBtn = null;
         }
 
+        private static void BuildPlayBtn()
+        {
+            playBtn = new Button();
+            playBtn.SetPos(Alfapet._graphics.GraphicsDevice.Viewport.Width / 2 - 100, Alfapet._graphics.GraphicsDevice.Viewport.Height / 2 + 75);
+            playBtn.SetSize(200, 75);
+            playBtn.SetText("Play");
+
+            playBtn.ClickEvent = delegate ()
+            {
+                Start();
+            };
+        }
+
         new public static void Initialize()
         {
             Alfapet.DrawFunction = delegate ()
@@ -41,16 +55,7 @@ namespace Alfapet
                 Button.Think();
             };
 
-            playBtn = new Button();
-            playBtn.SetPos(Alfapet._graphics.GraphicsDevice.Viewport.Width / 2 - 100, Alfapet._graphics.GraphicsDevice.Viewport.Height / 2 + 75);
-            playBtn.SetSize(200, 75);
-            playBtn.SetText("Play");
-
-            playBtn.ClickEvent = delegate ()
-            {
-                
-                Start();
-            };
+            BuildPlayBtn();
         }
     }
 }

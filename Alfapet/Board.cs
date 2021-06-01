@@ -144,13 +144,16 @@ namespace Alfapet
 
             // TODO: https://stackoverflow.com/questions/12176084/optimize-dictionary-add-on-expandoobjects-in-c-sharp
 
-            foreach (var word in Dictionaries.Current.Keys)
+            foreach (var word in Dictionaries.Current.Select(x => x.Key).ToList())
             {
+                bool test = false;
                 foreach (var boardWord in boardWords)
                 {
+                    if (test)
+                        break;
+
                     if (!word.Contains(boardWord.Value) || word == boardWord.Value)
                      continue;
-                    bool test = false;
                     string _hand = hand + boardWord.Value;
                     string _word = word;
                     int l = 0;
@@ -181,7 +184,7 @@ namespace Alfapet
                             {
                                 for (int x = 0; x < splittedWord[0].Length; x++)
                                 {
-                                    var _x = boardWord.XEnd - splittedWord[0].Length + x;
+                                    var _x = boardWord.XStart - splittedWord[0].Length + x;
 
                                     string upWord = boardWords.Where(wordObj => wordObj.XEnd == _x && wordObj.YEnd == boardWord.YEnd - 1)
                                         .Select(wordObj => wordObj.Value)
@@ -196,7 +199,7 @@ namespace Alfapet
                                         }
                                     }
 
-                                    string downWord = boardWords.Where(wordObj => wordObj.XStart == _x && wordObj.YStart == boardWord.YEnd + 1)
+                                    string downWord = boardWords.Where(wordObj => wordObj.XEnd == _x && wordObj.YEnd == boardWord.YEnd + 1)
                                         .Select(wordObj => wordObj.Value)
                                         .FirstOrDefault();
 
@@ -259,7 +262,7 @@ namespace Alfapet
                             {
                                 for (int x = 0; x < splittedWord[0].Length; x++)
                                 {
-                                    var y = (int)boardWord.YEnd - splittedWord[0].Length + x;
+                                    var y = (int)boardWord.YStart - splittedWord[0].Length + x;
 
                                     string leftWord = boardWords.Where((wordObj) => wordObj.XEnd == boardWord.XEnd - 1 && wordObj.YEnd == y)
                                         .Select((wordObj) => wordObj.Value)
@@ -337,18 +340,21 @@ namespace Alfapet
 
                             if (!invalid)
                             {
+                                System.Diagnostics.Debug.WriteLine(word);
                                 wordList.Add(word);
                                 t.Add(_t_);
                                 sw.Stop();
-                                System.Diagnostics.Debug.WriteLine("ELAPSED: " + (sw.ElapsedMilliseconds).ToString());
-                                return t;
+                                
+                               // return t;
                             }
+                            test = true;
+                            break;
                         }
                     }
                 }
             }
+            System.Diagnostics.Debug.WriteLine("ELAPSED: " + (sw.ElapsedMilliseconds).ToString());
 
-            
             return t;
         }
 

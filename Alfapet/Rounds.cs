@@ -85,7 +85,7 @@ namespace Alfapet
             if (skip) // Måste ha placerat minst en bokstav
                 return;
 
-            else if (false)
+            else if (!PlacedValidWords())
             {
                 ButtonRig.Buttons[0].InvalidClick("Invalid Words");
                 return;
@@ -118,9 +118,22 @@ namespace Alfapet
                     mostPoint = score;
                 }
             }
+
+            foreach (Tile tile in Board.Tiles)
+            {
+                if (!tile.TempPlaced || tile.Letter == '\0')
+                    continue;
+
+                tile.TempPlaced = false;
+                await Task.Delay(150); // vänta 0.15s innan nästa loop så användaren kan se allting hända
+            }
+
+            await Task.Delay(new Random().Next(350, 1000));
             foreach (var t in bestWord)
             {
                 Board.Tiles[t.Item2, t.Item3].Letter = char.ToUpper(t.Item1);
+                Board.Tiles[t.Item2, t.Item3].TempPlaced = true;
+                await Task.Delay(new Random().Next(500,1000));
             }
 
             /*for(int i = 0; i < 10; i++)

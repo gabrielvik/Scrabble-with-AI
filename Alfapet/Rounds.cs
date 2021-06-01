@@ -85,23 +85,23 @@ namespace Alfapet
             if (skip) // Måste ha placerat minst en bokstav
                 return;
 
-            else if (!PlacedValidWords())
+            else if (false)
             {
                 ButtonRig.Buttons[0].InvalidClick("Invalid Words");
                 return;
             }
 
             Board.TilesPlaced = 0;
-
             var words = Board.GetBestWords();
-            if (words.Count <= 0) { 
+
+            if (words.Count <= 0)
+            {
                 for (int i = 0; i < Hand.Tiles.Length; i++) // Populera arrayen med nya objekt
                 {
                     Hand.Tiles[i] = new Tile();
                     Hand.Tiles[i].Letter = Alfapet_Util.GenerateRandomLetter();
                 }
             }
-            words = Board.GetBestWords();
             var bestWord = new List<Tuple<char, int, int>>();
             int mostPoint = -1;
             foreach (var t in words)
@@ -122,7 +122,30 @@ namespace Alfapet
             {
                 Board.Tiles[t.Item2, t.Item3].Letter = char.ToUpper(t.Item1);
             }
-            int nigger = 0;
+
+            /*for(int i = 0; i < 10; i++)
+            {
+                var ai = Board.GetBestWords();
+                foreach (var t in ai)
+                {
+                    foreach (var _t in t)
+                    {
+                        Board.Tiles[_t.Item2, _t.Item3].Letter = char.ToUpper(_t.Item1);
+                    }
+                    break;
+                }
+                var player = Board.GetBestWords();
+                foreach (var t in player)
+                {
+                    foreach (var _t in t)
+                    {
+                        Board.Tiles[_t.Item2, _t.Item3].Letter = char.ToUpper(_t.Item1);
+                    }
+                    break;
+                }
+            }*/
+
+            int n = 0;
             foreach (Tile tile in Board.Tiles)
             {
                 if (!tile.TempPlaced || tile.Letter == '\0')
@@ -130,7 +153,7 @@ namespace Alfapet
 
                 tile.TempPlaced = false;
                 PlayerPoints += Alfapet_Config.CharactherPoints[tile.Letter];
-                nigger += Alfapet_Config.CharactherPoints[tile.Letter];
+                n += Alfapet_Config.CharactherPoints[tile.Letter];
                 await Task.Delay(150); // vänta 0.15s innan nästa loop så användaren kan se allting hända
             }
 
@@ -144,7 +167,7 @@ namespace Alfapet
             ButtonRig.Buttons[0].SetText("Skip");
 
 
-            System.Diagnostics.Debug.WriteLine("Player placed score for: " + nigger);
+            System.Diagnostics.Debug.WriteLine("Player placed score for: " + n);
             System.Diagnostics.Debug.WriteLine("AI placed score for: " + mostPoint);
         }
     }

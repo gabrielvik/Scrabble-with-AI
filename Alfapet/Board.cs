@@ -142,21 +142,18 @@ namespace Alfapet
             var t = new List<List<Tuple<char, int, int>>>();
             List<string> wordList = new List<string>();
 
-            foreach (var words in Dictionaries.Current)
-            {
-                string word = words.Key;
-                if (word.Length <= 1)
-                    continue;
+            // TODO: https://stackoverflow.com/questions/12176084/optimize-dictionary-add-on-expandoobjects-in-c-sharp
 
+            foreach (var word in Dictionaries.Current.Keys)
+            {
                 foreach (var boardWord in boardWords)
                 {
                     if (!word.Contains(boardWord.Value) || word == boardWord.Value)
-                        continue;
-
+                     continue;
+                    bool test = false;
                     string _hand = hand + boardWord.Value;
                     string _word = word;
                     int l = 0;
-
 
                     for (int i = 0; i < _hand.Length; i++)
                     {
@@ -168,7 +165,7 @@ namespace Alfapet
                             l++;
                         }
 
-                        if (l >= word.Length && !wordList.Contains(word))
+                        if (l >= word.Length)
                         {
                             string[] splittedWord = word.Split(boardWord.Value);
                             if (boardWord.XEnd - (splittedWord[0].Length + boardWord.Value.Length) < 0 || boardWord.XEnd + (splittedWord[1].Length + boardWord.Value.Length) > XTiles-1)
@@ -178,7 +175,7 @@ namespace Alfapet
 
                             var _t_ = new List<Tuple<char, int, int>>();
 
-                            bool fuck = false;
+                            bool invalid = false;
 
                             if (boardWord.Axis)
                             {
@@ -186,35 +183,35 @@ namespace Alfapet
                                 {
                                     var _x = boardWord.XEnd - splittedWord[0].Length + x;
 
-                                    string leftWord = boardWords.Where((wordObj) => wordObj.XEnd == _x && wordObj.YEnd == boardWord.YEnd - 1)
-                                        .Select((wordObj) => wordObj.Value)
+                                    string upWord = boardWords.Where(wordObj => wordObj.XEnd == _x && wordObj.YEnd == boardWord.YEnd - 1)
+                                        .Select(wordObj => wordObj.Value)
                                         .FirstOrDefault();
 
-                                    if (leftWord != null)
+                                    if (upWord != null)
                                     {
-                                        if (!Dictionaries.IsWord(Tiles[(int)boardWord.YEnd, (int)_x].Letter + leftWord))
+                                        if (!Dictionaries.IsWord(Tiles[(int)boardWord.YEnd, (int)_x].Letter + upWord))
                                         {
-                                            fuck = true;
+                                            invalid = true;
                                             break;
                                         }
                                     }
 
-                                    string rightWord = boardWords.Where((wordObj) => wordObj.XStart == _x && wordObj.YStart == boardWord.YEnd + 1)
-                                        .Select((wordObj) => wordObj.Value)
+                                    string downWord = boardWords.Where(wordObj => wordObj.XStart == _x && wordObj.YStart == boardWord.YEnd + 1)
+                                        .Select(wordObj => wordObj.Value)
                                         .FirstOrDefault();
 
-                                    if (rightWord != null)
+                                    if (downWord != null)
                                     {
-                                        if (!Dictionaries.IsWord(rightWord + Tiles[(int)boardWord.YEnd, (int)_x].Letter))
+                                        if (!Dictionaries.IsWord(downWord + Tiles[(int)boardWord.YEnd, (int)_x].Letter))
                                         {
-                                            fuck = true;
+                                            invalid = true;
                                             break;
                                         }
                                     }
 
-                                    if (Tiles[(int)boardWord.YEnd, (int)Math.Min((int)boardWord.YEnd, XTiles - 1)].Letter != '\0')
+                                    if (Tiles[(int)boardWord.YEnd, Math.Max((int)_x - 1, 0)].Letter != '\0')
                                     {
-                                        fuck = true;
+                                        invalid = true;
                                         break;
                                     }
 
@@ -224,55 +221,45 @@ namespace Alfapet
                                 {
                                     var _x = boardWord.XEnd + 1 + x;
 
-                                    string leftWord = boardWords.Where((wordObj) => wordObj.XEnd == _x && wordObj.YEnd == boardWord.YEnd - 1)
-                                        .Select((wordObj) => wordObj.Value)
+                                    string upWord = boardWords.Where(wordObj => wordObj.XEnd == _x && wordObj.YEnd == boardWord.YEnd - 1)
+                                        .Select(wordObj => wordObj.Value)
                                         .FirstOrDefault();
 
-                                    if (leftWord != null)
+                                    if (upWord != null)
                                     {
-                                        if (!Dictionaries.IsWord(Tiles[(int)boardWord.YEnd, (int)_x].Letter + leftWord))
+                                        if (!Dictionaries.IsWord(Tiles[(int)boardWord.YEnd, (int)_x].Letter + upWord))
                                         {
-                                            fuck = true;
+                                            invalid = true;
                                             break;
                                         }
                                     }
 
-                                    string rightWord = boardWords.Where((wordObj) => wordObj.XEnd == _x && wordObj.YStart == boardWord.YEnd + 1)
-                                        .Select((wordObj) => wordObj.Value)
+                                    string downWord = boardWords.Where(wordObj => wordObj.XEnd == _x && wordObj.YStart == boardWord.YEnd + 1)
+                                        .Select(wordObj => wordObj.Value)
                                         .FirstOrDefault();
 
-                                    if (rightWord != null)
+                                    if (downWord != null)
                                     {
-                                        if (!Dictionaries.IsWord(Tiles[(int)boardWord.YEnd, (int)_x].Letter + rightWord))
+                                        if (!Dictionaries.IsWord(Tiles[(int)boardWord.YEnd, (int)_x].Letter + downWord))
                                         {
-                                            fuck = true;
+                                            invalid = true;
                                             break;
                                         }
                                     }
 
-                                    if (Tiles[(int)boardWord.YEnd, (int)Math.Min((int)boardWord.YEnd, XTiles + 1)].Letter != '\0')
+                                    if (Tiles[(int)boardWord.YEnd, Math.Min((int)_x + 1, XTiles - 1)].Letter != '\0')
                                     {
-                                        fuck = true;
+                                        invalid = true;
                                         break;
                                     }
-                                    _t_.Add(new Tuple<char, int, int>(splittedWord[1][x], (int)boardWord.YEnd, (int)boardWord.XEnd + 1 + x));
-                                }
-
-
-                                if (t.Count <= 1)
-                                {
-                                    foreach (var _t in _t_)
-                                    {
-                                        //System.Diagnostics.Debug.WriteLine(_t.Item1 + ", Y: " + _t.Item2 + ", X: " + _t.Item3);
-                                    }
-                                    //System.Diagnostics.Debug.WriteLine(word + ":" + boardWord + (boardWord.Value.Item3 ? " - From X" : " - From Y"));
+                                    _t_.Add(new Tuple<char, int, int>(splittedWord[1][x], (int)boardWord.YEnd, (int)_x));
                                 }
                             }
                             else
                             {
                                 for (int x = 0; x < splittedWord[0].Length; x++)
                                 {
-                                    var y = (int)boardWord.YEnd - boardWord.Value.Length + x;
+                                    var y = (int)boardWord.YEnd - splittedWord[0].Length + x;
 
                                     string leftWord = boardWords.Where((wordObj) => wordObj.XEnd == boardWord.XEnd - 1 && wordObj.YEnd == y)
                                         .Select((wordObj) => wordObj.Value)
@@ -282,7 +269,7 @@ namespace Alfapet
                                     {
                                         if (!Dictionaries.IsWord(Tiles[(int)y, (int)boardWord.XEnd].Letter + leftWord))
                                         {
-                                            fuck = true;
+                                            invalid = true;
                                             break;
                                         }
                                     }
@@ -295,13 +282,13 @@ namespace Alfapet
                                     {
                                         if (!Dictionaries.IsWord(rightWord + Tiles[(int)y, (int)boardWord.XEnd].Letter))
                                         {
-                                            fuck = true;
+                                            invalid = true;
                                             break;
                                         }
                                     }
-                                    if (Tiles[(int)Math.Min((int)y + 1, (int)YTiles - 1), (int)boardWord.XEnd].Letter != '\0')
+                                    if (Tiles[(int)Math.Max((int)y - 1, 0), (int)boardWord.XEnd].Letter != '\0')
                                     {
-                                        fuck = true;
+                                        invalid = true;
                                         break;
                                     }
 
@@ -320,7 +307,7 @@ namespace Alfapet
                                     {
                                         if (!Dictionaries.IsWord(Tiles[(int)y, (int)boardWord.XEnd].Letter + leftWord))
                                         {
-                                            fuck = true;
+                                            invalid = true;
                                             break;
                                         }
                                     }
@@ -333,14 +320,14 @@ namespace Alfapet
                                     {
                                         if (!Dictionaries.IsWord(Tiles[(int)y, (int)boardWord.XEnd].Letter + rightWord))
                                         {
-                                            fuck = true;
+                                            invalid = true;
                                             break;
                                         }
                                     }
 
                                     if (Tiles[(int)Math.Min((int)y + 1, (int)YTiles - 1), (int)boardWord.XEnd].Letter != '\0')
                                     {
-                                        fuck = true;
+                                        invalid = true;
                                         break;
                                     }
 
@@ -348,18 +335,20 @@ namespace Alfapet
                                 }
                             }
 
-                            if (!fuck)
+                            if (!invalid)
                             {
                                 wordList.Add(word);
                                 t.Add(_t_);
+                                sw.Stop();
+                                System.Diagnostics.Debug.WriteLine("ELAPSED: " + (sw.ElapsedMilliseconds).ToString());
+                                return t;
                             }
                         }
                     }
                 }
             }
 
-            sw.Stop();
-            System.Diagnostics.Debug.WriteLine("ELAPSED: " + (sw.ElapsedMilliseconds).ToString());
+            
             return t;
         }
 

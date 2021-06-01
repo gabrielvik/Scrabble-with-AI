@@ -184,7 +184,7 @@ namespace Alfapet
                             {
                                 for (int x = 0; x < splittedWord[0].Length; x++)
                                 {
-                                    var _x = boardWord.XEnd - boardWord.Value.Length + x;
+                                    var _x = boardWord.XEnd - splittedWord[0].Length + x;
 
                                     string leftWord = boardWords.Where((wordObj) => wordObj.XEnd == _x && wordObj.YEnd == boardWord.YEnd - 1)
                                         .Select((wordObj) => wordObj.Value)
@@ -212,13 +212,13 @@ namespace Alfapet
                                         }
                                     }
 
-                                    if (Tiles[(int)boardWord.YEnd, (int)Math.Min((int)boardWord.XEnd - splittedWord[0].Length + x + 1, XTiles - 1)].Letter != '\0')
+                                    if (Tiles[(int)boardWord.YEnd, (int)Math.Min((int)boardWord.YEnd, XTiles - 1)].Letter != '\0')
                                     {
                                         fuck = true;
                                         break;
                                     }
 
-                                    _t_.Add(new Tuple<char, int, int>(splittedWord[0][x], (int)boardWord.YEnd, (int)boardWord.XEnd - splittedWord[0].Length + x));
+                                    _t_.Add(new Tuple<char, int, int>(splittedWord[0][x], (int)boardWord.YEnd, (int)_x));
                                 }
                                 for (int x = 0; x < splittedWord[1].Length; x++)
                                 {
@@ -250,7 +250,7 @@ namespace Alfapet
                                         }
                                     }
 
-                                    if (Tiles[(int)boardWord.YEnd, (int)Math.Min((int)boardWord.XEnd + 1 + x + 1, XTiles - 1)].Letter != '\0')
+                                    if (Tiles[(int)boardWord.YEnd, (int)Math.Min((int)boardWord.YEnd, XTiles + 1)].Letter != '\0')
                                     {
                                         fuck = true;
                                         break;

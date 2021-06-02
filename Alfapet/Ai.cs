@@ -99,18 +99,18 @@ namespace Alfapet
             System.Diagnostics.Debug.WriteLine("ELAPSED0: " + (sw.ElapsedMilliseconds).ToString());
             sw = System.Diagnostics.Stopwatch.StartNew();
 
+            var _wordList = Dictionaries.GetWordList();
 
-            foreach (var word in Dictionaries.GetWordList())
+
+            for (int _i = 0; _i < _wordList.Count; _i++)
             {
+                string word = _wordList[_i];
                 bool test = false;
-                foreach (var boardWord in boardWords)
+                foreach(var boardWord in boardWords.Where(s => word.Contains(s.Value) && word != s.Value))
                 {
                     if (test)
                         break;
-
-                    if (!word.Contains(boardWord.Value) || word == boardWord.Value)
-                        continue;
-
+                    
                     string tempHand = hand + boardWord.Value;
                     string tempWord = word;
                     int l = 0;
@@ -300,7 +300,6 @@ namespace Alfapet
                                 wordList.Add(word);
                                 wordPlacements.Add(wordPlacement);
 
-                                sw.Stop();
                                 test = true;
                                 break;
                             }
@@ -309,6 +308,7 @@ namespace Alfapet
                     }
                 }
             }
+            sw.Stop();
             System.Diagnostics.Debug.WriteLine("ELAPSED1: " + (sw.ElapsedMilliseconds).ToString());
 
             return wordPlacements;

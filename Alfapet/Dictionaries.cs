@@ -2,6 +2,7 @@
 using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace Alfapet
 {
@@ -22,6 +23,10 @@ namespace Alfapet
             return Current.ContainsKey(word);
         }
 
+        public static List<string> GetWordList()
+        {
+            return Current.Select(word => word.Key).ToList();
+        }
         public static string GetDefinition(string word)
         {
             return Current[word];

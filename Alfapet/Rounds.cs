@@ -85,14 +85,14 @@ namespace Alfapet
             if (skip) // Måste ha placerat minst en bokstav
                 return;
 
-            else if (!PlacedValidWords())
+            else if (false)
             {
                 ButtonRig.Buttons[0].InvalidClick("Invalid Words");
                 return;
             }
 
             Board.TilesPlaced = 0;
-            var words = Board.GetBestWords();
+            var words = Ai.GetBestWords();
 
             if (words.Count <= 0)
             {

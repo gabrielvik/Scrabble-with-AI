@@ -36,7 +36,7 @@ namespace Alfapet
             Buttons[2].SetText("New Hand (skip)");
             Buttons[2].ClickEvent = delegate ()
             {
-                foreach(var tile in Hand.Tiles)
+                foreach (var tile in Hand.Tiles)
                 {
                     tile.Letter = Alfapet_Util.GenerateRandomLetter();
                 }

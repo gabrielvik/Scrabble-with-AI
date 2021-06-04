@@ -38,6 +38,19 @@ namespace Alfapet
             SetPositions();
         }
 
+        public static string GetHandString()
+        {
+            string handString = "";
+            foreach (Tile tile in Tiles)
+            {
+                if (tile.Letter == '\0')
+                    continue;
+
+                handString += tile.Letter.ToString().ToLower();
+            }
+            return handString;
+        }
+
         public static void Draw()
         {
             Alfapet._spriteBatch.Draw(Alfapet.TransparentBack, new Rectangle(0, (int)(Alfapet._graphics.GraphicsDevice.Viewport.Height - TilesHeight), Alfapet._graphics.GraphicsDevice.Viewport.Width, (int)TilesHeight), Color.Black * 0.5f);
@@ -50,12 +63,12 @@ namespace Alfapet
                 if (!Tiles[i].Dragging)
                 {
                     Tiles[i].SetSize(TilesWidth, TilesHeight - 10);
-                    Tiles[i].SetFont(Fonts.Montserrat_Bold);
+                    Tiles[i].SetFont(UI.Montserrat_Bold);
                 }
                 else
                 {
                     Tiles[i].SetSize(Board.TilesWidth, Board.TilesHeight);
-                    Tiles[i].SetFont(Fonts.Montserrat_Bold_Smaller);
+                    Tiles[i].SetFont(UI.Montserrat_Bold_Smaller);
                 }
 
                 UI.StylishRectangle(new Rectangle((int)Tiles[i].X, (int)Tiles[i].Y, (int)Tiles[i].W, (int)Tiles[i].H));

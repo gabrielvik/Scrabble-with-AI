@@ -13,6 +13,7 @@ namespace Alfapet
 
         public bool Dragging = false;
         public bool Changed = false;
+        public bool PlayerPlaced = true;
 
         public Vector2 originalPos = default(Vector2);
 

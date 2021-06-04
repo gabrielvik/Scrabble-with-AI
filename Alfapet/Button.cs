@@ -65,7 +65,7 @@ namespace Alfapet
             {
                 // Sätter färgen till röd och lerpar färgens transparitet 
                 UI.StylishRectangle(new Rectangle((int)X, (int)Y, (int)W, (int)H), Color.Red * MathHelper.Lerp(1f, 0.95f, (DateTimeOffset.Now.ToUnixTimeMilliseconds() - lerpStart) * delay / 1000));
-                UI.DrawCenterText(Fonts.Montserrat_Bold_Smaller, text == null ? "Invalid" : text, GetPos(), Color.White, (int)W, (int)H);
+                UI.DrawCenterText(UI.Montserrat_Bold_Smaller, text == null ? "Invalid" : text, GetPos(), Color.White, (int)W, (int)H);
             };
 
             await Task.Delay(delay * 1000); // Efter x sekunder, sätt draw funktionen till null och återgå till normalt
@@ -83,7 +83,7 @@ namespace Alfapet
             else
                 UI.StylishRectangle(new Rectangle((int)X, (int)Y, (int)W, (int)H));
 
-            UI.DrawCenterText(Fonts.Montserrat_Bold_Smaller, (DrawText == null) ? "Button" : DrawText, GetPos(), Color.White, (int)W, (int)H);
+            UI.DrawCenterText(UI.Montserrat_Bold_Smaller, (DrawText == null) ? "Button" : DrawText, GetPos(), Color.White, (int)W, (int)H);
         }
 
         public static void Draw()

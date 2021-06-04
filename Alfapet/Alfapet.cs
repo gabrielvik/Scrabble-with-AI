@@ -49,7 +49,7 @@ namespace Alfapet
                 StartScreen.LoadString = "Creating Button Rig";
                 ButtonRig.Initialize();*/
 
-                foreach(var func in asd)
+                foreach (var func in asd)
                 {
                     StartScreen.LoadString = func.Value;
                     func.Key.Invoke();
@@ -83,7 +83,7 @@ namespace Alfapet
             TransparentBack = new Texture2D(GraphicsDevice, 1, 1);
             TransparentBack.SetData(new Color[] { Color.White * 0.5f });
 
-            Fonts.Load(Content);
+            UI.Load(Content);
         }
 
         protected override void Update(GameTime gameTime)

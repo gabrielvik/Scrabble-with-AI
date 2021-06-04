@@ -6,8 +6,8 @@ namespace Alfapet
     {
         public static string LoadString = "";
         private static Button playBtn;
-        private static Button settingsBtn;
-        
+        private static readonly Button settingsBtn;
+
         private static async void Start()
         {
             await Alfapet.Start();
@@ -47,8 +47,8 @@ namespace Alfapet
             Alfapet.DrawFunction = delegate ()
             {
                 Button.Draw();
-                UI.DrawCenterText(Fonts.Montserrat_Bold, "GameTitle", new Vector2(0, 0), Color.White, Alfapet._graphics.GraphicsDevice.Viewport.Width, Alfapet._graphics.GraphicsDevice.Viewport.Height / 2);
-                UI.DrawCenterText(Fonts.Montserrat_Bold_Smaller, LoadString, new Vector2(0, 0), Color.White, Alfapet._graphics.GraphicsDevice.Viewport.Width, Alfapet._graphics.GraphicsDevice.Viewport.Height);
+                UI.DrawCenterText(UI.Montserrat_Bold, "GameTitle", new Vector2(0, 0), Color.White, Alfapet._graphics.GraphicsDevice.Viewport.Width, Alfapet._graphics.GraphicsDevice.Viewport.Height / 2);
+                UI.DrawCenterText(UI.Montserrat_Bold_Smaller, LoadString, new Vector2(0, 0), Color.White, Alfapet._graphics.GraphicsDevice.Viewport.Width, Alfapet._graphics.GraphicsDevice.Viewport.Height);
             };
             Alfapet.UpdateFunction = delegate ()
             {

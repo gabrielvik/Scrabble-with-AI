@@ -14,7 +14,8 @@ namespace Alfapet
         }
 
         /*
-         * Kallas när användaren släppt en bricka
+         * Kallas när användaren släppt en bricka.
+         * 
          */
         private static void DoDrop(dynamic index, Tile tile, MOVE moveType)
         {
@@ -75,7 +76,9 @@ namespace Alfapet
                             }
                         }
                         else
+                        {
                             tile.SetPos(tile.originalPos.X, tile.originalPos.Y);
+                        }
                     }
                 }
             }
@@ -123,7 +126,7 @@ namespace Alfapet
             {
                 for (int x = 0; x < Board.XTiles; x++)
                 {
-                    if (!Board.Tiles[y, x].TempPlaced) // Man ska bara kunna ta bort och byta plats på brickor som är temporerade placerade
+                    if (!Board.Tiles[y, x].TempPlaced || !Board.Tiles[y, x].PlayerPlaced) // Man ska bara kunna ta bort och byta plats på brickor som är temporerade placerade
                         continue;
                     else
                         CheckDrag(new Vector2(x, y), Board.Tiles[y, x], Mouse.GetState(Alfapet._window).Y > (Board.YTiles + 2) * Board.TilesHeight ? MOVE.REMOVE : MOVE.CHANGE);

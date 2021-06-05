@@ -15,8 +15,8 @@ namespace Alfapet
         public static float TilesWidth;
         public static float TilesHeight;
 
-        public const int XTiles = 15;
-        public const int YTiles = 15;
+        public static int XTiles = 15;
+        public static int YTiles = 15;
 
         public static int TilesPlaced = 0;
 

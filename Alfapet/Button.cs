@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Alfapet
@@ -15,10 +16,13 @@ namespace Alfapet
         public static List<Button> List = new List<Button>();
         private bool pressed = false;
         private string DrawText;
-
+        private static int i = 0;
+        public int Id;
         public Button()
         {
+            Id = i + 1;
             List.Add(this);
+            i++;
         }
 
         public void SetPos(float x, float y)
@@ -106,28 +110,25 @@ namespace Alfapet
             if (!Alfapet.IsActive)
                 return;
 
-            for (var i = 0; i < List.Count; i++)
+            foreach (var button in List.Where(button => button.ClickEvent != null).ToList())
             {
-                if (List[i].ClickEvent == null || List[i] == null) // Om man inte har en klick event är det onödigt att äns kolla
-                    continue;
-
-                if (AlfapetUtil.IsHovering(List[i].GetPos(), List[i].GetSize()))
+                if (AlfapetUtil.IsHovering(button.GetPos(), button.GetSize()))
                 {
                     var mouse = Mouse.GetState(Alfapet.Window);
 
-                    if (!List[i].pressed && mouse.LeftButton == ButtonState.Pressed)
+                    if (!button.pressed && mouse.LeftButton == ButtonState.Pressed)
                     {
-                        List[i].pressed = true;
+                        button.pressed = true;
                     }
-                    if (List[i].pressed && mouse.LeftButton == ButtonState.Released)
+                    if (button.pressed && mouse.LeftButton == ButtonState.Released)
                     {
-                        List[i].ClickEvent();
-                        List[i].pressed = false;
+                        button.ClickEvent();
+                        button.pressed = false;
                     }
                 }
-                else if (List[i].pressed)
+                else if (button.pressed)
                 {
-                    List[i].pressed = false;
+                    button.pressed = false;
                 }
             }
         }

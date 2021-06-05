@@ -14,7 +14,7 @@
         "outputPath": "C:\\Users\\dator\\source\\repos\\alfapet_school\\Alfapet\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
-          "C:\\Microsoft\\Xamarin\\NuGet\\"
+          "C:\\Microsoft\\Xamarin\\NuGet"
         ],
         "configFilePaths": [
           "C:\\Users\\dator\\AppData\\Roaming\\NuGet\\NuGet.Config",

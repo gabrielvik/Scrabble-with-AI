@@ -41,14 +41,15 @@ namespace Alfapet
             Alfapet.SpriteBatch.Draw(Alfapet.TransparentBack, new Rectangle(rec.X + rec.Width - width, rec.Y + rec.Height - thickness, width, thickness), borderColor);
             Alfapet.SpriteBatch.Draw(Alfapet.TransparentBack, new Rectangle(rec.X + rec.Width - thickness, rec.Y + rec.Height - height, thickness, height - thickness), borderColor);
         }
+        
         public static void DrawCenterText(SpriteFont font, string text, Vector2 pos, Color color, int recWidth, int recHeight)
         {
             if (text == "\0")
                 return;
 
-            var font_size = font.MeasureString(text);
-            var offsetX = (int)(recWidth / 2 - font_size.X / 2);
-            var offsetY = (int)(recHeight / 2 - font_size.Y / 2);
+            var fontSize = font.MeasureString(text);
+            var offsetX = (int)(recWidth / 2 - fontSize.X / 2);
+            var offsetY = (int)(recHeight / 2 - fontSize.Y / 2);
 
             Alfapet.SpriteBatch.DrawString(font, text, new Vector2(pos.X + offsetX, pos.Y + offsetY), color);
         }

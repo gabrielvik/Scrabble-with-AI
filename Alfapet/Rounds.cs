@@ -1,6 +1,8 @@
 ﻿using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Alfapet
@@ -12,21 +14,21 @@ namespace Alfapet
         /*
          * Kollar att orden man placerat är kopplade till de andra orden
          * Om övre är sant, kolla också att orden är faktiska ord i nuvarande ordboken
-         */
-        public static bool PlacedValidWords()
+        */
+        private static bool PlacedValidWords()
         {
-            List<string> words = new List<string>();
-            string xWord = ""; // Temp variabel som lagrar ord
-            string yWord = "";
+            var words = new List<string>();
+            var xWord = "";
+            var yWord = "";
 
             /*
              * Privat funktion till PlacedValidWords() 
              * Används för att kalkylera alla ord tillagda på brädan,
              * behöver inte vara riktiga ord utan räknar bara ord som är placerade
-             */
+            */
             bool CorrectWordPlacement(int y, int x, bool axis)
             {
-                ref string tempWord = ref (axis ? ref xWord : ref yWord);
+                ref var tempWord = ref axis ? ref xWord : ref yWord;
                 if (Board.Tiles[y, x].Letter == '\0')
                 {
                     if (axis)
@@ -36,11 +38,11 @@ namespace Alfapet
 
                     if (tempWord.Length == 1)
                     {
-                        char letterUp = Board.Tiles[Math.Max(y - 1, 0), x].Letter;
-                        char letterDown = Board.Tiles[Math.Min(y + 1, Board.YTiles - 1), x].Letter;
-                        char letterLeft = Board.Tiles[y, Math.Max(x - 1, 0)].Letter;
-                        char letterRight = Board.Tiles[y, Math.Min(x + 1, Board.XTiles - 1)].Letter;
-
+                        var letterUp = Board.Tiles[Math.Max(y - 1, 0), x].Letter;
+                        var letterDown = Board.Tiles[Math.Min(y + 1, Board.YTiles - 1), x].Letter;
+                        var letterLeft = Board.Tiles[y, Math.Max(x - 1, 0)].Letter;
+                        var letterRight = Board.Tiles[y, Math.Min(x + 1, Board.XTiles - 1)].Letter;
+                    
                         if (letterUp == '\0' && letterDown == '\0' && letterLeft == '\0' && letterRight == '\0')
                             return false;
                     }
@@ -57,9 +59,9 @@ namespace Alfapet
                 return true;
             }
 
-            for (int y = 0; y < Board.XTiles; y++) // Kollar ord på Y axeln
+            for (var y = 0; y < Board.XTiles; y++) // Kollar ord på Y axeln
             {
-                for (int x = 0; x < Board.YTiles; x++)
+                for (var x = 0; x < Board.YTiles; x++)
                 {
                     if (!CorrectWordPlacement(y, x, true))
                         return false;
@@ -68,13 +70,7 @@ namespace Alfapet
                         return false;
                 }
             }
-
-            foreach (string word in words)
-            {
-                if (!Dictionaries.IsWord(word))
-                    return false; // Så fort man hittar ett ogilitigt ord returna false, behöver inte kolla längre
-            }
-            return true;
+            return words.All(Dictionaries.IsWord);
         }
 
         /*
@@ -82,40 +78,31 @@ namespace Alfapet
          * Säkerställer att man placerat riktiga ord
          * Om övre är sant, ger poäng och återställer variabler som behövs
          */
-        public static async void DoMove(bool skip = false)
+        public static void DoMove(bool skip = false)
         {
             if (skip) // Måste ha placerat minst en bokstav
                 return;
 
-            else if (false)
+            if (!PlacedValidWords())
             {
                 ButtonRig.Buttons[0].InvalidClick("Invalid Words");
                 return;
             }
 
-            foreach (Tile tile in Board.Tiles)
+            var score = 0;
+
+            Board.ResetTempTiles(tile =>
             {
-                if (!tile.TempPlaced || tile.Letter == '\0')
-                    continue;
+                score += AlfapetConfig.CharacterPoints[tile.Letter];
+            });
+            PlayerPoints += score;
 
-                tile.TempPlaced = false;
-
-                PlayerPoints += Alfapet_Config.CharactherPoints[tile.Letter];
-                await Task.Delay(150); // vänta 0.15s innan nästa loop så användaren kan se allting hända
-            }
-
-            foreach (var tile in Hand.Tiles)
-            {
-                if (tile.Letter == '\0')
-                    tile.Letter = Alfapet_Util.GenerateRandomLetter();
-            }
-
-            Hand.SetPositions();
+            Hand.GiveNewLetters();
             Board.TilesPlaced = 0;
 
             Ai.DoMove();
 
-            System.Diagnostics.Debug.WriteLine("Player placed score for: " + PlayerPoints);
+            Debug.WriteLine("Player placed score for: " + score);
         }
     }
 }

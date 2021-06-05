@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System;
+using Microsoft.Xna.Framework;
 using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.IO;
@@ -8,14 +9,16 @@ namespace Alfapet
 {
     class Dictionaries : Game
     {
-
-        public static Dictionary<string, string> Current;
+        private static Dictionary<string, string> Current;
 
         public static void Initialize(string language)
         {
-            string json = File.ReadAllText(@"dictionaries/" + language + ".json"); // Få JSON från vilket språk man kallar funktionen
+            var json = File.ReadAllText(@"dictionaries/" + language + ".json"); // Få JSON från vilket språk man kallar funktionen
 
-            Current = new Dictionary<string, string>(JsonConvert.DeserializeObject<Dictionary<string, string>>(json), System.StringComparer.OrdinalIgnoreCase); // Gör om JSON till ett dictionary
+            Current = new Dictionary<string, string>(
+                JsonConvert.DeserializeObject<Dictionary<string, string>>(json) ??
+                throw new InvalidOperationException(),
+                StringComparer.OrdinalIgnoreCase); // Gör om JSON till ett dictionary
         }
 
         public static bool IsWord(string word)

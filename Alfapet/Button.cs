@@ -10,18 +10,15 @@ namespace Alfapet
     {
         public float X, Y;
         public float W, H;
-        public Action DrawFunc;
+        private Action DrawFunc;
         public Action ClickEvent;
         public static List<Button> List = new List<Button>();
         private bool pressed = false;
         private string DrawText;
+
         public Button()
         {
             List.Add(this);
-        }
-        ~Button()
-        {
-            System.Diagnostics.Debug.WriteLine("aasd");
         }
 
         public void SetPos(float x, float y)
@@ -51,60 +48,72 @@ namespace Alfapet
             DrawText = text;
         }
 
-        async public void InvalidClick(string text = null)
+        /*
+         * Funktion för att en knapp som av någon anleding inte ska tryckas
+         * Gör knappen röd som lerpar genomskinlighet, och ändrar texten på knappen
+        */
+        public async void InvalidClick(string text = "Invalid")
         {
-            if (DrawFunc != null) // Om draw functionen redan finns (man har klickat nyligen), returna
+            if (DrawFunc != null) // Om draw functionen redan finns har klickat nyligen
                 return;
 
             var tempDrawFunc = DrawFunc;
             var tempClickEvent = ClickEvent;
 
-            long lerpStart = DateTimeOffset.Now.ToUnixTimeMilliseconds();
-            int delay = 4;
+            var lerpStart = DateTimeOffset.Now.ToUnixTimeMilliseconds();
+            var delay = 1500; // Hur länge det tar tills man får klicka igen
+
             DrawFunc = delegate ()
             {
+                var lerpValue = MathHelper.Lerp(1f, 0.25f, (float)(DateTimeOffset.Now.ToUnixTimeMilliseconds() - lerpStart) / delay);
                 // Sätter färgen till röd och lerpar färgens transparitet 
-                UI.StylishRectangle(new Rectangle((int)X, (int)Y, (int)W, (int)H), Color.Red * MathHelper.Lerp(1f, 0.95f, (DateTimeOffset.Now.ToUnixTimeMilliseconds() - lerpStart) * delay / 1000));
-                UI.DrawCenterText(UI.Montserrat_Bold_Smaller, text == null ? "Invalid" : text, GetPos(), Color.White, (int)W, (int)H);
+                UI.StylishRectangle(new Rectangle((int)X, (int)Y, (int)W, (int)H), Color.Red * lerpValue);
+                UI.DrawCenterText(UI.MontserratBoldSmaller, text, GetPos(), Color.White, (int)W, (int)H);
             };
+            ClickEvent = null;
 
-            await Task.Delay(delay * 1000); // Efter x sekunder, sätt draw funktionen till null och återgå till normalt
+            await Task.Delay(delay); // Efter x sekunder, sätt tillbaka funktionerna till deras tidigare läge
             DrawFunc = tempDrawFunc;
             ClickEvent = tempClickEvent;
         }
         private void DefaultDraw()
         {
-            bool hovering = Alfapet_Util.IsHovering(GetPos(), GetSize()); // För att inte behöva köra funktionen 2 gånger
+            var isHovering = AlfapetUtil.IsHovering(GetPos(), GetSize());
 
-            if (Mouse.GetState(Alfapet._window).LeftButton == ButtonState.Pressed && hovering)
+            if (Mouse.GetState(Alfapet.Window).LeftButton == ButtonState.Pressed && isHovering)
                 UI.StylishRectangle(new Rectangle((int)X, (int)Y, (int)W, (int)H), Color.White * 0.85f);
-            else if (hovering)
+            else if (isHovering)
                 UI.StylishRectangle(new Rectangle((int)X, (int)Y, (int)W, (int)H), Color.White * 0.5f);
             else
                 UI.StylishRectangle(new Rectangle((int)X, (int)Y, (int)W, (int)H));
 
-            UI.DrawCenterText(UI.Montserrat_Bold_Smaller, (DrawText == null) ? "Button" : DrawText, GetPos(), Color.White, (int)W, (int)H);
+            UI.DrawCenterText(UI.MontserratBoldSmaller, DrawText ?? "Button", GetPos(), Color.White, (int)W, (int)H);
         }
 
         public static void Draw()
         {
-            for (int i = 0; i < List.Count; i++)
-                if (List[i].DrawFunc == null)
-                    List[i].DefaultDraw();
+            foreach (var button in List)
+            {
+                if (button.DrawFunc == null)
+                    button.DefaultDraw();
                 else
-                    List[i].DrawFunc();
+                    button.DrawFunc();
+            }
         }
 
-        public static void Think()
+        public static void ListenForPresses()
         {
-            for (int i = 0; i < List.Count; i++)
+            if (!Alfapet.IsActive)
+                return;
+
+            for (var i = 0; i < List.Count; i++)
             {
-                if (List[i].ClickEvent == null || List[i] == null) // Om man inte har en click funktion är det onödigt att äns kolla
+                if (List[i].ClickEvent == null || List[i] == null) // Om man inte har en klick event är det onödigt att äns kolla
                     continue;
 
-                if (Alfapet_Util.IsHovering(List[i].GetPos(), List[i].GetSize()))
+                if (AlfapetUtil.IsHovering(List[i].GetPos(), List[i].GetSize()))
                 {
-                    MouseState mouse = Mouse.GetState(Alfapet._window);
+                    var mouse = Mouse.GetState(Alfapet.Window);
 
                     if (!List[i].pressed && mouse.LeftButton == ButtonState.Pressed)
                     {

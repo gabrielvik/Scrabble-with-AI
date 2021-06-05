@@ -5,7 +5,7 @@ using System;
 
 namespace Alfapet
 {
-    class Alfapet_Util : Game
+    class AlfapetUtil : Game
     {
         public static char GenerateRandomLetter()
         {
@@ -14,7 +14,10 @@ namespace Alfapet
 
         public static bool IsHovering(Vector2 pos, Vector2 size)
         {
-            MouseState mouse = Mouse.GetState(Alfapet._window);
+            if (!Alfapet.IsActive)
+                return false;
+
+            var mouse = Mouse.GetState(Alfapet.Window);
 
             return (mouse.X >= pos.X && mouse.X <= pos.X + size.X && mouse.Y >= pos.Y && mouse.Y <= pos.Y + size.Y);
         }
@@ -34,7 +37,7 @@ namespace Alfapet
                     if (Hand.Tiles[right].Letter == Hand.Tiles[left].Letter) // om det är samma bokstav, returna
                         return right;
 
-                    Tile temp = Hand.Tiles[left]; // lagra en kopia av Tile
+                    var temp = Hand.Tiles[left]; // lagra en kopia av Tile
                     Hand.Tiles[left] = Hand.Tiles[right]; // vänster blir höger
                     Hand.Tiles[right] = temp; // höger blir kopian
                 }
@@ -47,7 +50,7 @@ namespace Alfapet
         {
             if (left < right)
             {
-                int pivot = Partition(left, right);
+                var pivot = Partition(left, right);
 
                 if (pivot > 1)
                     SortHand(left, pivot - 1);
@@ -57,7 +60,7 @@ namespace Alfapet
         }
         public static void SortHand()
         {
-            SortHand(0, Alfapet_Config.HandAmount - 1);
+            SortHand(0, AlfapetConfig.HandAmount - 1);
             Hand.SetPositions();
         }
     }

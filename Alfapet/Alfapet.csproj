@@ -21,9 +21,19 @@
   </ItemGroup>
   <ItemGroup>
     <MonoGameContentReference Include="Content\Content.mgcb" />
+    <MonoGameContentReference Remove="NewFolder\**" />
+    <MonoGameContentReference Remove="NewFolder1\**" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="NewFolder1\" />
-    <Folder Include="NewFolder\" />
+    <Compile Remove="NewFolder\**" />
+    <Compile Remove="NewFolder1\**" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Remove="NewFolder\**" />
+    <EmbeddedResource Remove="NewFolder1\**" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Remove="NewFolder\**" />
+    <None Remove="NewFolder1\**" />
   </ItemGroup>
 </Project>

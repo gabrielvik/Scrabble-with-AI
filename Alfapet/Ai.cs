@@ -19,32 +19,31 @@ namespace Alfapet
         }
 
         /*
-         * Kallas när AI ska göra sitt drag
-         */
-        public async static void DoMove()
+        * Kallas när AI ska göra sitt drag
+        */
+        public static async void DoMove()
         {
-            // Sätter texten av "move" knappen och väntar tills man gjort det innan går vidare
+            // Vänta tills texten byts innan man gör över till att hitta ord eftersom funktionen kan vara kostsam
             await Task.Run(() =>
             {
                 ButtonRig.Buttons[0].SetText("Opponent Thinking");
             });
 
-            List<List<Tuple<char, int, int>>> words = GetBestWords(); // Möjliga ord man kan placera
+            var words = GetPlacableWords();
 
             // Väntar en random tid mellan 0.35s-1s innan man går vidare för att göra det mer verkligt för användaren
             await Task.Delay(new Random().Next(1000, 3000));
+            
             ButtonRig.Buttons[0].SetText("Opponent Playing..."); // Har "tänkt" klart
 
-            List<Tuple<char, int, int>> bestWord = new List<Tuple<char, int, int>>();
-            int mostPoint = 0;
+            var bestWord = new List<Tuple<char, int, int>>();
+            var mostPoint = 0;
 
             foreach (var word in words) // Räkna ut vilket ord som är värt mest poäng
             {
-                int tempScore = 0;
-                foreach (var characther in word)
-                {
-                    tempScore += Alfapet_Config.CharactherPoints[characther.Item1]; // Lägger till hur mycket karaktären är värd i poäng
-                }
+                // Summan av alla bokstäver i ordet beroende på poäng i config
+                var tempScore = word.Sum(character => AlfapetConfig.CharacterPoints[character.Item1]);
+                
                 if (tempScore > mostPoint)
                 {
                     bestWord = word;
@@ -52,44 +51,41 @@ namespace Alfapet
                 }
             }
 
-            foreach (var t in bestWord) // Lägg ut det bästa ordet man hittade på brädan
+            var score = 0;
+            // Lägg ut det bästa ordet man hittade på brädan
+            foreach (var (letter, y, x) in bestWord)
             {
-                Board.Tiles[t.Item2, t.Item3].Letter = t.Item1;
-                Board.Tiles[t.Item2, t.Item3].TempPlaced = true;
-                Board.Tiles[t.Item2, t.Item3].PlayerPlaced = false; // Användaren ska inte kunna röra brickan
+                Board.Tiles[y, x].Letter = letter;
+                Board.Tiles[y, x].TempPlaced = true;
+                Board.Tiles[y, x].PlayerPlaced = false; // Användaren ska inte kunna röra brickan
 
-                Rounds.AIPoints += Alfapet_Config.CharactherPoints[t.Item1];
+                score += AlfapetConfig.CharacterPoints[letter];
 
                 await Task.Delay(new Random().Next(500, 1250)); // Väntar 0.5-1.25s innan man lägger nästa karaktär
             }
 
-            foreach (Tile tile in Board.Tiles)
-            {
-                if (!tile.TempPlaced || tile.Letter == '\0')
-                    continue;
+            Rounds.AIPoints += score;
+            System.Diagnostics.Debug.WriteLine("Ai scored: " + score);
 
-                tile.TempPlaced = false;
-                await Task.Delay(150); // Vänta 0.15s innan nästa loop så användaren kan se allting hända
-            }
-
+            Board.ResetTempTiles();
             ButtonRig.Buttons[0].SetText("Skip");
         }
 
         /*
          * Returnerar en lista av alla ord på brädan i en Word struktur
-         */
+        */
         private static List<Word> GetBoardWords()
         {
-            List<Word> boardWords = new List<Word>();
-            for (int y = 0; y < Board.YTiles; y++)
+            var boardWords = new List<Word>();
+            for (var y = 0; y < Board.YTiles; y++)
             {
-                string xWord = "";
-                string yWord = "";
+                var xWord = "";
+                var yWord = "";
 
-                int xStart = -1;
-                int yStart = -1;
+                var xStart = -1;
+                var yStart = -1;
 
-                for (int x = 0; x < Board.XTiles; x++)
+                for (var x = 0; x < Board.XTiles; x++)
                 {
                     // Finns ett ord som nu har tagit slut eftersom brickan är tom på X axeln
                     if (xWord.Length > 0 && Board.Tiles[y, x].Letter == '\0')
@@ -105,6 +101,7 @@ namespace Alfapet
                         boardWords.Add(xWordObj);
                         xWord = "";
                     }
+                    
                     // Finns ett ord som nu har tagit slut eftersom brickan är tom på Y axeln
                     if (yWord.Length > 0 && Board.Tiles[x, y].Letter == '\0')
                     {
@@ -144,230 +141,206 @@ namespace Alfapet
          * Hittar alla ord som kan placeras på brädan.
          * Returnerar en lista med en lista som har information om alla karaktärer som ska placeras
          * Tuple<char, int, int> - Item1 är karaktären som ska placeras,
-         * Item2 är Y axeln vart den ska placeras, Item3 är X axeln där den sks placeras
-         */
-        public static List<List<Tuple<char, int, int>>> GetBestWords()
+         * Item2 är Y axeln vart den ska placeras, Item3 är X axeln där den ska placeras
+        */
+        private static List<List<Tuple<char, int, int>>> GetPlacableWords()
         {
-            string hand = Hand.GetHandString();
-            List<Word> boardWords = GetBoardWords();
+            var hand = Hand.GetHandString().ToLower();
+            var boardWords = GetBoardWords();
+            var wordPlacements = new List<List<Tuple<char, int, int>>>();
+            var dictionaryList = Dictionaries.GetWordList();
 
-            List<List<Tuple<char, int, int>>> wordPlacements = new List<List<Tuple<char, int, int>>>();
-
-            List<string> dictionaryList = Dictionaries.GetWordList();
-
-            foreach (string word in dictionaryList)
+            foreach (var word in dictionaryList)
             {
-                bool foundWord = false;
-                foreach (var boardWord in boardWords.Where(boardWord => word.Contains(boardWord.Value))) // Loop där ordet innehåller ett ord på brädan
+                var foundWord = false;
+                foreach (var boardWord in boardWords.Where(boardWord => word.Contains(boardWord.Value)))
                 {
-                    if (foundWord) // Gör igen skillnad om man hittar samma ord flera gånger, fortsätt till nästa istället
+                    if (foundWord) // Gör igen skillnad om man hittar samma ord flera gånger
                         break;
 
-                    string tempHand = hand + boardWord.Value;
-                    string tempWord = word;
-                    int match = 0;
+                    var tempHand = hand + boardWord.Value;
+                    var tempWord = word;
+                    var match = 0;
+                    
+                    var boardWordIndex = word.IndexOf(boardWord.Value, StringComparison.Ordinal);
 
-                    for (int i = 0; i < tempHand.Length; i++)
+                    if (boardWord.Axis)
                     {
-                        int index = tempWord.IndexOf(tempHand[i]);
+                        if (boardWord.XStart - word[..boardWordIndex].Length < 0)
+                            break;
 
+                        if (boardWord.XEnd + word[boardWordIndex..].Length - 1 > Board.XTiles - 1)
+                            break;
+                    }
+                    else
+                    {
+                        if (boardWord.YEnd + word[boardWordIndex..].Length - 1 > Board.YTiles - 1)
+                            break;
+
+                        if (boardWord.YStart - word[..boardWordIndex].Length < 0)
+                            break;
+                    }
+
+                    foreach (var index in tempHand.Select(handChar => tempWord.IndexOf(handChar)))
+                    {
                         if (index != -1)
                         {
                             tempWord = tempWord.Remove(index, 1); // Ta bort karaktären från strängen så den inte kan användas igen
                             match++;
                         }
+                        if (match < word.Length) continue;
 
-                        if (match >= word.Length) // Är en match, ordet på brädan kan bli ordet i ordboken
+                        var wordPlacement = new List<Tuple<char, int, int>>();
+                        var invalid = false;
+                        
+                        var separated = false;
+                        var separatedIterator = 0;
+                        
+                        if (boardWord.Axis) // X axel
                         {
-                            string[] splittedWord = word.Split(boardWord.Value);
-                            if (splittedWord.Length != 2) // Borde bara finnas två, innan och/eller efter ordet på brädan 
-                                continue;
-
-                            // Kollar om ordet går utanför brädan på X eller Y axeln
-                            if (boardWord.XEnd - (splittedWord[0].Length + boardWord.Value.Length) < 0 || boardWord.XEnd + (splittedWord[1].Length + boardWord.Value.Length) > Board.XTiles - 1)
-                                continue;
-                            if (boardWord.YEnd - (splittedWord[0].Length + boardWord.Value.Length) < 0 || boardWord.YEnd + (splittedWord[1].Length + boardWord.Value.Length) > Board.YTiles - 1)
-                                continue;
-
-                            var wordPlacement = new List<Tuple<char, int, int>>();
-
-                            bool invalid = false;
-
-                            if (boardWord.Axis) // På X axeln
+                            for (var x = 0; x < word.Length; x++)
                             {
-                                for (int x = 0; x < splittedWord[0].Length; x++)
+                                if (boardWordIndex == x)
                                 {
-                                    var boardX = boardWord.XStart - splittedWord[0].Length + x; // X Positionen där bokstaven ska placeras
-
-                                    // Kolla om det finns ett ord över karaktären
-                                    string upWord = boardWords.Where(wordObj => wordObj.XEnd == boardX && wordObj.YEnd == boardWord.YEnd - 1)
-                                        .Select(wordObj => wordObj.Value)
-                                        .FirstOrDefault();
-
-                                    if (upWord != null)
-                                    {
-                                        if (!Dictionaries.IsWord(Board.Tiles[boardWord.YEnd, boardX].Letter + upWord))
-                                        {
-                                            invalid = true;
-                                            break;
-                                        }
-                                    }
-
-                                    // Ordet under karaktären
-                                    string downWord = boardWords.Where(wordObj => wordObj.XEnd == boardX && wordObj.YEnd == boardWord.YEnd + 1)
-                                        .Select(wordObj => wordObj.Value)
-                                        .FirstOrDefault();
-
-                                    if (downWord != null)
-                                    {
-                                        if (!Dictionaries.IsWord(downWord + Board.Tiles[boardWord.YEnd, boardX].Letter))
-                                        {
-                                            invalid = true;
-                                            break;
-                                        }
-                                    }
-
-                                    if (Board.Tiles[boardWord.YEnd, Math.Max(boardX - 1, 0)].Letter != '\0')
-                                    {
-                                        invalid = true;
-                                        break;
-                                    }
-
-                                    wordPlacement.Add(new Tuple<char, int, int>(char.ToUpper(splittedWord[0][x]), boardWord.YEnd, boardX));
+                                    x += boardWord.Value.Length - 1;
+                                    
+                                    separated = true;
+                                    continue;
                                 }
-                                for (int x = 0; x < splittedWord[1].Length; x++) // Karaktärerna efter ordet på brädan slutar
+
+                                int boardX; // X Positionen där bokstaven ska placeras
+
+                                if (separated)
                                 {
-                                    var boardX = boardWord.XEnd + 1 + x;
-
-                                    // Ordet över karaktärerna
-                                    string upWord = boardWords.Where(wordObj => wordObj.XEnd == boardX && wordObj.YEnd == boardWord.YEnd - 1)
-                                        .Select(wordObj => wordObj.Value)
-                                        .FirstOrDefault();
-
-                                    if (upWord != null)
-                                    {
-                                        if (!Dictionaries.IsWord(Board.Tiles[boardWord.YEnd, boardX].Letter + upWord))
-                                        {
-                                            invalid = true;
-                                            break;
-                                        }
-                                    }
-
-                                    // Ordet under karaktärerna
-                                    string downWord = boardWords.Where(wordObj => wordObj.XEnd == boardX && wordObj.YStart == boardWord.YEnd + 1)
-                                        .Select(wordObj => wordObj.Value)
-                                        .FirstOrDefault();
-
-                                    if (downWord != null)
-                                    {
-                                        if (!Dictionaries.IsWord(Board.Tiles[boardWord.YEnd, boardX].Letter + downWord))
-                                        {
-                                            invalid = true;
-                                            break;
-                                        }
-                                    }
-
+                                    boardX = boardWord.XEnd + 1 + separatedIterator;
+                                    
                                     if (Board.Tiles[boardWord.YEnd, Math.Min(boardX + 1, Board.XTiles - 1)].Letter != '\0')
                                     {
                                         invalid = true;
                                         break;
                                     }
-                                    wordPlacement.Add(new Tuple<char, int, int>(char.ToUpper(splittedWord[1][x]), boardWord.YEnd, boardX));
+                                    separatedIterator++;
                                 }
-                            }
-                            else // Y axeln
-                            {
-                                for (int y = 0; y < splittedWord[0].Length; y++) // Bokstäverna innan ordet börjar
+                                else
                                 {
-                                    var boardY = boardWord.YStart - splittedWord[0].Length + y; // Y positionen där karaktären ska placeras
-
-                                    // Kolla om det finns ett ord vänster till karaktären
-                                    string leftWord = boardWords.Where((wordObj) => wordObj.XEnd == boardWord.XEnd - 1 && wordObj.YEnd == boardY)
-                                        .Select((wordObj) => wordObj.Value)
-                                        .FirstOrDefault();
-
-                                    if (leftWord != null)
-                                    {
-                                        if (!Dictionaries.IsWord(Board.Tiles[boardY, boardWord.XEnd].Letter + leftWord))
-                                        {
-                                            invalid = true;
-                                            break;
-                                        }
-                                    }
-
-                                    // Kolla om det finns ett ord till höger av karaktären
-                                    string rightWord = boardWords.Where((wordObj) => wordObj.XStart == boardWord.XEnd + 1 && wordObj.YEnd == boardY)
-                                        .Select((wordObj) => wordObj.Value)
-                                        .FirstOrDefault();
-
-                                    if (rightWord != null)
-                                    {
-                                        if (!Dictionaries.IsWord(rightWord + Board.Tiles[boardY, boardWord.XEnd].Letter))
-                                        {
-                                            invalid = true;
-                                            break;
-                                        }
-                                    }
-                                    if (Board.Tiles[Math.Max(boardY - 1, 0), boardWord.XEnd].Letter != '\0')
+                                    boardX = boardWord.XStart - word[..boardWordIndex].Length + x;
+                                    
+                                    if (Board.Tiles[boardWord.YEnd, Math.Max(boardX - 1, 0)].Letter != '\0')
                                     {
                                         invalid = true;
                                         break;
                                     }
-
-                                    wordPlacement.Add(new Tuple<char, int, int>(char.ToUpper(splittedWord[0][y]), boardY, boardWord.XEnd));
-                                    //System.Diagnostics.Debug.WriteLine("Adds here 0" + word);
                                 }
-                                for (int y = 0; y < splittedWord[1].Length; y++) // Bokstäverna efter ordet börjar
+                                
+                                // Kolla om det finns ett ord över karaktären
+                                var upWord = boardWords.Where(wordObj => wordObj.XEnd == boardX && wordObj.YEnd == boardWord.YEnd - 1)
+                                    .Select(wordObj => wordObj.Value)
+                                    .FirstOrDefault();
+
+                                if (upWord != null)
                                 {
-                                    //System.Diagnostics.Debug.WriteLine("Adds here 1"+word);
-                                    var boardY = boardWord.YEnd + 1 + y; // Y position där karaktären ska placeras
-
-                                    // Kolla om det finns ett ord till vänster om karaktären
-                                    string leftWord = boardWords.Where((wordObj) => wordObj.XEnd == boardWord.XEnd - 1 && wordObj.YEnd == boardY)
-                                        .Select((wordObj) => wordObj.Value)
-                                        .FirstOrDefault();
-
-                                    if (leftWord != null)
+                                    if (!Dictionaries.IsWord(Board.Tiles[boardWord.YEnd, boardX].Letter + upWord))
                                     {
-                                        if (!Dictionaries.IsWord(Board.Tiles[boardY, boardWord.XEnd].Letter + leftWord))
-                                        {
-                                            invalid = true;
-                                            break;
-                                        }
+                                        invalid = true;
+                                        break;
                                     }
+                                }
 
-                                    // Kolla om det finns ett ord till höger om karaktären
-                                    string rightWord = boardWords.Where((wordObj) => wordObj.XStart == boardWord.XEnd + 1 && wordObj.YEnd == boardY)
-                                        .Select((wordObj) => wordObj.Value)
-                                        .FirstOrDefault();
+                                // Ordet under karaktären
+                                var downWord = boardWords.Where(wordObj => wordObj.XEnd == boardX && wordObj.YStart == boardWord.YEnd + 1)
+                                    .Select(wordObj => wordObj.Value)
+                                    .FirstOrDefault();
 
-                                    if (rightWord != null)
+                                if (downWord != null)
+                                {
+                                    if (!Dictionaries.IsWord(Board.Tiles[boardWord.YEnd, boardX].Letter + downWord))
                                     {
-                                        if (!Dictionaries.IsWord(Board.Tiles[boardY, boardWord.XEnd].Letter + rightWord))
-                                        {
-                                            invalid = true;
-                                            break;
-                                        }
+                                        invalid = true;
+                                        break;
                                     }
+                                }
 
+                                wordPlacement.Add(new Tuple<char, int, int>(char.ToUpper(word[x]), boardWord.YEnd, boardX));
+                            }
+                        }
+                        else // Y axeln
+                        {
+                            for (var y = 0; y < word.Length; y++) // Bokstäverna innan ordet börjar
+                            {
+                                var boardY = -1; // Y positionen där karaktären ska placeras
+
+                                if (boardWordIndex == y)
+                                {
+                                    y += boardWord.Value.Length - 1;
+                                    
+                                    separated = true;
+                                    continue;
+                                }
+                                
+                                if (separated)
+                                {
+                                    boardY = boardWord.YEnd + 1 + separatedIterator;
                                     if (Board.Tiles[Math.Min(boardY + 1, Board.YTiles - 1), boardWord.XEnd].Letter != '\0')
                                     {
                                         invalid = true;
                                         break;
                                     }
-
-                                    wordPlacement.Add(new Tuple<char, int, int>(char.ToUpper(splittedWord[1][y]), boardWord.YEnd + 1 + y, boardWord.XEnd));
+                                    separatedIterator++;
                                 }
+                                else
+                                {
+                                    boardY = boardWord.YStart - word[..boardWordIndex].Length + y;
+                                    if (Board.Tiles[Math.Max(boardY - 1, 0), boardWord.XEnd].Letter != '\0')
+                                    {
+                                        invalid = true;
+                                        break;
+                                    }
+                                }
+
+                                // Kolla om det finns ett ord vänster till karaktären
+                                var leftWord = boardWords.Where(wordObj => wordObj.XEnd == boardWord.XEnd - 1 && wordObj.YEnd == boardY)
+                                    .Select(wordObj => wordObj.Value)
+                                    .FirstOrDefault();
+
+                                if (leftWord != null)
+                                {
+                                    if (!Dictionaries.IsWord(leftWord + Board.Tiles[boardY, boardWord.XEnd].Letter))
+                                    {
+                                        invalid = true;
+                                        break;
+                                    }
+                                }
+
+                                // Kolla om det finns ett ord till höger av karaktären
+                                var rightWord = boardWords.Where(wordObj => wordObj.XStart == boardWord.XEnd + 1 && wordObj.YEnd == boardY)
+                                    .Select(wordObj => wordObj.Value)
+                                    .FirstOrDefault();
+
+                                if (rightWord != null)
+                                {
+                                    if (!Dictionaries.IsWord(Board.Tiles[boardY, boardWord.XEnd].Letter + rightWord))
+                                    {
+                                        invalid = true;
+                                        break;
+                                    }
+                                }
+                                if (Board.Tiles[Math.Max(boardY - 1, 0), boardWord.XEnd].Letter != '\0')
+                                {
+                                    invalid = true;
+                                    break;
+                                }
+
+                                wordPlacement.Add(new Tuple<char, int, int>(char.ToUpper(word[y]), boardY, boardWord.XEnd));
+                                //System.Diagnostics.Debug.WriteLine("Adds here 0" + word);
                             }
+                        }
 
-                            if (!invalid)
-                            {
-                                wordPlacements.Add(wordPlacement);
+                        if (!invalid)
+                        {
+                            wordPlacements.Add(wordPlacement);
 
-                                foundWord = true;
-                                break;
-                            }
-
+                            foundWord = true;
+                            break;
                         }
                     }
                 }

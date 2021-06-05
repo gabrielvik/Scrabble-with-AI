@@ -5,8 +5,8 @@ namespace Alfapet
     class StartScreen : Game
     {
         public static string LoadString = "";
-        private static Button playBtn;
-        private static readonly Button settingsBtn;
+        private static Button PlayBtn;
+        private static readonly Button SettingsBtn;
 
         private static async void Start()
         {
@@ -15,7 +15,7 @@ namespace Alfapet
             Alfapet.UpdateFunction = delegate ()
             {
                 DragDrop.Think();
-                Button.Think();
+                Button.ListenForPresses();
             };
 
             Alfapet.DrawFunction = delegate ()
@@ -25,35 +25,29 @@ namespace Alfapet
                 Button.Draw();
             };
 
-            Button.List.Remove(playBtn);
-            playBtn = null;
+            Button.List.Remove(PlayBtn);
+            PlayBtn = null;
         }
 
         private static void BuildPlayBtn()
         {
-            playBtn = new Button();
-            playBtn.SetPos(Alfapet._graphics.GraphicsDevice.Viewport.Width / 2 - 100, Alfapet._graphics.GraphicsDevice.Viewport.Height / 2 + 75);
-            playBtn.SetSize(200, 75);
-            playBtn.SetText("Play");
+            PlayBtn = new Button();
+            PlayBtn.SetPos(Alfapet.Graphics.GraphicsDevice.Viewport.Width / 2 - 100, Alfapet.Graphics.GraphicsDevice.Viewport.Height / 2 + 75);
+            PlayBtn.SetSize(200, 75);
+            PlayBtn.SetText("Play");
 
-            playBtn.ClickEvent = delegate ()
-            {
-                Start();
-            };
+            PlayBtn.ClickEvent = Start;
         }
 
-        new public static void Initialize()
+        public new static void Initialize()
         {
             Alfapet.DrawFunction = delegate ()
             {
                 Button.Draw();
-                UI.DrawCenterText(UI.Montserrat_Bold, "GameTitle", new Vector2(0, 0), Color.White, Alfapet._graphics.GraphicsDevice.Viewport.Width, Alfapet._graphics.GraphicsDevice.Viewport.Height / 2);
-                UI.DrawCenterText(UI.Montserrat_Bold_Smaller, LoadString, new Vector2(0, 0), Color.White, Alfapet._graphics.GraphicsDevice.Viewport.Width, Alfapet._graphics.GraphicsDevice.Viewport.Height);
+                UI.DrawCenterText(UI.MontserratBold, "GameTitle", new Vector2(0, 0), Color.White, Alfapet.Graphics.GraphicsDevice.Viewport.Width, Alfapet.Graphics.GraphicsDevice.Viewport.Height / 2);
+                UI.DrawCenterText(UI.MontserratBoldSmaller, LoadString, new Vector2(0, 0), Color.White, Alfapet.Graphics.GraphicsDevice.Viewport.Width, Alfapet.Graphics.GraphicsDevice.Viewport.Height);
             };
-            Alfapet.UpdateFunction = delegate ()
-            {
-                Button.Think();
-            };
+            Alfapet.UpdateFunction = Button.ListenForPresses;
 
             BuildPlayBtn();
         }

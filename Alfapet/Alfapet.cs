@@ -8,9 +8,10 @@ namespace Alfapet
 {
     public class Alfapet : Game
     {
-        public static GraphicsDeviceManager _graphics;
-        public static SpriteBatch _spriteBatch;
-        public static GameWindow _window;
+        public static GraphicsDeviceManager Graphics;
+        public static SpriteBatch SpriteBatch;
+        public new static GameWindow Window;
+        public new static bool IsActive;
 
         public static Texture2D TransparentBack;
 
@@ -19,7 +20,7 @@ namespace Alfapet
 
         public Alfapet()
         {
-            _graphics = new GraphicsDeviceManager(this);
+            Graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
         }
@@ -27,9 +28,9 @@ namespace Alfapet
         public static async Task<int> Start()
         {
 
-            var asd = new Dictionary<Action, string>()
+            var initFuncs = new Dictionary<Action, string>()
             {
-                { Alfapet_Config.Initialize, "Loading config"},
+                { AlfapetConfig.Initialize, "Loading config"},
                 { Board.Initialize, "Creating Board" },
                 { Hand.Initialize, "Creating Hand" },
                 { () => Dictionaries.Initialize("english"), "Unpacking JSON" },
@@ -49,7 +50,7 @@ namespace Alfapet
                 StartScreen.LoadString = "Creating Button Rig";
                 ButtonRig.Initialize();*/
 
-                foreach (var func in asd)
+                foreach (var func in initFuncs)
                 {
                     StartScreen.LoadString = func.Value;
                     func.Key.Invoke();
@@ -63,13 +64,14 @@ namespace Alfapet
 
         protected override void Initialize()
         {
-            _graphics.PreferredBackBufferWidth = 800;
-            _graphics.PreferredBackBufferHeight = 800;
+
+            Graphics.PreferredBackBufferWidth = 800;
+            Graphics.PreferredBackBufferHeight = 800;
             IsFixedTimeStep = false; // tar bort FPS cap
             //Window.Position = new Point(-1500, 0);
-            _graphics.ApplyChanges();
+            Graphics.ApplyChanges();
 
-            _window = Window;
+            Window = base.Window;
 
             StartScreen.Initialize();
 
@@ -78,7 +80,7 @@ namespace Alfapet
 
         protected override void LoadContent()
         {
-            _spriteBatch = new SpriteBatch(GraphicsDevice);
+            SpriteBatch = new SpriteBatch(GraphicsDevice);
 
             TransparentBack = new Texture2D(GraphicsDevice, 1, 1);
             TransparentBack.SetData(new Color[] { Color.White * 0.5f });
@@ -89,6 +91,8 @@ namespace Alfapet
         protected override void Update(GameTime gameTime)
         {
             UpdateFunction?.Invoke();
+            
+            IsActive = base.IsActive;
 
             base.Update(gameTime);
         }
@@ -97,9 +101,9 @@ namespace Alfapet
         {
             GraphicsDevice.Clear(new Color(47, 54, 64));
 
-            _spriteBatch.Begin();
+            SpriteBatch.Begin();
             DrawFunction?.Invoke();
-            _spriteBatch.End();
+            SpriteBatch.End();
 
             base.Draw(gameTime);
         }

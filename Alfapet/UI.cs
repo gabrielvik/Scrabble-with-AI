@@ -6,51 +6,51 @@ namespace Alfapet
 {
     class UI : Game
     {
-        public static SpriteFont Montserrat_Bold;
-        public static SpriteFont Montserrat_Bold_Smaller;
+        public static SpriteFont MontserratBold;
+        public static SpriteFont MontserratBoldSmaller;
 
         public static void Load(ContentManager Content)
         {
-            Montserrat_Bold = Content.Load<SpriteFont>("Fonts/Montserrat-Bold");
-            Montserrat_Bold_Smaller = Content.Load<SpriteFont>("Fonts/Montserrat-Bold-Smaller");
+            MontserratBold = Content.Load<SpriteFont>("Fonts/Montserrat-Bold");
+            MontserratBoldSmaller = Content.Load<SpriteFont>("Fonts/Montserrat-Bold-Smaller");
         }
 
         public static void StylishRectangle(Rectangle rec, Color? colorOverwrite = null)
         {
-            int thickness = 2;
-            int width = 10;
-            int height = 10;
+            const int thickness = 2;
+            const int width = 10;
+            const int height = 10;
 
-            Color border_color = Color.White;
+            var borderColor = Color.White;
 
-            Alfapet._spriteBatch.Draw(Alfapet.TransparentBack, rec, (colorOverwrite == null) ? (Color.Black * 0.5f) : (Color)(colorOverwrite));
+            Alfapet.SpriteBatch.Draw(Alfapet.TransparentBack, rec, colorOverwrite ?? (Color.Black * 0.5f));
 
             // Vänster top
-            Alfapet._spriteBatch.Draw(Alfapet.TransparentBack, new Rectangle(rec.X, rec.Y, width, thickness), border_color);
-            Alfapet._spriteBatch.Draw(Alfapet.TransparentBack, new Rectangle(rec.X, rec.Y + thickness, thickness, height - thickness), border_color);
+            Alfapet.SpriteBatch.Draw(Alfapet.TransparentBack, new Rectangle(rec.X, rec.Y, width, thickness), borderColor);
+            Alfapet.SpriteBatch.Draw(Alfapet.TransparentBack, new Rectangle(rec.X, rec.Y + thickness, thickness, height - thickness), borderColor);
 
             // Vänster nedre
-            Alfapet._spriteBatch.Draw(Alfapet.TransparentBack, new Rectangle(rec.X, rec.Y + rec.Height - thickness, width, thickness), border_color);
-            Alfapet._spriteBatch.Draw(Alfapet.TransparentBack, new Rectangle(rec.X, rec.Y + rec.Height - height, thickness, height - thickness), border_color);
+            Alfapet.SpriteBatch.Draw(Alfapet.TransparentBack, new Rectangle(rec.X, rec.Y + rec.Height - thickness, width, thickness), borderColor);
+            Alfapet.SpriteBatch.Draw(Alfapet.TransparentBack, new Rectangle(rec.X, rec.Y + rec.Height - height, thickness, height - thickness), borderColor);
 
             // Högre top
-            Alfapet._spriteBatch.Draw(Alfapet.TransparentBack, new Rectangle(rec.X + rec.Width - width, rec.Y, width, thickness), border_color);
-            Alfapet._spriteBatch.Draw(Alfapet.TransparentBack, new Rectangle(rec.X + rec.Width - thickness, rec.Y + thickness, thickness, height - thickness), border_color);
+            Alfapet.SpriteBatch.Draw(Alfapet.TransparentBack, new Rectangle(rec.X + rec.Width - width, rec.Y, width, thickness), borderColor);
+            Alfapet.SpriteBatch.Draw(Alfapet.TransparentBack, new Rectangle(rec.X + rec.Width - thickness, rec.Y + thickness, thickness, height - thickness), borderColor);
 
             // Högre nedre
-            Alfapet._spriteBatch.Draw(Alfapet.TransparentBack, new Rectangle(rec.X + rec.Width - width, rec.Y + rec.Height - thickness, width, thickness), border_color);
-            Alfapet._spriteBatch.Draw(Alfapet.TransparentBack, new Rectangle(rec.X + rec.Width - thickness, rec.Y + rec.Height - height, thickness, height - thickness), border_color);
+            Alfapet.SpriteBatch.Draw(Alfapet.TransparentBack, new Rectangle(rec.X + rec.Width - width, rec.Y + rec.Height - thickness, width, thickness), borderColor);
+            Alfapet.SpriteBatch.Draw(Alfapet.TransparentBack, new Rectangle(rec.X + rec.Width - thickness, rec.Y + rec.Height - height, thickness, height - thickness), borderColor);
         }
-        public static void DrawCenterText(SpriteFont font, string text, Vector2 pos, Color color, int rec_width, int rec_height)
+        public static void DrawCenterText(SpriteFont font, string text, Vector2 pos, Color color, int recWidth, int recHeight)
         {
             if (text == "\0")
                 return;
 
-            Vector2 font_size = font.MeasureString(text);
-            int offset_x = (int)(rec_width / 2 - font_size.X / 2);
-            int offset_y = (int)(rec_height / 2 - font_size.Y / 2);
+            var font_size = font.MeasureString(text);
+            var offsetX = (int)(recWidth / 2 - font_size.X / 2);
+            var offsetY = (int)(recHeight / 2 - font_size.Y / 2);
 
-            Alfapet._spriteBatch.DrawString(font, text, new Vector2(pos.X + offset_x, pos.Y + offset_y), color);
+            Alfapet.SpriteBatch.DrawString(font, text, new Vector2(pos.X + offsetX, pos.Y + offsetY), color);
         }
     }
 }

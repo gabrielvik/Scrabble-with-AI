@@ -20,37 +20,31 @@ namespace Alfapet
 
         public static int TilesPlaced = 0;
 
-        public new static void Initialize() // Bygger brädan, kallas i Initalize()
+        public new static void Initialize()
         {
             Tiles = new Tile[YTiles, XTiles];
-
+            
+            // Anpassar sig automatiskt till skärmens storlek
             TilesWidth = (Alfapet.Graphics.GraphicsDevice.Viewport.Width - (XTiles + 1) * TilesMargin) / XTiles;
-            TilesHeight = (Alfapet.Graphics.GraphicsDevice.Viewport.Height - (Hand.TilesHeight + ButtonRig.ButtonHeight) - ((YTiles + 1) * TilesMargin)) / YTiles;
+            TilesHeight = (Alfapet.Graphics.GraphicsDevice.Viewport.Height - (Hand.TilesHeight + ButtonRig.ButtonHeight) - (YTiles + 1) * TilesMargin) / YTiles;
 
-            float x = 5, y = 5;
+            float xPos = 5, yPos = 5;
 
-            for (var i = 0; i < YTiles; i++)
+            for (var y = 0; y < YTiles; y++)
             {
-                if (x + TilesWidth > Alfapet.Graphics.GraphicsDevice.Viewport.Width)
+                if (xPos + TilesWidth > Alfapet.Graphics.GraphicsDevice.Viewport.Width) // Rymms inga fler, gå till nästa rad
                 {
-                    y += TilesHeight + TilesMargin;
-                    x = 5;
+                    yPos += TilesHeight + TilesMargin;
+                    xPos = 5;
                 }
 
-                for (var z = 0; z < XTiles; z++)
+                for (var x = 0; x < XTiles; x++)
                 {
-                    Tiles[i, z] = new Tile();
-                    Tiles[i, z].SetSize(TilesWidth, TilesHeight);
-                    Tiles[i, z].SetPos(x, y);
-                    
-                    if (i == 4 && z == 7)
-                        Tiles[i, z].Letter = 'P';
-                    else if (i == 5 && z == 7)
-                        Tiles[i, z].Letter = 'A';
-                    else if (i == 6 && z == 7)
-                        Tiles[i, z].Letter = 'Y';
+                    Tiles[y, x] = new Tile();
+                    Tiles[y, x].SetSize(TilesWidth, TilesHeight);
+                    Tiles[y, x].SetPos(xPos, yPos);
 
-                    x += TilesWidth + TilesMargin;
+                    xPos += TilesWidth + TilesMargin;
                 }
             }
         }
@@ -65,19 +59,23 @@ namespace Alfapet
                     UI.StylishRectangle(new Rectangle((int)tile.X, (int)tile.Y, (int)tile.W, (int)tile.H), null);
 
                 if (tile.Letter != '\0')
-                    UI.DrawCenterText(UI.MontserratBoldSmaller, tile.Letter.ToString(), new Vector2(tile.X, tile.Y), Color.White, (int)tile.W, (int)tile.H);
+                    UI.DrawCenterText(UI.MontserratBoldSmaller, tile.Letter.ToString(), tile.GetPos(), tile.GetSize(), Color.White);
             }
         }
 
         /*
-         * Ändrar texten på move knappen beroende på hur många brickor man placerat
+         * Ändrar texten på move knappen till Skip eller Move beroende på hur många brickor man placerat
         */
         public static void CheckTilesPlaced()
         {
-            ButtonRig.Buttons[0].SetText(TilesPlaced <= 0 ? "Skip" : "Move");
+            ButtonRig.Buttons["move"].SetText(TilesPlaced <= 0 ? "Skip" : "Move");
         }
 
-        public static async void ResetTempTiles(Action<Tile> callback = null)
+        /*
+         * Återställer alla temporerat placerade brickor
+         * noDelay är om man vill att det ska vara en delay mellan varje bricka eller inte
+        */
+        public static async void ResetTempTiles(Action<Tile> callback = null, bool noDelay = false)
         {
             foreach (var tile in Tiles)
             {
@@ -86,8 +84,10 @@ namespace Alfapet
 
                 callback?.Invoke(tile);
                 
+                if(!noDelay)
+                    await Task.Delay(150); // Vänta 0.15s innan nästa loop så användaren kan se allting hända
+                
                 tile.TempPlaced = false;
-                await Task.Delay(150); // Vänta 0.15s innan nästa loop så användaren kan se allting hända
             }
         }
     }

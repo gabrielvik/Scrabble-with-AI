@@ -1,5 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System;
+using System.Collections.Generic;
 
 namespace Alfapet
 {
@@ -14,13 +16,28 @@ namespace Alfapet
         
         public bool TempPlaced = false;
         public bool Dragging = false;
-        public bool PlayerPlaced = true;
 
         public Vector2 OriginalPos = default(Vector2);
 
         public Tile()
         {
 
+        }
+
+        public static List<Tile> GetSurroundingTiles(int y, int x)
+        {
+            var tiles = new List<Tile>();
+            
+            if(y > 0)
+                tiles.Add(Board.Tiles[y - 1, x]);
+            if(y < Board.YTiles - 1)
+                tiles.Add(Board.Tiles[y + 1, x]);
+            if(x > 0)
+                tiles.Add(Board.Tiles[y, x - 1]);
+            if(x < Board.XTiles - 1)
+                tiles.Add(Board.Tiles[y, x + 1]);
+
+            return tiles;
         }
 
         public void SetPos(float x, float y)

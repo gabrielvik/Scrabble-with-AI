@@ -9,20 +9,16 @@ namespace Alfapet
 {
     class Button : Game
     {
-        public float X, Y;
-        public float W, H;
+        public float X, Y, W, H;
         private Action DrawFunc;
         public Action ClickEvent;
         public static List<Button> List = new List<Button>();
-        private bool pressed = false;
+        private bool Pressed = false;
         private string DrawText;
-        private static int i = 0;
-        public int Id;
+
         public Button()
         {
-            Id = i + 1;
             List.Add(this);
-            i++;
         }
 
         public void SetPos(float x, float y)
@@ -70,9 +66,8 @@ namespace Alfapet
             DrawFunc = delegate ()
             {
                 var lerpValue = MathHelper.Lerp(1f, 0.25f, (float)(DateTimeOffset.Now.ToUnixTimeMilliseconds() - lerpStart) / delay);
-                // Sätter färgen till röd och lerpar färgens transparitet 
-                UI.StylishRectangle(new Rectangle((int)X, (int)Y, (int)W, (int)H), Color.Red * lerpValue);
-                UI.DrawCenterText(UI.MontserratBoldSmaller, text, GetPos(), Color.White, (int)W, (int)H);
+                UI.StylishRectangle(new Rectangle((int)X, (int)Y, (int)W, (int)H), Color.Red * lerpValue); // Sätter genomskinligheten till lerp värdet
+                UI.DrawCenterText(UI.MontserratBoldSmaller, text, GetPos(), GetSize(), Color.White);
             };
             ClickEvent = null;
 
@@ -82,16 +77,16 @@ namespace Alfapet
         }
         private void DefaultDraw()
         {
-            var isHovering = AlfapetUtil.IsHovering(GetPos(), GetSize());
+            var isHovering = Util.IsHovering(GetPos(), GetSize());
 
-            if (Mouse.GetState(Alfapet.Window).LeftButton == ButtonState.Pressed && isHovering)
+            if (Mouse.GetState(Alfapet.Window).LeftButton == ButtonState.Pressed && isHovering) // Håller leftclick på knappen
                 UI.StylishRectangle(new Rectangle((int)X, (int)Y, (int)W, (int)H), Color.White * 0.85f);
             else if (isHovering)
                 UI.StylishRectangle(new Rectangle((int)X, (int)Y, (int)W, (int)H), Color.White * 0.5f);
             else
                 UI.StylishRectangle(new Rectangle((int)X, (int)Y, (int)W, (int)H));
 
-            UI.DrawCenterText(UI.MontserratBoldSmaller, DrawText ?? "Button", GetPos(), Color.White, (int)W, (int)H);
+            UI.DrawCenterText(UI.MontserratBoldSmaller, DrawText ?? "Button", GetPos(), GetSize(), Color.White);
         }
 
         public static void Draw()
@@ -107,28 +102,33 @@ namespace Alfapet
 
         public static void ListenForPresses()
         {
+            // Ingen idé att kolla om man inte är inne i programmet
             if (!Alfapet.IsActive)
                 return;
 
+            // Gör om till lista, så ändringar som görs inte interfererar mitt i update funktionen (försöker indexa utanför etc)
             foreach (var button in List.Where(button => button.ClickEvent != null).ToList())
             {
-                if (AlfapetUtil.IsHovering(button.GetPos(), button.GetSize()))
+                if (Util.IsHovering(button.GetPos(), button.GetSize()))
                 {
                     var mouse = Mouse.GetState(Alfapet.Window);
 
-                    if (!button.pressed && mouse.LeftButton == ButtonState.Pressed)
+                    // Man börjar hålla nere knappen
+                    if (!button.Pressed && mouse.LeftButton == ButtonState.Pressed)
                     {
-                        button.pressed = true;
+                        button.Pressed = true;
                     }
-                    if (button.pressed && mouse.LeftButton == ButtonState.Released)
+                    // Man har hållt nere knappen och har nu släppt, användaren vill klicka
+                    if (button.Pressed && mouse.LeftButton == ButtonState.Released)
                     {
                         button.ClickEvent();
-                        button.pressed = false;
+                        button.Pressed = false;
                     }
                 }
-                else if (button.pressed)
+                // Man har hållt nere men tagit bort muspekaren från knappen, användaren vill avbryta
+                else if (button.Pressed)
                 {
-                    button.pressed = false;
+                    button.Pressed = false;
                 }
             }
         }

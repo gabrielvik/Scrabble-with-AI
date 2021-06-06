@@ -27,3 +27,10 @@
 /processorParam:TextureFormat=Compressed
 /build:Fonts/Montserrat-Bold-Smaller.spritefont
 
+#begin Fonts/Montserrat-Bold-Tiny.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:Fonts/Montserrat-Bold-Tiny.spritefont
+

@@ -8,11 +8,11 @@ namespace Alfapet
      */
     class Hand : Game
     {
-        public static Tile[] Tiles = new Tile[AlfapetConfig.HandAmount];
+        public static Tile[] Tiles = new Tile[Config.HandAmount];
 
         public static float TilesMargin = 5f;
-        public static float TilesWidth = (Alfapet.Graphics.GraphicsDevice.Viewport.Width - ((Tiles.Length + 1) * TilesMargin)) / Tiles.Length;
-        public static float TilesHeight = (Alfapet.Graphics.GraphicsDevice.Viewport.Height - ((Tiles.Length + 1) * TilesMargin)) / Tiles.Length;
+        public static float TilesWidth = (Alfapet.Graphics.GraphicsDevice.Viewport.Width - (Tiles.Length + 1) * TilesMargin) / Tiles.Length;
+        public static float TilesHeight = (Alfapet.Graphics.GraphicsDevice.Viewport.Height - (Tiles.Length + 1) * TilesMargin) / Tiles.Length;
 
         public static void SetPositions()
         {
@@ -34,25 +34,18 @@ namespace Alfapet
             {
                 Tiles[i] = new Tile
                 {
-                    Letter = AlfapetUtil.GenerateRandomLetter()
+                    Letter = Util.GenerateRandomLetter()
                 };
             }
             SetPositions();
         }
 
-        public static string GetHandString()
+        public static void Sort()
         {
-            var handString = "";
-            foreach (var tile in Tiles)
-            {
-                if (tile.Letter == '\0')
-                    continue;
-
-                handString += tile.Letter;
-            }
-            return handString;
+            Array.Sort(Hand.Tiles, (tile1, tile2) => tile1.Letter.CompareTo(tile2.Letter));
+            SetPositions();
         }
-
+        
         public static void InsertLetter(char letter)
         {
             foreach (var tile in Tiles)
@@ -70,14 +63,16 @@ namespace Alfapet
             foreach (var tile in Hand.Tiles)
             {
                 if (tile.Letter == '\0')
-                    tile.Letter = AlfapetUtil.GenerateRandomLetter();
+                    tile.Letter = Util.GenerateRandomLetter();
             }
             SetPositions();
         }
         
         public static void Draw()
         {
-            Alfapet.SpriteBatch.Draw(Alfapet.TransparentBack, new Rectangle(0, (int)(Alfapet.Graphics.GraphicsDevice.Viewport.Height - TilesHeight), Alfapet.Graphics.GraphicsDevice.Viewport.Width, (int)TilesHeight), Color.Black * 0.5f);
+            Alfapet.SpriteBatch.Draw(Alfapet.TransparentBack,
+                new Rectangle(0, (int) (Alfapet.Graphics.GraphicsDevice.Viewport.Height - TilesHeight),
+                    Alfapet.Graphics.GraphicsDevice.Viewport.Width, (int) TilesHeight), Color.Black * 0.5f);
 
             foreach (var tile in Tiles)
             {
@@ -96,7 +91,7 @@ namespace Alfapet
                 }
 
                 UI.StylishRectangle(new Rectangle((int)tile.X, (int)tile.Y, (int)tile.W, (int)tile.H));
-                UI.DrawCenterText(tile.Font, tile.Letter.ToString(), new Vector2(tile.X, tile.Y), Color.White, (int)tile.W, (int)tile.H);
+                UI.DrawCenterText(tile.Font, tile.Letter.ToString(), tile.GetPos(), tile.GetSize(), Color.White);
             }
         }
     }

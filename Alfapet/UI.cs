@@ -8,11 +8,13 @@ namespace Alfapet
     {
         public static SpriteFont MontserratBold;
         public static SpriteFont MontserratBoldSmaller;
+        public static SpriteFont MontserratBoldTiny;
 
-        public static void Load(ContentManager Content)
+        public static void Load(ContentManager content)
         {
-            MontserratBold = Content.Load<SpriteFont>("Fonts/Montserrat-Bold");
-            MontserratBoldSmaller = Content.Load<SpriteFont>("Fonts/Montserrat-Bold-Smaller");
+            MontserratBold = content.Load<SpriteFont>("Fonts/Montserrat-Bold");
+            MontserratBoldSmaller = content.Load<SpriteFont>("Fonts/Montserrat-Bold-Smaller");
+            MontserratBoldTiny = content.Load<SpriteFont>("Fonts/Montserrat-Bold-Tiny");
         }
 
         public static void StylishRectangle(Rectangle rec, Color? colorOverwrite = null)
@@ -23,7 +25,8 @@ namespace Alfapet
 
             var borderColor = Color.White;
 
-            Alfapet.SpriteBatch.Draw(Alfapet.TransparentBack, rec, colorOverwrite ?? (Color.Black * 0.5f));
+            // Bakgrunden
+            Alfapet.SpriteBatch.Draw(Alfapet.TransparentBack, rec, colorOverwrite ?? Color.Black * 0.5f);
 
             // Vänster top
             Alfapet.SpriteBatch.Draw(Alfapet.TransparentBack, new Rectangle(rec.X, rec.Y, width, thickness), borderColor);
@@ -42,14 +45,11 @@ namespace Alfapet
             Alfapet.SpriteBatch.Draw(Alfapet.TransparentBack, new Rectangle(rec.X + rec.Width - thickness, rec.Y + rec.Height - height, thickness, height - thickness), borderColor);
         }
         
-        public static void DrawCenterText(SpriteFont font, string text, Vector2 pos, Color color, int recWidth, int recHeight)
+        public static void DrawCenterText(SpriteFont font, string text, Vector2 pos, Vector2 size, Color color)
         {
-            if (text == "\0")
-                return;
-
             var fontSize = font.MeasureString(text);
-            var offsetX = (int)(recWidth / 2 - fontSize.X / 2);
-            var offsetY = (int)(recHeight / 2 - fontSize.Y / 2);
+            var offsetX = (int)(size.X / 2 - fontSize.X / 2);
+            var offsetY = (int)(size.Y / 2 - fontSize.Y / 2);
 
             Alfapet.SpriteBatch.DrawString(font, text, new Vector2(pos.X + offsetX, pos.Y + offsetY), color);
         }

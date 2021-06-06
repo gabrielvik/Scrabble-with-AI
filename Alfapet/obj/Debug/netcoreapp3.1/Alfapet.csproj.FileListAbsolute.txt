@@ -75,3 +75,4 @@ C:\Users\dator\source\repos\alfapet_school\Alfapet\obj\Debug\netcoreapp3.1\Alfap
 C:\Users\dator\source\repos\alfapet_school\Alfapet\bin\Debug\netcoreapp3.1\Content\Fonts\Montserrat-Bold-Smaller.xnb
 C:\Users\dator\source\repos\alfapet_school\Alfapet\bin\Debug\netcoreapp3.1\Json.Net.dll
 C:\Users\dator\source\repos\alfapet_school\Alfapet\bin\Debug\netcoreapp3.1\Newtonsoft.Json.dll
+C:\Users\dator\source\repos\alfapet_school\Alfapet\bin\Debug\netcoreapp3.1\Content\Fonts\Montserrat-Bold-Tiny.xnb

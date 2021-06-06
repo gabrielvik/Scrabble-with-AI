@@ -17,11 +17,13 @@ namespace Alfapet
         private static async void Start(int boardTiles, int handTiles)
         {
             Board.XTiles = Board.YTiles = boardTiles;
-            AlfapetConfig.HandAmount = handTiles;
+            Config.HandAmount = handTiles;
             
             Alfapet.DrawFunction = delegate ()
             {
-                UI.DrawCenterText(UI.MontserratBoldSmaller, LoadString, new Vector2(0, 0), Color.White, Alfapet.Graphics.GraphicsDevice.Viewport.Width, Alfapet.Graphics.GraphicsDevice.Viewport.Height);
+                UI.DrawCenterText(UI.MontserratBoldSmaller, LoadString, new Vector2(0, 0),
+                    new Vector2(Alfapet.Graphics.GraphicsDevice.Viewport.Width,
+                        Alfapet.Graphics.GraphicsDevice.Viewport.Height), Color.White);
             };
             
             await Alfapet.Start();
@@ -37,6 +39,7 @@ namespace Alfapet
                 Board.Draw();
                 Hand.Draw();
                 Button.Draw();
+                Notifications.Draw();
             };
         }
 
@@ -56,16 +59,22 @@ namespace Alfapet
             {
                 Button.Draw();
 
-                UI.DrawCenterText(UI.MontserratBoldSmaller, "Board Tiles Amount", new Vector2(0, y - 24 - 10), Color.White, Alfapet.Graphics.GraphicsDevice.Viewport.Width, 0);
-                UI.DrawCenterText(UI.MontserratBoldSmaller, "Hand Tiles Amount", new Vector2(0, y + 64 + height - 10), Color.White, Alfapet.Graphics.GraphicsDevice.Viewport.Width, 0);
+                UI.DrawCenterText(UI.MontserratBoldSmaller, "Board Tiles Amount", new Vector2(0, y - 24 - 10),
+                    new Vector2(Alfapet.Graphics.GraphicsDevice.Viewport.Width, 0), Color.White);
+                UI.DrawCenterText(UI.MontserratBoldSmaller, "Hand Tiles Amount", new Vector2(0, y + 64 + height - 10),
+                    new Vector2(Alfapet.Graphics.GraphicsDevice.Viewport.Width, 0), Color.White);
                 
                 var tilesNumRec = new Rectangle(x, y, width, height);
                 UI.StylishRectangle(tilesNumRec);
-                UI.DrawCenterText(UI.MontserratBoldSmaller, boardNumAmount+ "x" + boardNumAmount, new Vector2(tilesNumRec.X, tilesNumRec.Y), Color.White, tilesNumRec.Width, tilesNumRec.Height);
+                UI.DrawCenterText(UI.MontserratBoldSmaller, boardNumAmount + "x" + boardNumAmount,
+                    new Vector2(tilesNumRec.X, tilesNumRec.Y), new Vector2(tilesNumRec.Width, tilesNumRec.Height),
+                    Color.White);
                 
                 var handTilesNumRec = new Rectangle(x, y + 64 + height + 24, width, height);
                 UI.StylishRectangle(handTilesNumRec);
-                UI.DrawCenterText(UI.MontserratBoldSmaller, handNumAmount.ToString(), new Vector2(handTilesNumRec.X, handTilesNumRec.Y), Color.White, handTilesNumRec.Width, handTilesNumRec.Height);
+                UI.DrawCenterText(UI.MontserratBoldSmaller, handNumAmount.ToString(),
+                    new Vector2(handTilesNumRec.X, handTilesNumRec.Y),
+                    new Vector2(handTilesNumRec.Width, handTilesNumRec.Height), Color.White);
             };
             
             var boardNumPrev = new Button();
@@ -135,7 +144,9 @@ namespace Alfapet
             Alfapet.DrawFunction = delegate ()
             {
                 Button.Draw();
-                UI.DrawCenterText(UI.MontserratBold, "GameTitle", new Vector2(0, 0), Color.White, Alfapet.Graphics.GraphicsDevice.Viewport.Width, Alfapet.Graphics.GraphicsDevice.Viewport.Height / 2);
+                UI.DrawCenterText(UI.MontserratBold, "GameTitle", new Vector2(0, 0),
+                    new Vector2(Alfapet.Graphics.GraphicsDevice.Viewport.Width,
+                        Alfapet.Graphics.GraphicsDevice.Viewport.Height / 2), Color.White);
             };
             Alfapet.UpdateFunction = Button.ListenForPresses;
 

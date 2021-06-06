@@ -8,14 +8,42 @@ namespace Alfapet
 {
     class Ai : Game
     {
+        public static bool Playing = false;
+        public static char[] Hand = new char[Config.HandAmount];
         private struct Word
         {
             public int YStart { get; set; } // Där ordet börjar på Y axeln
             public int YEnd { get; set; } // Där ordet slutar på Y axeln
             public int XStart { get; set; } // Där ordet börjar på X axeln
             public int XEnd { get; set; } // Där Ordet slutar på X axeln
-            public bool Axis { get; set; } // Om man är på X eller Y. sant för X och falskt för Y
-            public string Value { get; set; } // Sträng av vad ordet är
+            public bool Axis { get; set; } // Om man är på X eller Y. Sant för X och falskt för Y
+            public string Value { get; set; } // Vad ordet är
+        }
+
+        private static void GenerateHand()
+        {
+            for (var i = 0; i < Hand.Length; i++) // Populera arrayen med nya objekt
+            {
+                Hand[i] = Util.GenerateRandomLetter();
+            }
+        }
+        
+        public new static void Initialize()
+        {
+            GenerateHand();
+        }
+
+        private static string GetHandString()
+        {
+            var handString = "";
+            foreach (var tile in Hand)
+            {
+                if (tile == '\0')
+                    continue;
+
+                handString += tile;
+            }
+            return handString;
         }
 
         /*
@@ -23,18 +51,19 @@ namespace Alfapet
         */
         public static async void DoMove()
         {
-            // Vänta tills texten byts innan man gör över till att hitta ord eftersom funktionen kan vara kostsam
+            Playing = true;
+            // Vänta tills texten byts innan man gör över till att hitta ord
             await Task.Run(() =>
             {
-                ButtonRig.Buttons[0].SetText("Opponent Thinking");
+                ButtonRig.Buttons["move"].SetText("Opponent Thinking");
             });
 
             var words = GetPlacableWords();
 
-            // Väntar en random tid mellan 0.35s-1s innan man går vidare för att göra det mer verkligt för användaren
+            // Väntar en random tid mellan 1s-3s innan man går vidare för att göra det mer verkligt för användaren
             await Task.Delay(new Random().Next(1000, 3000));
             
-            ButtonRig.Buttons[0].SetText("Opponent Playing..."); // Har "tänkt" klart
+            ButtonRig.Buttons["move"].SetText("Opponent Playing"); // Har "tänkt" klart
 
             var bestWord = new List<Tuple<char, int, int>>();
             var mostPoint = 0;
@@ -42,7 +71,7 @@ namespace Alfapet
             foreach (var word in words) // Räkna ut vilket ord som är värt mest poäng
             {
                 // Summan av alla bokstäver i ordet beroende på poäng i config
-                var tempScore = word.Sum(character => AlfapetConfig.CharacterPoints[character.Item1]);
+                var tempScore = word.Sum(character => Config.CharacterPoints[character.Item1]);
                 
                 if (tempScore > mostPoint)
                 {
@@ -50,25 +79,43 @@ namespace Alfapet
                     mostPoint = tempScore;
                 }
             }
-
+            
             var score = 0;
+            var notificationString = "Opponent placed the letters (";
             // Lägg ut det bästa ordet man hittade på brädan
             foreach (var (letter, y, x) in bestWord)
             {
+                // Ersätt med en ny random karaktär
+                Hand[Array.IndexOf(Hand, char.ToUpper(letter))] = Util.GenerateRandomLetter();
+                
+                if(score != 0)
+                    notificationString += ", ";
+                
+                notificationString += letter;
+                
                 Board.Tiles[y, x].Letter = letter;
                 Board.Tiles[y, x].TempPlaced = true;
-                Board.Tiles[y, x].PlayerPlaced = false; // Användaren ska inte kunna röra brickan
 
-                score += AlfapetConfig.CharacterPoints[letter];
-
+                score += Config.CharacterPoints[letter];
                 await Task.Delay(new Random().Next(500, 1250)); // Väntar 0.5-1.25s innan man lägger nästa karaktär
             }
+            if (score <= 0)
+            {
+                Notifications.AddMessage("Opponent skipped this round");
+                GenerateHand();
+            }
+            else
+            {
+                notificationString += ") for " + score + " points";
+                Notifications.AddMessage(notificationString);
 
-            Rounds.AIPoints += score;
-            System.Diagnostics.Debug.WriteLine("Ai scored: " + score);
+                Rounds.AIPoints += score;
+            }
 
             Board.ResetTempTiles();
-            ButtonRig.Buttons[0].SetText("Skip");
+            Board.CheckTilesPlaced();
+            
+            Playing = false;
         }
 
         /*
@@ -92,9 +139,10 @@ namespace Alfapet
                     {
                         var xWordObj = new Word()
                         {
+                            YStart = y,
                             YEnd = y,
-                            XEnd = x - 1, // Minus ett eftersom ordet slutate på förra brickan
                             XStart = xStart,
+                            XEnd = x - 1, // Minus ett eftersom ordet slutate på förra brickan
                             Axis = true,
                             Value = xWord.ToLower()
                         };
@@ -105,11 +153,11 @@ namespace Alfapet
                     // Finns ett ord som nu har tagit slut eftersom brickan är tom på Y axeln
                     if (yWord.Length > 0 && Board.Tiles[x, y].Letter == '\0')
                     {
-                        //System.Diagnostics.Debug.WriteLine(yWord);
                         var yWordObj = new Word()
                         {
-                            YEnd = x - 1, // Minus ett eftersom ordet slutate på förra brickan
                             YStart = yStart,
+                            YEnd = x - 1, // Minus ett eftersom ordet slutate på förra brickan
+                            XStart = y,
                             XEnd = y,
                             Axis = false,
                             Value = yWord.ToLower()
@@ -139,13 +187,13 @@ namespace Alfapet
 
         /*
          * Hittar alla ord som kan placeras på brädan.
-         * Returnerar en lista med en lista som har information om alla karaktärer som ska placeras
+         * Returnerar en lista med en lista som har information om alla karaktärer som kan placeras
          * Tuple<char, int, int> - Item1 är karaktären som ska placeras,
          * Item2 är Y axeln vart den ska placeras, Item3 är X axeln där den ska placeras
         */
         private static List<List<Tuple<char, int, int>>> GetPlacableWords()
         {
-            var hand = Hand.GetHandString().ToLower();
+            var hand = GetHandString().ToLower();
             var boardWords = GetBoardWords();
             var wordPlacements = new List<List<Tuple<char, int, int>>>();
             var dictionaryList = Dictionaries.GetWordList();
@@ -153,7 +201,7 @@ namespace Alfapet
             foreach (var word in dictionaryList)
             {
                 var foundWord = false;
-                foreach (var boardWord in boardWords.Where(boardWord => word.Contains(boardWord.Value)))
+                foreach (var boardWord in boardWords.Where(boardWord => word.Contains(boardWord.Value))) // Alla ord på brädan som word strängen innehåller
                 {
                     if (foundWord) // Gör igen skillnad om man hittar samma ord flera gånger
                         break;
@@ -164,31 +212,37 @@ namespace Alfapet
                     
                     var boardWordIndex = word.IndexOf(boardWord.Value, StringComparison.Ordinal);
 
+                    var firstHalf = word[..boardWordIndex];
+                    var secondHalf = word[boardWordIndex..];
+                    
+                    // Kollar om ordet har tillräckligt plats på brädan
                     if (boardWord.Axis)
                     {
-                        if (boardWord.XStart - word[..boardWordIndex].Length < 0)
+                        if (boardWord.XStart - firstHalf.Length < 0)
                             break;
 
-                        if (boardWord.XEnd + word[boardWordIndex..].Length - 1 > Board.XTiles - 1)
+                        // Minus längden på boardWord eftersom boardWord tas med i rangen
+                        if (boardWord.XEnd + secondHalf.Length - boardWord.Value.Length > Board.XTiles - 1)
                             break;
                     }
                     else
                     {
-                        if (boardWord.YEnd + word[boardWordIndex..].Length - 1 > Board.YTiles - 1)
+                        if (boardWord.YStart - firstHalf.Length < 0)
                             break;
-
-                        if (boardWord.YStart - word[..boardWordIndex].Length < 0)
+                        
+                        if (boardWord.YEnd + secondHalf.Length - boardWord.Value.Length > Board.YTiles - 1)
                             break;
                     }
 
-                    foreach (var index in tempHand.Select(handChar => tempWord.IndexOf(handChar)))
+                    foreach (var index in tempHand.Select(handChar => tempWord.IndexOf(handChar))) // Ordets index av karaktären i handen 
                     {
                         if (index != -1)
                         {
                             tempWord = tempWord.Remove(index, 1); // Ta bort karaktären från strängen så den inte kan användas igen
                             match++;
                         }
-                        if (match < word.Length) continue;
+                        
+                        if (match < word.Length) continue; // Inte en match än
 
                         var wordPlacement = new List<Tuple<char, int, int>>();
                         var invalid = false;
@@ -196,24 +250,25 @@ namespace Alfapet
                         var separated = false;
                         var separatedIterator = 0;
                         
-                        if (boardWord.Axis) // X axel
+                        if (boardWord.Axis)
                         {
                             for (var x = 0; x < word.Length; x++)
                             {
-                                if (boardWordIndex == x)
+                                if (boardWordIndex == x) // x är positionen av boardWord som ska seperera
                                 {
-                                    x += boardWord.Value.Length - 1;
+                                    x += boardWord.Value.Length - 1; // Skippa alla karaktärer i boardWord
                                     
                                     separated = true;
                                     continue;
                                 }
 
                                 int boardX; // X Positionen där bokstaven ska placeras
-
                                 if (separated)
                                 {
+                                    // Plussa med nya iteratorn som börjar plussas när ordet är separerad
                                     boardX = boardWord.XEnd + 1 + separatedIterator;
                                     
+                                    // För att inte krocka med ett annat ord som kommer efter
                                     if (Board.Tiles[boardWord.YEnd, Math.Min(boardX + 1, Board.XTiles - 1)].Letter != '\0')
                                     {
                                         invalid = true;
@@ -223,8 +278,9 @@ namespace Alfapet
                                 }
                                 else
                                 {
-                                    boardX = boardWord.XStart - word[..boardWordIndex].Length + x;
+                                    boardX = boardWord.XStart - firstHalf.Length + x;
                                     
+                                    // För att inte krocka med ett annat ord som kommer innan
                                     if (Board.Tiles[boardWord.YEnd, Math.Max(boardX - 1, 0)].Letter != '\0')
                                     {
                                         invalid = true;
@@ -233,12 +289,16 @@ namespace Alfapet
                                 }
                                 
                                 // Kolla om det finns ett ord över karaktären
-                                var upWord = boardWords.Where(wordObj => wordObj.XEnd == boardX && wordObj.YEnd == boardWord.YEnd - 1)
+                                var upWord = boardWords.Where(wordObj =>
+                                        wordObj.XStart >= boardX &&
+                                        wordObj.XEnd <= boardX &&
+                                        wordObj.YEnd == boardWord.YEnd - 1)
                                     .Select(wordObj => wordObj.Value)
                                     .FirstOrDefault();
 
                                 if (upWord != null)
                                 {
+                                    // Kolla om det finns i ordboken
                                     if (!Dictionaries.IsWord(Board.Tiles[boardWord.YEnd, boardX].Letter + upWord))
                                     {
                                         invalid = true;
@@ -247,7 +307,10 @@ namespace Alfapet
                                 }
 
                                 // Ordet under karaktären
-                                var downWord = boardWords.Where(wordObj => wordObj.XEnd == boardX && wordObj.YStart == boardWord.YEnd + 1)
+                                var downWord = boardWords.Where(wordObj =>
+                                        wordObj.XStart >= boardX &&
+                                        wordObj.XEnd <= boardX &&
+                                        wordObj.YStart == boardWord.YEnd + 1)
                                     .Select(wordObj => wordObj.Value)
                                     .FirstOrDefault();
 
@@ -263,11 +326,11 @@ namespace Alfapet
                                 wordPlacement.Add(new Tuple<char, int, int>(char.ToUpper(word[x]), boardWord.YEnd, boardX));
                             }
                         }
-                        else // Y axeln
+                        else
                         {
-                            for (var y = 0; y < word.Length; y++) // Bokstäverna innan ordet börjar
+                            for (var y = 0; y < word.Length; y++)
                             {
-                                var boardY = -1; // Y positionen där karaktären ska placeras
+                                int boardY; // Y positionen där karaktären ska placeras
 
                                 if (boardWordIndex == y)
                                 {
@@ -280,6 +343,7 @@ namespace Alfapet
                                 if (separated)
                                 {
                                     boardY = boardWord.YEnd + 1 + separatedIterator;
+                                    // För att inte krocka med ett annat ord som kommer efter
                                     if (Board.Tiles[Math.Min(boardY + 1, Board.YTiles - 1), boardWord.XEnd].Letter != '\0')
                                     {
                                         invalid = true;
@@ -290,6 +354,7 @@ namespace Alfapet
                                 else
                                 {
                                     boardY = boardWord.YStart - word[..boardWordIndex].Length + y;
+                                    // För att inte krocka med ett annat ord som kommer innan
                                     if (Board.Tiles[Math.Max(boardY - 1, 0), boardWord.XEnd].Letter != '\0')
                                     {
                                         invalid = true;
@@ -298,7 +363,10 @@ namespace Alfapet
                                 }
 
                                 // Kolla om det finns ett ord vänster till karaktären
-                                var leftWord = boardWords.Where(wordObj => wordObj.XEnd == boardWord.XEnd - 1 && wordObj.YEnd == boardY)
+                                var leftWord = boardWords.Where(wordObj =>
+                                        wordObj.XEnd == boardWord.XEnd - 1 &&
+                                        wordObj.YStart >= boardY &&
+                                        wordObj.YEnd <= boardY)
                                     .Select(wordObj => wordObj.Value)
                                     .FirstOrDefault();
 
@@ -312,7 +380,10 @@ namespace Alfapet
                                 }
 
                                 // Kolla om det finns ett ord till höger av karaktären
-                                var rightWord = boardWords.Where(wordObj => wordObj.XStart == boardWord.XEnd + 1 && wordObj.YEnd == boardY)
+                                var rightWord = boardWords.Where(wordObj =>
+                                        wordObj.XStart == boardWord.XEnd + 1 &&
+                                        wordObj.YStart >= boardY &&
+                                        wordObj.YEnd <= boardY)
                                     .Select(wordObj => wordObj.Value)
                                     .FirstOrDefault();
 
@@ -331,21 +402,18 @@ namespace Alfapet
                                 }
 
                                 wordPlacement.Add(new Tuple<char, int, int>(char.ToUpper(word[y]), boardY, boardWord.XEnd));
-                                //System.Diagnostics.Debug.WriteLine("Adds here 0" + word);
                             }
                         }
 
                         if (!invalid)
                         {
                             wordPlacements.Add(wordPlacement);
-
                             foundWord = true;
-                            break;
                         }
+                        break;
                     }
                 }
             }
-
             return wordPlacements;
         }
     }

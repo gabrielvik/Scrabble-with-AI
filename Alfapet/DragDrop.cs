@@ -42,7 +42,7 @@ namespace Alfapet
                         var destinationTile = Board.Tiles[y, x];
                         
                         // Om muspekaren är över brickan, är det den användaren vill släppa på
-                        if (AlfapetUtil.IsHovering(destinationTile.GetPos(), originTile.GetSize()))
+                        if (Util.IsHovering(destinationTile.GetPos(), originTile.GetSize()))
                         {
                             if (destinationTile.Letter != '\0')
                                 break;
@@ -113,7 +113,7 @@ namespace Alfapet
             }
 
             // Om man håller leftclick och är över en bricka, börja dra på brickan
-            if (mouse.LeftButton == ButtonState.Pressed && AlfapetUtil.IsHovering(tile.GetPos(), new Vector2(Hand.TilesWidth, Hand.TilesHeight)))
+            if (mouse.LeftButton == ButtonState.Pressed && Util.IsHovering(tile.GetPos(), new Vector2(Hand.TilesWidth, Hand.TilesHeight)))
             {
                 tile.Dragging = true;
                 Dragging = true;
@@ -122,6 +122,10 @@ namespace Alfapet
 
         public static void Think()
         {
+            // Kolla inget om det inte är användarens tur
+            if (Ai.Playing)
+                return;
+            
             for (var i = 0; i < Hand.Tiles.Length; i++)
             {
                 CheckDrag(i, Hand.Tiles[i], Move.Place);
@@ -131,7 +135,7 @@ namespace Alfapet
                 for (var x = 0; x < Board.XTiles; x++)
                 {
                     // Låt inte användaren röra fasta eller bottens brickor
-                    if (!Board.Tiles[y, x].TempPlaced || !Board.Tiles[y, x].PlayerPlaced)
+                    if (!Board.Tiles[y, x].TempPlaced)
                         continue;
 
                     // Om muspekaren är vid handen vill man ta bort, annars flytta till en annan bricka på bordet

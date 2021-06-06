@@ -25,41 +25,26 @@ namespace Alfapet
             IsMouseVisible = true;
         }
 
-        public static async Task<int> Start()
+        public static async Task Start()
         {
-
             var initFuncs = new Dictionary<Action, string>()
             {
-                { AlfapetConfig.Initialize, "Loading config"},
+                { Config.Initialize, "Loading config"},
+                { () => Dictionaries.Initialize("english"), "Loading Dictionary" },
                 { Board.Initialize, "Creating Board" },
                 { Hand.Initialize, "Creating Hand" },
-                { () => Dictionaries.Initialize("english"), "Unpacking JSON" },
-                { ButtonRig.Initialize, "Creating Buttons" }
+                { ButtonRig.Initialize, "Creating Buttons" },
+                { Ai.Initialize, "Creating opponent" }
             };
 
             await Task.Run(() =>
             {
-                /*StartScreen.LoadString = "Loading Config";
-                Alfapet_Config.Initialize();
-                StartScreen.LoadString = "Creating Board";
-                Board.Initialize();
-                StartScreen.LoadString = "Creating Hand";
-                Hand.Initialize();
-                StartScreen.LoadString = "Unpacking JSON";
-                Dictionaries.Initialize("english");
-                StartScreen.LoadString = "Creating Button Rig";
-                ButtonRig.Initialize();*/
-
                 foreach (var func in initFuncs)
                 {
                     StartScreen.LoadString = func.Value;
                     func.Key.Invoke();
                 }
-
-
-                return 1;
             });
-            return 0;
         }
 
         protected override void Initialize()

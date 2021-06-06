@@ -3,13 +3,13 @@ using System.Collections.Generic;
 
 namespace Alfapet
 {
-    class AlfapetConfig : Game
+    class Config : Game
     {
         public static int HandAmount = 9;
 
         public static Dictionary<char, int> CharacterPoints;
 
-        public new static async void Initialize()
+        public new static void Initialize()
         {
             CharacterPoints = new Dictionary<char, int>()
             {

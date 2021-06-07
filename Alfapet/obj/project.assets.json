@@ -7432,23 +7432,23 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\tissto19gabvik\\.nuget\\packages\\": {},
-    "C:\\Microsoft\\Xamarin\\NuGet\\": {}
+    "C:\\Users\\dator\\.nuget\\packages\\": {},
+    "C:\\Microsoft\\Xamarin\\NuGet": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\tissto19gabvik\\source\\repos\\alfapet_school\\Alfapet\\Alfapet.csproj",
+      "projectUniqueName": "C:\\Users\\dator\\source\\repos\\alfapet_school\\Alfapet\\Alfapet.csproj",
       "projectName": "Alfapet",
-      "projectPath": "C:\\Users\\tissto19gabvik\\source\\repos\\alfapet_school\\Alfapet\\Alfapet.csproj",
-      "packagesPath": "C:\\Users\\tissto19gabvik\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\tissto19gabvik\\source\\repos\\alfapet_school\\Alfapet\\obj\\",
+      "projectPath": "C:\\Users\\dator\\source\\repos\\alfapet_school\\Alfapet\\Alfapet.csproj",
+      "packagesPath": "C:\\Users\\dator\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\dator\\source\\repos\\alfapet_school\\Alfapet\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
-        "C:\\Microsoft\\Xamarin\\NuGet\\"
+        "C:\\Microsoft\\Xamarin\\NuGet"
       ],
       "configFilePaths": [
-        "C:\\Users\\tissto19gabvik\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\dator\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Xamarin.Offline.config"
       ],
@@ -7461,6 +7461,7 @@
       },
       "frameworks": {
         "netcoreapp3.1": {
+          "targetAlias": "netcoreapp3.1",
           "projectReferences": {}
         }
       },
@@ -7472,6 +7473,7 @@
     },
     "frameworks": {
       "netcoreapp3.1": {
+        "targetAlias": "netcoreapp3.1",
         "dependencies": {
           "Json.Net": {
             "target": "Package",
@@ -7508,7 +7510,7 @@
             "privateAssets": "none"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.401\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.101\\RuntimeIdentifierGraph.json"
       }
     }
   }

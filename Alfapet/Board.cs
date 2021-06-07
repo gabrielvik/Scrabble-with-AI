@@ -54,12 +54,12 @@ namespace Alfapet
             foreach (var tile in Tiles)
             {
                 if (tile.TempPlaced)
-                    UI.StylishRectangle(new Rectangle((int)tile.X, (int)tile.Y, (int)tile.W, (int)tile.H), Color.White * 0.5f);
+                    Ui.StylishRectangle(new Rectangle((int)tile.X, (int)tile.Y, (int)tile.W, (int)tile.H), Color.White * 0.5f);
                 else
-                    UI.StylishRectangle(new Rectangle((int)tile.X, (int)tile.Y, (int)tile.W, (int)tile.H), null);
+                    Ui.StylishRectangle(new Rectangle((int)tile.X, (int)tile.Y, (int)tile.W, (int)tile.H), null);
 
                 if (tile.Letter != '\0')
-                    UI.DrawCenterText(UI.MontserratBoldSmaller, tile.Letter.ToString(), tile.GetPos(), tile.GetSize(), Color.White);
+                    Ui.DrawCenterText(Ui.MontserratBoldSmaller, tile.Letter.ToString(), tile.GetPos(), tile.GetSize(), Color.White);
             }
         }
 

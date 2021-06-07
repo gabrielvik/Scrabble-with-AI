@@ -67,7 +67,8 @@ namespace Alfapet
                 return true;
             }
 
-            for (var y = 0; y < Board.XTiles; y++) // Kollar ord på Y axeln
+            // Kör funktionen för varje karaktär på X och Y axeln
+            for (var y = 0; y < Board.XTiles; y++)
             {
                 for (var x = 0; x < Board.YTiles; x++)
                 {
@@ -88,9 +89,13 @@ namespace Alfapet
         {
             if (skip)
             {
-                Notifications.AddMessage("You skipped this round");
-                Ai.DoMove();
-                // TODO: (?) RoundNum++;
+                if (RoundNum > 0) // Användaren måste placera första ordet
+                {
+                    Notifications.AddMessage("You skipped this round");
+                    Ai.DoMove();
+                    RoundNum++;
+                }
+
                 return;
             }
             
@@ -104,21 +109,18 @@ namespace Alfapet
 
             var notificationString = "You placed the letters (";
             var score = 0;
-            Board.ResetTempTiles(async tile =>
+            Board.ResetTempTiles(tile =>
             {
                 if(score != 0) // Lägg inte ett komma innan första bokstaven
                     notificationString += ", ";
                 
                 notificationString += tile.Letter;
                 score += Config.CharacterPoints[tile.Letter];
-
-                await Task.Delay(150); // Vänta 0.15s efter man gjort beräkningar
             }, true);
-
-            notificationString += ") for " + score + " points";
-            Notifications.AddMessage(notificationString);
             
             PlayerPoints += score;
+            notificationString += ") for " + score + " points - Total score " + PlayerPoints;
+            Notifications.AddMessage(notificationString);
 
             Board.TilesPlaced = 0;
             Hand.GiveNewLetters();

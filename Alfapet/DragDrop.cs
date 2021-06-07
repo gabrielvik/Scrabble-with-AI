@@ -5,7 +5,7 @@ namespace Alfapet
 {
     public class DragDrop : Game
     {
-        private static bool Dragging = false;
+        private static bool Dragging;
 
         private enum Move
         {
@@ -16,17 +16,18 @@ namespace Alfapet
 
         /*
          * Kallas när användaren släppt en bricka.
-         * Gör olika saker beroende på vilken moveType
+         * Gör olika saker beroende på vilken Move typ
         */
         private static void DoDrop(dynamic index, Tile originTile, Move moveType)
         {
             // Behöver ingen destinations bricka
             if (moveType == Move.Remove)
             {
-                originTile.ResetPos();
+                originTile.ResetPos(); // Sätter tillbaka positionen på bordet
                 
                 Hand.InsertLetter(originTile.Letter);
                 
+                // Brickan på bordet borde nu vara tom
                 originTile.Letter = '\0';
                 originTile.TempPlaced = false;
 
@@ -44,12 +45,14 @@ namespace Alfapet
                         // Om muspekaren är över brickan, är det den användaren vill släppa på
                         if (Util.IsHovering(destinationTile.GetPos(), originTile.GetSize()))
                         {
+                            // Låt inte användaren släppa på en bricka med en boktav
                             if (destinationTile.Letter != '\0')
                                 break;
                             
                             switch (moveType)
                             {
                                 case Move.Place:
+                                    // Sätter brickan på bordet till bokstaven i handen
                                     destinationTile.Letter = originTile.Letter;
                                     destinationTile.TempPlaced = true; // Nya brickor måste markeras som temporärt placerade
 
@@ -60,12 +63,13 @@ namespace Alfapet
                                     
                                     break;
                                 case Move.Change:
+                                    // Byter brickorna på bordet
                                     destinationTile.Letter = originTile.Letter;
                                     destinationTile.TempPlaced = true;
 
+                                    // Återställ brickan man bytt från
                                     originTile.ResetPos();
                                     originTile.TempPlaced = false;
-
                                     originTile.Letter = '\0';
 
                                     break;
@@ -73,7 +77,7 @@ namespace Alfapet
 
                             break;
                         }
-                        // Om man inte hittar, sätt tillbaka brickans position till handen
+                        // Om man inte hittar, sätt tillbaka brickans position
                         originTile.ResetPos();
                     }
                 }
@@ -93,7 +97,7 @@ namespace Alfapet
 
             if (tile.Dragging)
             {
-                // Man håller på att dra och leftclick är nere, brickan fortsätter att följa musen
+                // Man håller på att dra och leftclick är fortfarande nere, brickan fortsätter att följa musen
                 if (mouse.LeftButton == ButtonState.Pressed)
                 {
                     tile.SetPos(mouse.X - tile.W / 2, mouse.Y - tile.H / 2); // Sätter brickan till i mitten av muspekaren
@@ -101,8 +105,10 @@ namespace Alfapet
                 // Man håller på att dra och inte längre håller leftclick, användaren vill släppa brickan
                 else
                 {
+                    // Inget dras längre
                     Dragging = false;
                     tile.Dragging = false;
+                    
                     DoDrop(index, tile, moveType);
                 }
             }
@@ -120,16 +126,18 @@ namespace Alfapet
             }
         }
 
-        public static void Think()
+        public static void Check()
         {
             // Kolla inget om det inte är användarens tur
             if (Ai.Playing)
                 return;
             
+            // Kolla om brickor i handen blir dragna
             for (var i = 0; i < Hand.Tiles.Length; i++)
             {
                 CheckDrag(i, Hand.Tiles[i], Move.Place);
             }
+            // Kolla brickorna på bordet
             for (var y = 0; y < Board.YTiles; y++)
             {
                 for (var x = 0; x < Board.XTiles; x++)

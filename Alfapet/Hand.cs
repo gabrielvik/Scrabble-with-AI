@@ -33,10 +33,40 @@ namespace Alfapet
         {
             for (var i = 0; i < Tiles.Length; i++)
             {
-                Tiles[i] = new Tile
+                /*Tiles[i] = new Tile
                 {
                     Letter = Util.GenerateRandomLetter()
-                };
+                };*/
+                
+                // TODO: 
+                Tiles[i] = new Tile();
+                switch (i)
+                {
+                    case 0:
+                        Tiles[i].Letter = 'D';
+                        break;
+                    case 1: 
+                        Tiles[i].Letter = 'A';
+                        break;
+                    case 2: 
+                        Tiles[i].Letter = 'B';
+                        break;
+                    case 3: 
+                        Tiles[i].Letter = 'W';
+                        break;
+                    case 4: 
+                        Tiles[i].Letter = 'C';
+                        break;
+                    case 5: 
+                        Tiles[i].Letter = 'T';
+                        break;
+                    case 6: 
+                        Tiles[i].Letter = 'Q';
+                        break;
+                    case 7: 
+                        Tiles[i].Letter = 'Q';
+                        break;
+                }
             }
             SetPositions();
         }
@@ -92,16 +122,16 @@ namespace Alfapet
                 if (!tile.Dragging)
                 {
                     tile.SetSize(TilesWidth, TilesHeight - 10);
-                    tile.SetFont(UI.MontserratBold);
+                    tile.SetFont(Ui.MontserratBold);
                 }
                 else
                 {
                     tile.SetSize(Board.TilesWidth, Board.TilesHeight);
-                    tile.SetFont(UI.MontserratBoldSmaller);
+                    tile.SetFont(Ui.MontserratBoldSmaller);
                 }
 
-                UI.StylishRectangle(new Rectangle((int)tile.X, (int)tile.Y, (int)tile.W, (int)tile.H));
-                UI.DrawCenterText(tile.Font, tile.Letter.ToString(), tile.GetPos(), tile.GetSize(), Color.White);
+                Ui.StylishRectangle(new Rectangle((int)tile.X, (int)tile.Y, (int)tile.W, (int)tile.H));
+                Ui.DrawCenterText(tile.Font, tile.Letter.ToString(), tile.GetPos(), tile.GetSize(), Color.White);
             }
         }
     }

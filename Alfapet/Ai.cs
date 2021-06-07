@@ -9,7 +9,7 @@ namespace Alfapet
     class Ai : Game
     {
         public static bool Playing = false;
-        public static char[] Letters = new char[Hand.Amount];
+        private static readonly char[] Letters = new char[Hand.Amount];
         private struct Word
         {
             public int YStart { get; set; } // Där ordet börjar på Y axeln
@@ -20,6 +20,9 @@ namespace Alfapet
             public string Value { get; set; } // Vad ordet är
         }
 
+        /*
+         * Sätter alla karakträrer i handen till nya random bokstäver
+        */
         private static void GenerateHand()
         {
             for (var i = 0; i < Letters.Length; i++)
@@ -31,19 +34,6 @@ namespace Alfapet
         public new static void Initialize()
         {
             GenerateHand();
-        }
-
-        private static string GetHandString()
-        {
-            var handString = "";
-            foreach (var tile in Letters)
-            {
-                if (tile == '\0')
-                    continue;
-
-                handString += tile;
-            }
-            return handString;
         }
 
         /*
@@ -61,7 +51,7 @@ namespace Alfapet
             var words = GetPlacableWords();
 
             // Väntar en random tid mellan 1s-3s innan man går vidare för att göra det mer verkligt för användaren
-            await Task.Delay(new Random().Next(500, 3000));
+            await Task.Delay(new Random().Next(1000, 3000));
             
             ButtonRig.Buttons["move"].SetText("Opponent Playing"); // Har "tänkt" klart
 
@@ -77,6 +67,16 @@ namespace Alfapet
                     bestWord = word;
                     mostPoint = tempScore;
                 }
+            }
+
+            // TODO: 
+            if (Rounds.RoundNum == 2 || Rounds.RoundNum == 3)
+            {
+                Rounds.RoundNum++;
+                Notifications.AddMessage("Opponent skipped this round");
+                Board.CheckTilesPlaced();
+                Playing = false;
+                return;
             }
             
             var score = 0;
@@ -106,10 +106,10 @@ namespace Alfapet
             }
             else
             {
-                notificationString += ") for " + score + " points";
-                Notifications.AddMessage(notificationString);
-
                 Rounds.AIPoints += score;
+                
+                notificationString += ") for " + score + " points - Total score " + Rounds.AIPoints;
+                Notifications.AddMessage(notificationString);
             }
 
             Board.ResetTempTiles();
@@ -117,7 +117,23 @@ namespace Alfapet
             
             Playing = false;
         }
+        
+        /*
+         * Returnerar en sträng av Ai handen
+        */
+        private static string GetHandString()
+        {
+            var handString = "";
+            foreach (var tile in Letters)
+            {
+                if (tile == '\0')
+                    continue;
 
+                handString += tile;
+            }
+            return handString;
+        }
+        
         /*
          * Returnerar en lista av alla ord på brädan i en Word struktur
         */
@@ -168,7 +184,7 @@ namespace Alfapet
                     }
                     if (Board.Tiles[y, x].Letter != '\0')
                     {
-                        if (xWord.Length <= 0)
+                        if (xWord.Length <= 0) // Är start på ordet
                             xStart = x;
 
                         xWord += Board.Tiles[y, x].Letter;
@@ -221,7 +237,6 @@ namespace Alfapet
                     {
                         if (boardWord.XStart - firstHalf.Length < 0)
                             break;
-
                         // Minus längden på boardWord eftersom boardWord tas med i rangen
                         if (boardWord.XEnd + secondHalf.Length - boardWord.Value.Length > Board.XTiles - 1)
                             break;
@@ -254,9 +269,11 @@ namespace Alfapet
                         {
                             for (var x = 0; x < word.Length; x++)
                             {
-                                if (boardWordIndex == x) // x är positionen av boardWord som ska seperera
+                                // Man har kommit till positionen av boardWord, separera ordet
+                                if (boardWordIndex == x)
                                 {
-                                    x += boardWord.Value.Length - 1; // Skippa alla karaktärer i boardWord
+                                    // Skippa alla karaktärer i boardWord (minus ett för att man fortsätter till nästa)
+                                    x += boardWord.Value.Length - 1;
                                     
                                     separated = true;
                                     continue;
@@ -298,7 +315,7 @@ namespace Alfapet
 
                                 if (upWord != null)
                                 {
-                                    // Kolla om det finns i ordboken
+                                    // Kolla det kollektiva ordet finns i ordboken
                                     if (!Dictionaries.IsWord(Board.Tiles[boardWord.YEnd, boardX].Letter + upWord))
                                     {
                                         invalid = true;
@@ -394,11 +411,6 @@ namespace Alfapet
                                         invalid = true;
                                         break;
                                     }
-                                }
-                                if (Board.Tiles[Math.Max(boardY - 1, 0), boardWord.XEnd].Letter != '\0')
-                                {
-                                    invalid = true;
-                                    break;
                                 }
 
                                 wordPlacement.Add(new Tuple<char, int, int>(char.ToUpper(word[y]), boardY, boardWord.XEnd));

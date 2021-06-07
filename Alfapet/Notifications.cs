@@ -32,7 +32,7 @@ namespace Alfapet
                 {
                     // Lerpar positionen till utanför skärmen
                     H = MathHelper.Lerp(H, -20, (float)(DateTimeOffset.Now.ToUnixTimeSeconds() - Messages[i].StartTime + 2) / 500);
-                    if (H <= -16) // Texten är utanför (16 är storleken på font)
+                    if (H <= -14) // Texten är utanför (14 är storleken på font)
                     {
                         Messages.Remove(Messages[i]);
 
@@ -41,7 +41,7 @@ namespace Alfapet
                     }
                 }
                 
-                UI.DrawCenterText(UI.MontserratBoldTiny, Messages[i].Value, new Vector2(0, 0),
+                Ui.DrawCenterText(Ui.MontserratBoldTiny, Messages[i].Value, new Vector2(0, 0),
                     new Vector2(Alfapet.Graphics.GraphicsDevice.Viewport.Width, H + i * 100), Color.White);
             }
         }

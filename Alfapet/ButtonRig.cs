@@ -10,14 +10,15 @@ namespace Alfapet
         public static float ButtonHeight = 47.5f;
         public new static void Initialize()
         {
-            Buttons = new Dictionary<string, Button>();
-            Buttons["move"] = new Button();
-            Buttons["sort"] = new Button();
-            Buttons["newHand"] = new Button();
-            // Buttons[2] = new Button();
+            Buttons = new Dictionary<string, Button>
+            {
+                { "move", new Button() },
+                { "sort", new Button() },
+                { "newHand", new Button() }
+            };
 
             float x = 5;
-            var w = (Alfapet.Graphics.GraphicsDevice.Viewport.Width - ((Buttons.Count + 1) * x)) / Buttons.Count;
+            var w = (Alfapet.Graphics.GraphicsDevice.Viewport.Width - (Buttons.Count + 1) * x) / Buttons.Count;
             foreach (var button in Buttons.Values)
             {
                 button.SetPos(x, Alfapet.Graphics.GraphicsDevice.Viewport.Height - Hand.TilesHeight - ButtonHeight - 2.5f);
@@ -27,11 +28,11 @@ namespace Alfapet
             }
             
             Buttons["move"].SetText("Skip");
-            Buttons["move"].ClickEvent = delegate ()
+            Buttons["move"].ClickEvent = delegate
             {
                 if (Ai.Playing)
                     return;
-                
+
                 Rounds.DoMove(Board.TilesPlaced <= 0);
             };
             
@@ -39,11 +40,16 @@ namespace Alfapet
             Buttons["sort"].ClickEvent = Hand.Sort;
             
             Buttons["newHand"].SetText("New Hand (skip)");
-            Buttons["newHand"].ClickEvent = delegate ()
+            Buttons["newHand"].ClickEvent = delegate
             {
                 if (Ai.Playing)
                 {
                     Buttons["newHand"].InvalidClick("Opponent Playing!");
+                    return;
+                }
+                if (Board.TilesPlaced > 0)
+                {
+                    Buttons["newHand"].InvalidClick("Remove Tiles!");
                     return;
                 }
 

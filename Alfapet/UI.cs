@@ -4,7 +4,7 @@ using Microsoft.Xna.Framework.Content;
 
 namespace Alfapet
 {
-    class UI : Game
+    class Ui : Game
     {
         public static SpriteFont MontserratBold;
         public static SpriteFont MontserratBoldSmaller;

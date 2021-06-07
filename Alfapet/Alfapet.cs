@@ -70,7 +70,7 @@ namespace Alfapet
             TransparentBack = new Texture2D(GraphicsDevice, 1, 1);
             TransparentBack.SetData(new Color[] { Color.White * 0.5f });
 
-            UI.Load(Content);
+            Ui.Load(Content);
         }
 
         protected override void Update(GameTime gameTime)

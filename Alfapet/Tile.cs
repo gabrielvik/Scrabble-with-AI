@@ -17,28 +17,13 @@ namespace Alfapet
         public bool TempPlaced = false;
         public bool Dragging = false;
 
-        public Vector2 OriginalPos = default(Vector2);
-
-        public static List<Tile> GetSurroundingTiles(int y, int x)
-        {
-            var tiles = new List<Tile>();
-            
-            if(y > 0)
-                tiles.Add(Board.Tiles[y - 1, x]);
-            if(y < Board.YTiles - 1)
-                tiles.Add(Board.Tiles[y + 1, x]);
-            if(x > 0)
-                tiles.Add(Board.Tiles[y, x - 1]);
-            if(x < Board.XTiles - 1)
-                tiles.Add(Board.Tiles[y, x + 1]);
-
-            return tiles;
-        }
+        private Vector2 OriginalPos;
 
         public void SetPos(float x, float y)
         {
-            this.X = x;
-            this.Y = y;
+            X = x;
+            Y = y;
+            // Om orignella positionen inte finns, sätt den
             if (OriginalPos == Vector2.Zero)
                 OriginalPos = new Vector2(x, y);
         }
@@ -50,13 +35,13 @@ namespace Alfapet
 
         public void SetFont(SpriteFont font)
         {
-            this.Font = font;
+            Font = font;
         }
 
         public void SetSize(float w, float h)
         {
-            this.W = w;
-            this.H = h;
+            W = w;
+            H = h;
         }
 
         public Vector2 GetSize()

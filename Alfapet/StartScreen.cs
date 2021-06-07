@@ -14,27 +14,32 @@ namespace Alfapet
         public static string LoadString = "";
         private static Button PlayBtn;
 
+        /*
+         * När användaren vill börja spelet, ändrar på draw och update funktionen
+         * Sätter hur många brickor på bordet och på handen
+        */
         private static async void Start(int boardTiles, int handTiles)
         {
             Board.XTiles = Board.YTiles = boardTiles;
             Hand.Amount = handTiles;
             
-            Alfapet.DrawFunction = delegate ()
+            // Sätter draw funktionen till att visa LoadString
+            Alfapet.DrawFunction = delegate
             {
-                UI.DrawCenterText(UI.MontserratBoldSmaller, LoadString, new Vector2(0, 0),
+                Ui.DrawCenterText(Ui.MontserratBoldSmaller, LoadString, new Vector2(0, 0),
                     new Vector2(Alfapet.Graphics.GraphicsDevice.Viewport.Width,
                         Alfapet.Graphics.GraphicsDevice.Viewport.Height), Color.White);
             };
             
             await Alfapet.Start();
             
-            Alfapet.UpdateFunction = delegate ()
+            Alfapet.UpdateFunction = delegate
             {
-                DragDrop.Think();
+                DragDrop.Check();
                 Button.ListenForPresses();
             };
 
-            Alfapet.DrawFunction = delegate ()
+            Alfapet.DrawFunction = delegate
             {
                 Board.Draw();
                 Hand.Draw();
@@ -43,6 +48,9 @@ namespace Alfapet
             };
         }
 
+        /*
+         * Skapar en meny där man väljer hur många brickor på brädan och handen
+        */
         private static void BuildGameSettingsMenu()
         {
             if (PlayBtn != null)
@@ -59,20 +67,20 @@ namespace Alfapet
             {
                 Button.Draw();
 
-                UI.DrawCenterText(UI.MontserratBoldSmaller, "Board Tiles Amount", new Vector2(0, y - 24 - 10),
+                Ui.DrawCenterText(Ui.MontserratBoldSmaller, "Board Tiles Amount", new Vector2(0, y - 24 - 10),
                     new Vector2(Alfapet.Graphics.GraphicsDevice.Viewport.Width, 0), Color.White);
-                UI.DrawCenterText(UI.MontserratBoldSmaller, "Hand Tiles Amount", new Vector2(0, y + 64 + height - 10),
+                Ui.DrawCenterText(Ui.MontserratBoldSmaller, "Hand Tiles Amount", new Vector2(0, y + 64 + height - 10),
                     new Vector2(Alfapet.Graphics.GraphicsDevice.Viewport.Width, 0), Color.White);
                 
                 var tilesNumRec = new Rectangle(x, y, width, height);
-                UI.StylishRectangle(tilesNumRec);
-                UI.DrawCenterText(UI.MontserratBoldSmaller, boardNumAmount + "x" + boardNumAmount,
+                Ui.StylishRectangle(tilesNumRec);
+                Ui.DrawCenterText(Ui.MontserratBoldSmaller, boardNumAmount + "x" + boardNumAmount,
                     new Vector2(tilesNumRec.X, tilesNumRec.Y), new Vector2(tilesNumRec.Width, tilesNumRec.Height),
                     Color.White);
                 
                 var handTilesNumRec = new Rectangle(x, y + 64 + height + 24, width, height);
-                UI.StylishRectangle(handTilesNumRec);
-                UI.DrawCenterText(UI.MontserratBoldSmaller, handNumAmount.ToString(),
+                Ui.StylishRectangle(handTilesNumRec);
+                Ui.DrawCenterText(Ui.MontserratBoldSmaller, handNumAmount.ToString(),
                     new Vector2(handTilesNumRec.X, handTilesNumRec.Y),
                     new Vector2(handTilesNumRec.Width, handTilesNumRec.Height), Color.White);
             };
@@ -144,7 +152,7 @@ namespace Alfapet
             Alfapet.DrawFunction = delegate ()
             {
                 Button.Draw();
-                UI.DrawCenterText(UI.MontserratBold, "GameTitle", new Vector2(0, 0),
+                Ui.DrawCenterText(Ui.MontserratBold, "GameTitle", new Vector2(0, 0),
                     new Vector2(Alfapet.Graphics.GraphicsDevice.Viewport.Width,
                         Alfapet.Graphics.GraphicsDevice.Viewport.Height / 2), Color.White);
             };

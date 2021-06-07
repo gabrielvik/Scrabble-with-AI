@@ -13,6 +13,7 @@ namespace Alfapet
         public static int AIPoints = 0;
 
         public static int RoundNum = 0;
+
         /*
          * Returnerar sant om brickorna är lagligt placerade och att alla ord placerade finns i ordboken
         */
@@ -23,7 +24,7 @@ namespace Alfapet
             var yWord = "";
 
             /*
-             * Används för att kalkylera alla ord tillagda på brädan,
+             * Används för att räkna alla ord tillagda på brädan,
              * behöver inte vara riktiga ord utan räknar bara ord som är placerade
             */
             bool CorrectWordPlacement(int y, int x, bool axis)
@@ -32,13 +33,13 @@ namespace Alfapet
                 ref var tempWord = ref axis ? ref xWord : ref yWord;
                 if (Board.Tiles[y, x].Letter == '\0')
                 {
-                    // Går bak en gång eftersom ordet slutade på förra brickan
+                    // Går bak en bricka eftersom ordet slutade på förra brickan
                     if (axis)
                         x--;
                     else
                         y--;
 
-                    // Kollar att bokstaven har åtmistonde en annan placerad brevid sig
+                    // Om man inte går utanför brädan, kolla att bokstaven har åtmistonde en annan placerad brevid sig
                     if (!ignoreIsolated && tempWord.Length == 1 && x > 0 && x < Board.XTiles - 1 && y > 0 && y < Board.YTiles - 1)
                     {
                         var letterUp = Board.Tiles[y - 1, x];
@@ -50,7 +51,7 @@ namespace Alfapet
                         if ((letterUp.Letter == '\0' || letterUp.TempPlaced) &&
                             (letterDown.Letter == '\0' || letterDown.TempPlaced) &&
                             (letterLeft.Letter == '\0' || letterLeft.TempPlaced) &&
-                            (letterRight.Letter == '\0' || letterRight.TempPlaced)) 
+                            (letterRight.Letter == '\0' || letterRight.TempPlaced))
                             return false;
                     }
                     else if (tempWord.Length > 1) // Är ett lagligt ord
@@ -89,6 +90,7 @@ namespace Alfapet
             {
                 Notifications.AddMessage("You skipped this round");
                 Ai.DoMove();
+                // TODO: (?) RoundNum++;
                 return;
             }
             
@@ -102,27 +104,26 @@ namespace Alfapet
 
             var notificationString = "You placed the letters (";
             var score = 0;
-            
             Board.ResetTempTiles(async tile =>
             {
-                if(score != 0)
+                if(score != 0) // Lägg inte ett komma innan första bokstaven
                     notificationString += ", ";
                 
                 notificationString += tile.Letter;
                 score += Config.CharacterPoints[tile.Letter];
 
-                await Task.Delay(150);
+                await Task.Delay(150); // Vänta 0.15s efter man gjort beräkningar
             }, true);
+
             notificationString += ") for " + score + " points";
             Notifications.AddMessage(notificationString);
             
             PlayerPoints += score;
 
-            Hand.GiveNewLetters();
             Board.TilesPlaced = 0;
-            Ai.DoMove();
+            Hand.GiveNewLetters();
 
-            Debug.WriteLine("Player placed score for: " + score);
+            Ai.DoMove();
         }
     }
 }

@@ -9,7 +9,7 @@ namespace Alfapet
     class Ai : Game
     {
         public static bool Playing = false;
-        public static char[] Hand = new char[Config.HandAmount];
+        public static char[] Letters = new char[Hand.Amount];
         private struct Word
         {
             public int YStart { get; set; } // Där ordet börjar på Y axeln
@@ -22,9 +22,9 @@ namespace Alfapet
 
         private static void GenerateHand()
         {
-            for (var i = 0; i < Hand.Length; i++) // Populera arrayen med nya objekt
+            for (var i = 0; i < Letters.Length; i++)
             {
-                Hand[i] = Util.GenerateRandomLetter();
+                Letters[i] = Util.GenerateRandomLetter();
             }
         }
         
@@ -36,7 +36,7 @@ namespace Alfapet
         private static string GetHandString()
         {
             var handString = "";
-            foreach (var tile in Hand)
+            foreach (var tile in Letters)
             {
                 if (tile == '\0')
                     continue;
@@ -47,7 +47,7 @@ namespace Alfapet
         }
 
         /*
-        * Kallas när AI ska göra sitt drag
+        * Kallas när AI ska göra sitt drag, sätter ut brickor och ger poäng
         */
         public static async void DoMove()
         {
@@ -61,13 +61,12 @@ namespace Alfapet
             var words = GetPlacableWords();
 
             // Väntar en random tid mellan 1s-3s innan man går vidare för att göra det mer verkligt för användaren
-            await Task.Delay(new Random().Next(1000, 3000));
+            await Task.Delay(new Random().Next(500, 3000));
             
             ButtonRig.Buttons["move"].SetText("Opponent Playing"); // Har "tänkt" klart
 
             var bestWord = new List<Tuple<char, int, int>>();
             var mostPoint = 0;
-
             foreach (var word in words) // Räkna ut vilket ord som är värt mest poäng
             {
                 // Summan av alla bokstäver i ordet beroende på poäng i config
@@ -86,9 +85,9 @@ namespace Alfapet
             foreach (var (letter, y, x) in bestWord)
             {
                 // Ersätt med en ny random karaktär
-                Hand[Array.IndexOf(Hand, char.ToUpper(letter))] = Util.GenerateRandomLetter();
+                Letters[Array.IndexOf(Letters, char.ToUpper(letter))] = Util.GenerateRandomLetter();
                 
-                if(score != 0)
+                if(score != 0) // Lägg inte till ett komma första bokstaven
                     notificationString += ", ";
                 
                 notificationString += letter;
@@ -102,6 +101,7 @@ namespace Alfapet
             if (score <= 0)
             {
                 Notifications.AddMessage("Opponent skipped this round");
+                // Ge Ai en ny hand så den kanske kan lägga ett ord nästa runda
                 GenerateHand();
             }
             else
@@ -195,23 +195,24 @@ namespace Alfapet
         {
             var hand = GetHandString().ToLower();
             var boardWords = GetBoardWords();
-            var wordPlacements = new List<List<Tuple<char, int, int>>>();
             var dictionaryList = Dictionaries.GetWordList();
+            var wordPlacements = new List<List<Tuple<char, int, int>>>();
 
             foreach (var word in dictionaryList)
             {
                 var foundWord = false;
-                foreach (var boardWord in boardWords.Where(boardWord => word.Contains(boardWord.Value))) // Alla ord på brädan som word strängen innehåller
+                // Loopa genom alla ord på brädan som word strängen innehåller
+                foreach (var boardWord in boardWords.Where(boardWord => word.Contains(boardWord.Value)))
                 {
                     if (foundWord) // Gör igen skillnad om man hittar samma ord flera gånger
                         break;
 
                     var tempHand = hand + boardWord.Value;
                     var tempWord = word;
+
                     var match = 0;
                     
                     var boardWordIndex = word.IndexOf(boardWord.Value, StringComparison.Ordinal);
-
                     var firstHalf = word[..boardWordIndex];
                     var secondHalf = word[boardWordIndex..];
                     
@@ -234,9 +235,9 @@ namespace Alfapet
                             break;
                     }
 
-                    foreach (var index in tempHand.Select(handChar => tempWord.IndexOf(handChar))) // Ordets index av karaktären i handen 
+                    foreach (var index in tempHand.Select(handChar => tempWord.IndexOf(handChar))) // Ordets position av karaktären i handen 
                     {
-                        if (index != -1)
+                        if (index != -1) // Karaktären finns i ordet
                         {
                             tempWord = tempWord.Remove(index, 1); // Ta bort karaktären från strängen så den inte kan användas igen
                             match++;
@@ -249,7 +250,6 @@ namespace Alfapet
                         
                         var separated = false;
                         var separatedIterator = 0;
-                        
                         if (boardWord.Axis)
                         {
                             for (var x = 0; x < word.Length; x++)

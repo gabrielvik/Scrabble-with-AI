@@ -5,8 +5,6 @@ namespace Alfapet
 {
     class Config : Game
     {
-        public static int HandAmount = 9;
-
         public static Dictionary<char, int> CharacterPoints;
 
         public new static void Initialize()

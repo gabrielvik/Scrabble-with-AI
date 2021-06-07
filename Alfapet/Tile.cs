@@ -19,11 +19,6 @@ namespace Alfapet
 
         public Vector2 OriginalPos = default(Vector2);
 
-        public Tile()
-        {
-
-        }
-
         public static List<Tile> GetSurroundingTiles(int y, int x)
         {
             var tiles = new List<Tile>();

@@ -3,17 +3,15 @@ using System;
 
 namespace Alfapet
 {
-    /*
-     * Klass för dina bokstäver (din hand)
-     */
     class Hand : Game
     {
-        public static Tile[] Tiles = new Tile[Config.HandAmount];
+        public static int Amount = 8; // Antalet brickor man har i handen
+        public static Tile[] Tiles = new Tile[Amount];
 
-        public static float TilesMargin = 5f;
+        public static float TilesMargin = 5f; // Mellanrum mellan brickorna 
+        // Anpassar sig automatiskt till skärmens storlek
         public static float TilesWidth = (Alfapet.Graphics.GraphicsDevice.Viewport.Width - (Tiles.Length + 1) * TilesMargin) / Tiles.Length;
         public static float TilesHeight = (Alfapet.Graphics.GraphicsDevice.Viewport.Height - (Tiles.Length + 1) * TilesMargin) / Tiles.Length;
-
         public static void SetPositions()
         {
             var w = 5f;
@@ -28,9 +26,12 @@ namespace Alfapet
             }
         }
 
-        public new static void Initialize() // Körs i Initialize()
+        /*
+         * Populerar handen med brickor med random karaktärer 
+        */
+        public new static void Initialize()
         {
-            for (var i = 0; i < Tiles.Length; i++) // Populera arrayen med nya objekt
+            for (var i = 0; i < Tiles.Length; i++)
             {
                 Tiles[i] = new Tile
                 {
@@ -40,12 +41,18 @@ namespace Alfapet
             SetPositions();
         }
 
+        /*
+         * Sorterar handen alfabetiskt
+        */
         public static void Sort()
         {
-            Array.Sort(Hand.Tiles, (tile1, tile2) => tile1.Letter.CompareTo(tile2.Letter));
+            Array.Sort(Tiles, (tile1, tile2) => tile1.Letter.CompareTo(tile2.Letter));
             SetPositions();
         }
         
+        /*
+         * Hittar automatiskt en tom plats och sätter in karaktären
+        */
         public static void InsertLetter(char letter)
         {
             foreach (var tile in Tiles)
@@ -58,6 +65,9 @@ namespace Alfapet
             }
         }
 
+        /*
+         * 
+         */
         public static void GiveNewLetters()
         {
             foreach (var tile in Hand.Tiles)

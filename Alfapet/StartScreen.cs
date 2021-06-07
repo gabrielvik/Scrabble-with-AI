@@ -17,7 +17,7 @@ namespace Alfapet
         private static async void Start(int boardTiles, int handTiles)
         {
             Board.XTiles = Board.YTiles = boardTiles;
-            Config.HandAmount = handTiles;
+            Hand.Amount = handTiles;
             
             Alfapet.DrawFunction = delegate ()
             {

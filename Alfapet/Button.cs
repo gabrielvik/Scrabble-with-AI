@@ -75,6 +75,10 @@ namespace Alfapet
             DrawFunc = tempDrawFunc;
             ClickEvent = tempClickEvent;
         }
+        
+        /*
+         * Om knappen inte har en draw funktion kommer denna bli det 
+        */
         private void DefaultDraw()
         {
             var isHovering = Util.IsHovering(GetPos(), GetSize());

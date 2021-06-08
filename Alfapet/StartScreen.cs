@@ -8,6 +8,7 @@ namespace Alfapet
     {
         public static string LoadString = "";
         private static Button PlayBtn;
+        
         /*
          * När användaren vill börja spelet, ändrar på draw och update funktionen
          * Sätter hur många brickor på bordet och på handen

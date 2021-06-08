@@ -27,7 +27,6 @@ namespace Alfapet
             TilesHeight = (Alfapet.Graphics.GraphicsDevice.Viewport.Height - (Hand.TilesHeight + ButtonRig.ButtonHeight) - (YTiles + 1) * TilesMargin) / YTiles;
 
             float xPos = 5, yPos = 5;
-
             for (var y = 0; y < YTiles; y++)
             {
                 if (xPos + TilesWidth > Alfapet.Graphics.GraphicsDevice.Viewport.Width) // Rymms inga fler, gå till nästa rad
@@ -81,11 +80,10 @@ namespace Alfapet
                     continue;
 
                 callback?.Invoke(tile);
+                tile.TempPlaced = false;
                 
                 if(!noDelay)
                     await Task.Delay(150); // Vänta 0.15s innan nästa loop så användaren kan se allting hända
-                
-                tile.TempPlaced = false;
             }
         }
     }

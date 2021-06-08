@@ -56,7 +56,7 @@ namespace Alfapet
         */
         public static void DrawCenterText(SpriteFont font, string text, Vector2 pos, Vector2 size, Color color)
         {
-            var fontSize = font.MeasureString(text);
+            var fontSize = font.MeasureString(text); // Storleken för fontet i X och Y
             var offsetX = (int)(size.X / 2 - fontSize.X / 2);
             var offsetY = (int)(size.Y / 2 - fontSize.Y / 2);
 

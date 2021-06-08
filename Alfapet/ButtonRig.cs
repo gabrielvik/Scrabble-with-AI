@@ -32,7 +32,7 @@ namespace Alfapet
                 if (Ai.Playing)
                     return;
 
-                Rounds.DoMove(Board.TilesPlaced <= 0);
+                Rounds.DoMove(Board.TilesPlaced <= 0); // Skippa om man inte har brickor på brädan
             };
             
             Buttons["sort"].SetText("Sort Hand");

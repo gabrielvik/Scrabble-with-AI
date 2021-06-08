@@ -6,10 +6,9 @@ namespace Alfapet
 {
     class Rounds : Game
     {
-        public static int PlayerPoints = 0;
-        public static int AIPoints = 0;
-
-        public static int RoundNum = 0;
+        public static int PlayerPoints;
+        public static int AIPoints;
+        public static int RoundNum;
 
         /*
          * Returnerar sant om brickorna är lagligt placerade och att alla ord placerade finns i ordboken
@@ -37,13 +36,14 @@ namespace Alfapet
                         y--;
 
                     // Om man inte går utanför brädan, kolla att bokstaven har åtmistonde en annan placerad brevid sig
-                    if (!ignoreIsolated && tempWord.Length == 1 && x > 0 && x < Board.XTiles - 1 && y > 0 && y < Board.YTiles - 1)
+                    if (!ignoreIsolated && tempWord.Length == 1 && x > 0 && x < Board.XTiles - 1 && y > 0 &&
+                        y < Board.YTiles - 1)
                     {
                         var letterUp = Board.Tiles[y - 1, x];
                         var letterDown = Board.Tiles[y + 1, x];
                         var letterLeft = Board.Tiles[y, x - 1];
                         var letterRight = Board.Tiles[y, x + 1];
-                    
+
                         // Bokstaven får inte heller vara temporerat placerad
                         if ((letterUp.Letter == '\0' || letterUp.TempPlaced) &&
                             (letterDown.Letter == '\0' || letterDown.TempPlaced) &&
@@ -55,12 +55,14 @@ namespace Alfapet
                     {
                         words.Add(tempWord);
                     }
+
                     tempWord = "";
                 }
                 else
                 {
                     tempWord += Board.Tiles[y, x].Letter;
                 }
+
                 return true;
             }
 
@@ -76,6 +78,7 @@ namespace Alfapet
                         return false;
                 }
             }
+
             return words.All(Dictionaries.IsWord); // Returnerar om alla ord i listan finns i ordboken
         }
 
@@ -95,26 +98,29 @@ namespace Alfapet
 
                 return;
             }
-            
+
             // Kolla inte om ordet är isolerat första rundan
             if (!PlacedValidWords(RoundNum <= 0))
             {
                 ButtonRig.Buttons["move"].InvalidClick("Invalid Words");
                 return;
             }
+
             RoundNum++;
 
             var notificationString = "You placed the letters (";
             var score = 0;
+
+            // Lägg till poäng för varje bokstav och lägg till bokstaven i notifikation strängen
             Board.ResetTempTiles(tile =>
             {
-                if(score != 0) // Lägg inte ett komma innan första bokstaven
+                if (score != 0) // Lägg inte ett komma innan första bokstaven
                     notificationString += ", ";
-                
+
                 notificationString += tile.Letter;
                 score += Config.CharacterPoints[tile.Letter];
             }, true);
-            
+
             PlayerPoints += score;
             notificationString += ") for " + score + " points - Total score " + PlayerPoints;
             Notifications.AddMessage(notificationString);

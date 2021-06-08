@@ -5,9 +5,8 @@ namespace Alfapet
 {
     public class Tile : Game
     {
-        public float X, Y;
-        public float W, H;
-        
+        public float X, Y, W, H;
+
         public char Letter = '\0';
         
         public SpriteFont Font;
@@ -21,11 +20,15 @@ namespace Alfapet
         {
             X = x;
             Y = y;
+            
             // Om orignella positionen inte finns, sätt den
             if (OriginalPos == Vector2.Zero)
                 OriginalPos = new Vector2(x, y);
         }
 
+        /*
+         * Sätter positionen till där den var i början 
+        */
         public void ResetPos()
         {
             SetPos(OriginalPos.X, OriginalPos.Y);

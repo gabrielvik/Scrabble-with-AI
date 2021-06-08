@@ -8,7 +8,7 @@ namespace Alfapet
 {
     class Ai : Game
     {
-        public static bool Playing = false;
+        public static bool Playing;
         private static readonly char[] Letters = new char[Hand.Amount];
         private struct Word
         {
@@ -69,19 +69,10 @@ namespace Alfapet
                 }
             }
 
-            // TODO: 
-            if (Rounds.RoundNum == 2 || Rounds.RoundNum == 3)
-            {
-                Rounds.RoundNum++;
-                Notifications.AddMessage("Opponent skipped this round");
-                Board.CheckTilesPlaced();
-                Playing = false;
-                return;
-            }
-            
             var score = 0;
             var notificationString = "Opponent placed the letters (";
-            // Lägg ut det bästa ordet man hittade på brädan
+            
+            // Lägg ut det bästa ordet man hittade på brädan medans man lägger till poäng och bokstäver
             foreach (var (letter, y, x) in bestWord)
             {
                 // Ersätt med en ny random karaktär
@@ -153,7 +144,7 @@ namespace Alfapet
                     // Finns ett ord som nu har tagit slut eftersom brickan är tom på X axeln
                     if (xWord.Length > 0 && Board.Tiles[y, x].Letter == '\0')
                     {
-                        var xWordObj = new Word()
+                        var xWordObj = new Word
                         {
                             YStart = y,
                             YEnd = y,
@@ -169,7 +160,7 @@ namespace Alfapet
                     // Finns ett ord som nu har tagit slut eftersom brickan är tom på Y axeln
                     if (yWord.Length > 0 && Board.Tiles[x, y].Letter == '\0')
                     {
-                        var yWordObj = new Word()
+                        var yWordObj = new Word
                         {
                             YStart = yStart,
                             YEnd = x - 1, // Minus ett eftersom ordet slutate på förra brickan

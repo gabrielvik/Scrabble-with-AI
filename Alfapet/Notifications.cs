@@ -10,8 +10,8 @@ namespace Alfapet
         private static float H = 100;
         private struct Message
         {
-            public string Value { get; set; }
-            public long StartTime { get; set; }
+            public string Value { get; set; } // Vad medelandet är
+            public long StartTime { get; set; } // När medelandet kom up på skärmen
         }
         
         public static void AddMessage(string msg)

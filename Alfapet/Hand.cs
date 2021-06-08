@@ -9,9 +9,14 @@ namespace Alfapet
         public static Tile[] Tiles = new Tile[Amount];
 
         public static float TilesMargin = 5f; // Mellanrum mellan brickorna 
+        
         // Anpassar sig automatiskt till skärmens storlek
         public static float TilesWidth = (Alfapet.Graphics.GraphicsDevice.Viewport.Width - (Tiles.Length + 1) * TilesMargin) / Tiles.Length;
         public static float TilesHeight = (Alfapet.Graphics.GraphicsDevice.Viewport.Height - (Tiles.Length + 1) * TilesMargin) / Tiles.Length;
+        
+        /*
+         * Sätter om positionerna av brickorna i handen 
+        */
         public static void SetPositions()
         {
             var w = 5f;
@@ -27,7 +32,7 @@ namespace Alfapet
         }
 
         /*
-         * Byter alla bokstäver i handen till nya random
+         * Byter alla bokstäver i handen till nya random brickor
         */
         public static void GenerateNew()
         {
@@ -40,10 +45,7 @@ namespace Alfapet
             }
             SetPositions();
         }
-
-        /*
-         * Populerar handen med brickor med random karaktärer 
-        */
+        
         public new static void Initialize()
         {
             GenerateNew();
@@ -102,6 +104,7 @@ namespace Alfapet
                     tile.SetSize(TilesWidth, TilesHeight - 10);
                     tile.SetFont(Ui.MontserratBold);
                 }
+                // Om man drar en bricka, sätt storleken till samma som på brickorna på bordet
                 else
                 {
                     tile.SetSize(Board.TilesWidth, Board.TilesHeight);

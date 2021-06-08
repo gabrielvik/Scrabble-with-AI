@@ -27,48 +27,26 @@ namespace Alfapet
         }
 
         /*
+         * Byter alla bokstäver i handen till nya random
+        */
+        public static void GenerateNew()
+        {
+            for (var i = 0; i < Tiles.Length; i++)
+            {
+                Tiles[i] = new Tile
+                {
+                    Letter = Util.GenerateRandomLetter()
+                };
+            }
+            SetPositions();
+        }
+
+        /*
          * Populerar handen med brickor med random karaktärer 
         */
         public new static void Initialize()
         {
-            for (var i = 0; i < Tiles.Length; i++)
-            {
-                /*Tiles[i] = new Tile
-                {
-                    Letter = Util.GenerateRandomLetter()
-                };*/
-                
-                // TODO: 
-                Tiles[i] = new Tile();
-                switch (i)
-                {
-                    case 0:
-                        Tiles[i].Letter = 'D';
-                        break;
-                    case 1: 
-                        Tiles[i].Letter = 'A';
-                        break;
-                    case 2: 
-                        Tiles[i].Letter = 'B';
-                        break;
-                    case 3: 
-                        Tiles[i].Letter = 'W';
-                        break;
-                    case 4: 
-                        Tiles[i].Letter = 'C';
-                        break;
-                    case 5: 
-                        Tiles[i].Letter = 'T';
-                        break;
-                    case 6: 
-                        Tiles[i].Letter = 'Q';
-                        break;
-                    case 7: 
-                        Tiles[i].Letter = 'Q';
-                        break;
-                }
-            }
-            SetPositions();
+            GenerateNew();
         }
 
         /*
@@ -96,11 +74,11 @@ namespace Alfapet
         }
 
         /*
-         * 
-         */
+         * Ändrar alla toma bokstäver till nya random bokstäver
+        */
         public static void GiveNewLetters()
         {
-            foreach (var tile in Hand.Tiles)
+            foreach (var tile in Tiles)
             {
                 if (tile.Letter == '\0')
                     tile.Letter = Util.GenerateRandomLetter();
@@ -130,7 +108,7 @@ namespace Alfapet
                     tile.SetFont(Ui.MontserratBoldSmaller);
                 }
 
-                Ui.StylishRectangle(new Rectangle((int)tile.X, (int)tile.Y, (int)tile.W, (int)tile.H));
+                Ui.OutlinedRectangle(new Rectangle((int)tile.X, (int)tile.Y, (int)tile.W, (int)tile.H));
                 Ui.DrawCenterText(tile.Font, tile.Letter.ToString(), tile.GetPos(), tile.GetSize(), Color.White);
             }
         }

@@ -31,7 +31,7 @@ namespace Alfapet
                 if (DateTimeOffset.Now.ToUnixTimeSeconds() - Messages[i].StartTime > 2)
                 {
                     // Lerpar positionen till utanför skärmen
-                    H = MathHelper.Lerp(H, -20, (float)(DateTimeOffset.Now.ToUnixTimeSeconds() - Messages[i].StartTime + 2) / 500);
+                    H = MathHelper.Lerp(H, -20, (float)(DateTimeOffset.Now.ToUnixTimeSeconds() - Messages[i].StartTime + 2) / 100);
                     if (H <= -14) // Texten är utanför (14 är storleken på font)
                     {
                         Messages.Remove(Messages[i]);

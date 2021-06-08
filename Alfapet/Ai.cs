@@ -229,14 +229,15 @@ namespace Alfapet
                     var match = 0;
                     
                     var boardWordIndex = word.IndexOf(boardWord.Value, StringComparison.Ordinal);
-                    var firstHalf = word[..boardWordIndex];
-                    var secondHalf = word[boardWordIndex..];
-                    
+                    var firstHalf = word[..boardWordIndex]; // Range från början till ordet på brädans position i´ordet
+                    var secondHalf = word[boardWordIndex..]; // Range från ordet på brädans position i´ordet till slutet
+
                     // Kollar om ordet har tillräckligt plats på brädan
                     if (boardWord.Axis)
                     {
                         if (boardWord.XStart - firstHalf.Length < 0)
                             break;
+
                         // Minus längden på boardWord eftersom boardWord tas med i rangen
                         if (boardWord.XEnd + secondHalf.Length - boardWord.Value.Length > Board.XTiles - 1)
                             break;
@@ -416,7 +417,6 @@ namespace Alfapet
                                 wordPlacement.Add(new Tuple<char, int, int>(char.ToUpper(word[y]), boardY, boardWord.XEnd));
                             }
                         }
-
                         if (!invalid)
                         {
                             wordPlacements.Add(wordPlacement);

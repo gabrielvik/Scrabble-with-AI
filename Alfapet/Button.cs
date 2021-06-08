@@ -66,7 +66,7 @@ namespace Alfapet
             DrawFunc = delegate ()
             {
                 var lerpValue = MathHelper.Lerp(1f, 0.25f, (float)(DateTimeOffset.Now.ToUnixTimeMilliseconds() - lerpStart) / delay);
-                Ui.StylishRectangle(new Rectangle((int)X, (int)Y, (int)W, (int)H), Color.Red * lerpValue); // Sätter genomskinligheten till lerp värdet
+                Ui.OutlinedRectangle(new Rectangle((int)X, (int)Y, (int)W, (int)H), Color.Red * lerpValue); // Sätter genomskinligheten till lerp värdet
                 Ui.DrawCenterText(Ui.MontserratBoldSmaller, text, GetPos(), GetSize(), Color.White);
             };
             ClickEvent = null;
@@ -80,11 +80,11 @@ namespace Alfapet
             var isHovering = Util.IsHovering(GetPos(), GetSize());
 
             if (Mouse.GetState(Alfapet.Window).LeftButton == ButtonState.Pressed && isHovering) // Håller leftclick på knappen
-                Ui.StylishRectangle(new Rectangle((int)X, (int)Y, (int)W, (int)H), Color.White * 0.85f);
+                Ui.OutlinedRectangle(new Rectangle((int)X, (int)Y, (int)W, (int)H), Color.White * 0.85f);
             else if (isHovering)
-                Ui.StylishRectangle(new Rectangle((int)X, (int)Y, (int)W, (int)H), Color.White * 0.5f);
+                Ui.OutlinedRectangle(new Rectangle((int)X, (int)Y, (int)W, (int)H), Color.White * 0.5f);
             else
-                Ui.StylishRectangle(new Rectangle((int)X, (int)Y, (int)W, (int)H));
+                Ui.OutlinedRectangle(new Rectangle((int)X, (int)Y, (int)W, (int)H));
 
             Ui.DrawCenterText(Ui.MontserratBoldSmaller, DrawText ?? "Button", GetPos(), GetSize(), Color.White);
         }

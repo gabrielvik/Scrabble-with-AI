@@ -13,11 +13,11 @@ namespace Alfapet
         private static Dictionary<string, string> Current;
         public static void Initialize(string language)
         {
-            var json = File.ReadAllText(@"dictionaries/" + language + ".json"); // Få JSON från vilket språk man kallar funktionen
+            //  Få JSON från filen beroende på vilket språk man kallar funktionen
+            var json = File.ReadAllText(@"dictionaries/" + language + ".json");
 
             // Gör om JSON till ett dictionary där ordboken lagras
-            Current = new Dictionary<string, string>(
-                JsonConvert.DeserializeObject<Dictionary<string, string>>(json), StringComparer.OrdinalIgnoreCase);
+            Current = new Dictionary<string, string>(JsonConvert.DeserializeObject<Dictionary<string, string>>(json), StringComparer.OrdinalIgnoreCase);
         }
 
         public static bool IsWord(string word)
@@ -25,6 +25,9 @@ namespace Alfapet
             return Current.ContainsKey(word);
         }
 
+        /*
+         * Gör om Dictionary till en lista med alla ord
+        */
         public static List<string> GetWordList()
         {
             return Current.Select(word => word.Key).ToList();

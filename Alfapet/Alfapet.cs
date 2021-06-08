@@ -49,9 +49,8 @@ namespace Alfapet
 
         protected override void Initialize()
         {
-
-            Graphics.PreferredBackBufferWidth = 800;
-            Graphics.PreferredBackBufferHeight = 800;
+            Graphics.PreferredBackBufferWidth = 900;
+            Graphics.PreferredBackBufferHeight = 900;
             IsFixedTimeStep = false; // tar bort FPS cap
             //Window.Position = new Point(-1500, 0);
             Graphics.ApplyChanges();

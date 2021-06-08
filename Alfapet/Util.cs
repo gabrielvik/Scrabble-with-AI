@@ -1,10 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using System;
-using System.Linq;
-using System.Collections.Generic;
-using SharpDX.Direct2D1.Effects;
-
 
 namespace Alfapet
 {
@@ -12,16 +8,20 @@ namespace Alfapet
     {
         public static char GenerateRandomLetter()
         {
-            return (char)new Random().Next(65, 90); // 65-90 är värden för stora bokstäver i ASCII
+            // Random nummer från 65 till 90 (värden för stora bokstäver i ASCII), och gör om till karaktär
+            return (char)new Random().Next(65, 90);
         }
 
+        /*
+         * Returnerar om muspekaren är över positionen och inom storleken 
+        */
         public static bool IsHovering(Vector2 pos, Vector2 size)
         {
-            if (!Alfapet.IsActive) // Gå inte vidare om man inte är inne i programmet
+            // Gå inte vidare om man inte är inne i programmet
+            if (!Alfapet.IsActive)
                 return false;
 
             var mouse = Mouse.GetState(Alfapet.Window);
-
             return mouse.X >= pos.X && mouse.X <= pos.X + size.X && mouse.Y >= pos.Y && mouse.Y <= pos.Y + size.Y;
         }
     }

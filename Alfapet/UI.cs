@@ -10,6 +10,9 @@ namespace Alfapet
         public static SpriteFont MontserratBoldSmaller;
         public static SpriteFont MontserratBoldTiny;
 
+        /*
+         * Laddar in alla fonts 
+        */
         public static void Load(ContentManager content)
         {
             MontserratBold = content.Load<SpriteFont>("Fonts/Montserrat-Bold");
@@ -17,7 +20,10 @@ namespace Alfapet
             MontserratBoldTiny = content.Load<SpriteFont>("Fonts/Montserrat-Bold-Tiny");
         }
 
-        public static void StylishRectangle(Rectangle rec, Color? colorOverwrite = null)
+        /*
+         * Ritar en rektangel med outline runt kanterna
+        */
+        public static void OutlinedRectangle(Rectangle rec, Color? colorOverwrite = null)
         {
             const int thickness = 2;
             const int width = 10;
@@ -45,6 +51,9 @@ namespace Alfapet
             Alfapet.SpriteBatch.Draw(Alfapet.TransparentBack, new Rectangle(rec.X + rec.Width - thickness, rec.Y + rec.Height - height, thickness, height - thickness), borderColor);
         }
         
+        /*
+         * Ritar text i mitten på positionen beroende på storleken
+        */
         public static void DrawCenterText(SpriteFont font, string text, Vector2 pos, Vector2 size, Color color)
         {
             var fontSize = font.MeasureString(text);

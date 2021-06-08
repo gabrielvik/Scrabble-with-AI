@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PipelineBuildEvent xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <SourceFile>C:/Users/dator/source/repos/alfapet_school/Alfapet/Content/Fonts/Montserrat-Bold-Tiny.spritefont</SourceFile>
-  <SourceTime>2021-06-07T15:45:07.128458+02:00</SourceTime>
-  <DestFile>C:/Users/dator/source/repos/alfapet_school/Alfapet/Content/bin/Windows/Content/Fonts/Montserrat-Bold-Tiny.xnb</DestFile>
-  <DestTime>2021-06-07T15:45:32.1502385+02:00</DestTime>
+  <SourceFile>C:/Users/tissto19gabvik/source/repos/alfapet_school/Alfapet/Content/Fonts/Montserrat-Bold-Tiny.spritefont</SourceFile>
+  <SourceTime>2021-06-08T09:01:18.9511125+02:00</SourceTime>
+  <DestFile>C:/Users/tissto19gabvik/source/repos/alfapet_school/Alfapet/Content/bin/Windows/Content/Fonts/Montserrat-Bold-Tiny.xnb</DestFile>
+  <DestTime>2021-06-08T09:01:24.5454259+02:00</DestTime>
   <Importer>FontDescriptionImporter</Importer>
   <ImporterTime>2020-08-10T16:17:54+02:00</ImporterTime>
   <Processor>FontDescriptionProcessor</Processor>

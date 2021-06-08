@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 
 namespace Alfapet
@@ -17,7 +16,7 @@ namespace Alfapet
                 { "newHand", new Button() }
             };
 
-            float x = 5;
+            var x = 5f;
             var w = (Alfapet.Graphics.GraphicsDevice.Viewport.Width - (Buttons.Count + 1) * x) / Buttons.Count;
             foreach (var button in Buttons.Values)
             {
@@ -42,22 +41,20 @@ namespace Alfapet
             Buttons["newHand"].SetText("New Hand (skip)");
             Buttons["newHand"].ClickEvent = delegate
             {
+                // Låt inte skippa om inte användaren spelar
                 if (Ai.Playing)
                 {
                     Buttons["newHand"].InvalidClick("Opponent Playing!");
                     return;
                 }
+                // Låt inte skippa om man har brickor på brädan
                 if (Board.TilesPlaced > 0)
                 {
                     Buttons["newHand"].InvalidClick("Remove Tiles!");
                     return;
                 }
 
-                foreach (var tile in Hand.Tiles)
-                {
-                    tile.Letter = Util.GenerateRandomLetter();
-                }
-                Hand.SetPositions();
+                Hand.GenerateNew();
                 Rounds.DoMove(true);
             };
         }

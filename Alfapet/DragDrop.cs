@@ -20,10 +20,10 @@ namespace Alfapet
         */
         private static void DoDrop(dynamic index, Tile originTile, Move moveType)
         {
-            // Behöver ingen destinations bricka
+            // Behöver inte en destinations bricka
             if (moveType == Move.Remove)
             {
-                originTile.ResetPos(); // Sätter tillbaka positionen på bordet
+                originTile.ResetPos(); // Sätter tillbaka brickans positionens till bordet
                 
                 Hand.InsertLetter(originTile.Letter);
                 
@@ -41,7 +41,6 @@ namespace Alfapet
                     for (var x = 0; x < Board.XTiles; x++)
                     {
                         var destinationTile = Board.Tiles[y, x];
-                        
                         // Om muspekaren är över brickan, är det den användaren vill släppa på
                         if (Util.IsHovering(destinationTile.GetPos(), originTile.GetSize()))
                         {
@@ -94,7 +93,6 @@ namespace Alfapet
                 return;
 
             var mouse = Mouse.GetState(Alfapet.Window);
-
             if (tile.Dragging)
             {
                 // Man håller på att dra och leftclick är fortfarande nere, brickan fortsätter att följa musen
@@ -146,7 +144,7 @@ namespace Alfapet
                     if (!Board.Tiles[y, x].TempPlaced)
                         continue;
 
-                    // Om muspekaren är vid handen vill man ta bort, annars flytta till en annan bricka på bordet
+                    // Om muspekaren är vid handens position vill man ta bort, annars flytta till en annan bricka på bordet
                     var mouseInHandRange = Mouse.GetState(Alfapet.Window).Y > (Board.YTiles + 2) * Board.TilesHeight;
                     CheckDrag(new Vector2(x, y), Board.Tiles[y, x], mouseInHandRange ? Move.Remove : Move.Change);
                 }

@@ -1,7 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace Alfapet
@@ -54,9 +52,9 @@ namespace Alfapet
             foreach (var tile in Tiles)
             {
                 if (tile.TempPlaced)
-                    Ui.StylishRectangle(new Rectangle((int)tile.X, (int)tile.Y, (int)tile.W, (int)tile.H), Color.White * 0.5f);
+                    Ui.OutlinedRectangle(new Rectangle((int)tile.X, (int)tile.Y, (int)tile.W, (int)tile.H), Color.White * 0.5f);
                 else
-                    Ui.StylishRectangle(new Rectangle((int)tile.X, (int)tile.Y, (int)tile.W, (int)tile.H), null);
+                    Ui.OutlinedRectangle(new Rectangle((int)tile.X, (int)tile.Y, (int)tile.W, (int)tile.H), null);
 
                 if (tile.Letter != '\0')
                     Ui.DrawCenterText(Ui.MontserratBoldSmaller, tile.Letter.ToString(), tile.GetPos(), tile.GetSize(), Color.White);

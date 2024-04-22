@@ -1,0 +1,42 @@
+C:\Users\Dator\source\repos\Scrabble with AI\Scrabble with AI\obj\Debug\net6.0-windows\Scrabble with AI.csproj.AssemblyReference.cache
+C:\Users\Dator\source\repos\Scrabble with AI\Scrabble with AI\obj\Debug\net6.0-windows\Scrabble with AI.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Dator\source\repos\Scrabble with AI\Scrabble with AI\obj\Debug\net6.0-windows\Scrabble with AI.AssemblyInfoInputs.cache
+C:\Users\Dator\source\repos\Scrabble with AI\Scrabble with AI\obj\Debug\net6.0-windows\Scrabble with AI.AssemblyInfo.cs
+C:\Users\Dator\source\repos\Scrabble with AI\Scrabble with AI\obj\Debug\net6.0-windows\Scrabble with AI.csproj.CoreCompileInputs.cache
+C:\Users\Dator\source\repos\Scrabble with AI\Scrabble with AI\bin\Debug\net6.0-windows\Scrabble with AI.exe
+C:\Users\Dator\source\repos\Scrabble with AI\Scrabble with AI\bin\Debug\net6.0-windows\Scrabble with AI.deps.json
+C:\Users\Dator\source\repos\Scrabble with AI\Scrabble with AI\bin\Debug\net6.0-windows\Scrabble with AI.runtimeconfig.json
+C:\Users\Dator\source\repos\Scrabble with AI\Scrabble with AI\bin\Debug\net6.0-windows\Scrabble with AI.dll
+C:\Users\Dator\source\repos\Scrabble with AI\Scrabble with AI\bin\Debug\net6.0-windows\Scrabble with AI.pdb
+C:\Users\Dator\source\repos\Scrabble with AI\Scrabble with AI\bin\Debug\net6.0-windows\Microsoft.CodeAnalysis.dll
+C:\Users\Dator\source\repos\Scrabble with AI\Scrabble with AI\bin\Debug\net6.0-windows\Microsoft.CodeAnalysis.CSharp.dll
+C:\Users\Dator\source\repos\Scrabble with AI\Scrabble with AI\bin\Debug\net6.0-windows\Microsoft.CodeAnalysis.VisualBasic.dll
+C:\Users\Dator\source\repos\Scrabble with AI\Scrabble with AI\bin\Debug\net6.0-windows\MonoGame.Framework.dll
+C:\Users\Dator\source\repos\Scrabble with AI\Scrabble with AI\bin\Debug\net6.0-windows\Newtonsoft.Json.dll
+C:\Users\Dator\source\repos\Scrabble with AI\Scrabble with AI\bin\Debug\net6.0-windows\SharpDX.dll
+C:\Users\Dator\source\repos\Scrabble with AI\Scrabble with AI\bin\Debug\net6.0-windows\SharpDX.Direct2D1.dll
+C:\Users\Dator\source\repos\Scrabble with AI\Scrabble with AI\bin\Debug\net6.0-windows\SharpDX.Direct3D11.dll
+C:\Users\Dator\source\repos\Scrabble with AI\Scrabble with AI\bin\Debug\net6.0-windows\SharpDX.Direct3D9.dll
+C:\Users\Dator\source\repos\Scrabble with AI\Scrabble with AI\bin\Debug\net6.0-windows\SharpDX.DXGI.dll
+C:\Users\Dator\source\repos\Scrabble with AI\Scrabble with AI\bin\Debug\net6.0-windows\SharpDX.Mathematics.dll
+C:\Users\Dator\source\repos\Scrabble with AI\Scrabble with AI\bin\Debug\net6.0-windows\SharpDX.MediaFoundation.dll
+C:\Users\Dator\source\repos\Scrabble with AI\Scrabble with AI\bin\Debug\net6.0-windows\SharpDX.XAudio2.dll
+C:\Users\Dator\source\repos\Scrabble with AI\Scrabble with AI\bin\Debug\net6.0-windows\SharpDX.XInput.dll
+C:\Users\Dator\source\repos\Scrabble with AI\Scrabble with AI\bin\Debug\net6.0-windows\runtimes\debian-x64\native\libuv.so
+C:\Users\Dator\source\repos\Scrabble with AI\Scrabble with AI\bin\Debug\net6.0-windows\runtimes\fedora-x64\native\libuv.so
+C:\Users\Dator\source\repos\Scrabble with AI\Scrabble with AI\bin\Debug\net6.0-windows\runtimes\opensuse-x64\native\libuv.so
+C:\Users\Dator\source\repos\Scrabble with AI\Scrabble with AI\bin\Debug\net6.0-windows\runtimes\osx\native\libuv.dylib
+C:\Users\Dator\source\repos\Scrabble with AI\Scrabble with AI\bin\Debug\net6.0-windows\runtimes\rhel-x64\native\libuv.so
+C:\Users\Dator\source\repos\Scrabble with AI\Scrabble with AI\bin\Debug\net6.0-windows\runtimes\win7-arm\native\libuv.dll
+C:\Users\Dator\source\repos\Scrabble with AI\Scrabble with AI\bin\Debug\net6.0-windows\runtimes\win7-x64\native\libuv.dll
+C:\Users\Dator\source\repos\Scrabble with AI\Scrabble with AI\bin\Debug\net6.0-windows\runtimes\win7-x86\native\libuv.dll
+C:\Users\Dator\source\repos\Scrabble with AI\Scrabble with AI\obj\Debug\net6.0-windows\Scrabble with AI.csproj.CopyComplete
+C:\Users\Dator\source\repos\Scrabble with AI\Scrabble with AI\obj\Debug\net6.0-windows\Scrabble with AI.dll
+C:\Users\Dator\source\repos\Scrabble with AI\Scrabble with AI\obj\Debug\net6.0-windows\refint\Scrabble with AI.dll
+C:\Users\Dator\source\repos\Scrabble with AI\Scrabble with AI\obj\Debug\net6.0-windows\Scrabble with AI.pdb
+C:\Users\Dator\source\repos\Scrabble with AI\Scrabble with AI\obj\Debug\net6.0-windows\Scrabble with AI.genruntimeconfig.cache
+C:\Users\Dator\source\repos\Scrabble with AI\Scrabble with AI\obj\Debug\net6.0-windows\ref\Scrabble with AI.dll
+C:\Users\Dator\source\repos\Scrabble with AI\Scrabble with AI\bin\Debug\net6.0-windows\Content\Fonts\Montserrat-Bold.xnb
+C:\Users\Dator\source\repos\Scrabble with AI\Scrabble with AI\bin\Debug\net6.0-windows\Content\Fonts\Montserrat-Bold-Smaller.xnb
+C:\Users\Dator\source\repos\Scrabble with AI\Scrabble with AI\bin\Debug\net6.0-windows\Content\Fonts\Montserrat-Bold-Tiny.xnb
+C:\Users\Dator\source\repos\Scrabble with AI\Scrabble with AI\bin\Debug\net6.0-windows\Dictionaries\english.json

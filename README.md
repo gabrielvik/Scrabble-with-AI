@@ -4,11 +4,10 @@ This project is a simple Scrabble game developed using XNA and MonoGame, where p
 
 ## Features
 
-- **Scrabble Gameplay**: Enjoy the traditional Scrabble experience on your computer.
+- **Simple Scrabble Gameplay**: Simple traditional Scrabble experience on your computer.
 - **Realistic AI Opponent**: Play against an AI that simulates human-like word selection and strategy.
 - **Word Validation**: Ensure played words are valid against a built-in dictionary.
 - **Scoring System**: Points are calculated based on letter values and tile placement bonuses.
-- **Graphical Interface**: Utilizes XNA and MonoGame for a visually appealing and interactive game interface.
 
 ## How to Play
 

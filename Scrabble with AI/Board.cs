@@ -21,15 +21,15 @@ namespace Alfapet
         public new static void Initialize()
         {
             Tiles = new Tile[YTiles, XTiles];
-            
-            // Anpassar sig automatiskt till skärmens storlek
+
+            // Automatically adjusts to the screen size
             TilesWidth = (Alfapet.Graphics.GraphicsDevice.Viewport.Width - (XTiles + 1) * TilesMargin) / XTiles;
             TilesHeight = (Alfapet.Graphics.GraphicsDevice.Viewport.Height - (Hand.TilesHeight + ButtonRig.ButtonHeight) - (YTiles + 1) * TilesMargin) / YTiles;
 
             float xPos = 5, yPos = 5;
             for (var y = 0; y < YTiles; y++)
             {
-                if (xPos + TilesWidth > Alfapet.Graphics.GraphicsDevice.Viewport.Width) // Rymms inga fler, gå till nästa rad
+                if (xPos + TilesWidth > Alfapet.Graphics.GraphicsDevice.Viewport.Width) // No more room, go to the next row
                 {
                     yPos += TilesHeight + TilesMargin;
                     xPos = 5;
@@ -61,7 +61,7 @@ namespace Alfapet
         }
 
         /*
-         * Ändrar texten på move knappen till Skip eller Move beroende på hur många brickor man placerat
+         * Changes the text on the move button to Skip or Move depending on how many tiles have been placed
         */
         public static void CheckTilesPlaced()
         {
@@ -69,8 +69,8 @@ namespace Alfapet
         }
 
         /*
-         * Återställer alla temporerat placerade brickor
-         * noDelay är om man vill att det ska vara en delay mellan varje bricka eller inte
+         * Resets all temporarily placed tiles
+         * noDelay indicates whether there should be a delay between each tile or not
         */
         public static async void ResetTempTiles(Action<Tile> callback = null, bool noDelay = false)
         {
@@ -81,9 +81,9 @@ namespace Alfapet
 
                 callback?.Invoke(tile);
                 tile.TempPlaced = false;
-                
-                if(!noDelay)
-                    await Task.Delay(150); // Vänta 0.15s innan nästa loop så användaren kan se allting hända
+
+                if (!noDelay)
+                    await Task.Delay(150); // Wait 0.15s before next loop so the user can see everything happen
             }
         }
     }

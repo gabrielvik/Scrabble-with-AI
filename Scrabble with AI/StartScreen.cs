@@ -8,26 +8,26 @@ namespace Alfapet
     {
         public static string LoadString = "";
         private static Button PlayBtn;
-        
+
         /*
-         * När användaren vill börja spelet, ändrar på draw och update funktionen
-         * Sätter hur många brickor på bordet och på handen
+         * When the user wants to start the game, modify the draw and update functions
+         * Sets the number of tiles on the board and in hand
         */
         private static async void Start(int boardTiles, int handTiles)
         {
             Board.XTiles = Board.YTiles = boardTiles;
             Hand.Amount = handTiles;
-            
-            // Sätter draw funktionen till att visa LoadString
+
+            // Sets the draw function to display LoadString
             Alfapet.DrawFunction = delegate
             {
                 Ui.DrawCenterText(Ui.MontserratBoldSmaller, LoadString, new Vector2(0, 0),
                     new Vector2(Alfapet.Graphics.GraphicsDevice.Viewport.Width,
                         Alfapet.Graphics.GraphicsDevice.Viewport.Height), Color.White);
             };
-            
+
             await Alfapet.Start();
-            
+
             Alfapet.UpdateFunction = delegate
             {
                 DragDrop.Check();
@@ -44,19 +44,19 @@ namespace Alfapet
         }
 
         /*
-         * Skapar en meny där man väljer hur många brickor på brädan och handen
+         * Creates a menu where you select the number of tiles on the board and in hand
         */
         private static void BuildGameSettingsMenu()
         {
-            // Ta bort play knappen om den finns
+            // Remove the play button if it exists
             if (PlayBtn != null)
                 Button.List.Remove(PlayBtn);
 
-            // Default värden på hur många brickor på brädan och i handen
+            // Default values for the number of tiles on the board and in hand
             var boardNumAmount = 9;
             var handNumAmount = 8;
-            
-            // Storleken på rektanglerna
+
+            // Size of the rectangles
             var height = 40;
             var width = 125;
 
@@ -66,28 +66,28 @@ namespace Alfapet
             {
                 Button.Draw();
 
-                // Text över rektangeln
+                // Text above the rectangle
                 Ui.DrawCenterText(Ui.MontserratBoldSmaller, "Board Tiles Amount", new Vector2(0, y - 24 - 10),
                     new Vector2(Alfapet.Graphics.GraphicsDevice.Viewport.Width, 0), Color.White);
                 Ui.DrawCenterText(Ui.MontserratBoldSmaller, "Hand Tiles Amount", new Vector2(0, y + 64 + height - 10),
                     new Vector2(Alfapet.Graphics.GraphicsDevice.Viewport.Width, 0), Color.White);
-                
-                // Rektangeln där det står hur många brickor på bordet
+
+                // Rectangle showing the number of tiles on the board
                 var tilesNumRec = new Rectangle(x, y, width, height);
                 Ui.OutlinedRectangle(tilesNumRec);
                 Ui.DrawCenterText(Ui.MontserratBoldSmaller, boardNumAmount + "x" + boardNumAmount,
                     new Vector2(tilesNumRec.X, tilesNumRec.Y), new Vector2(tilesNumRec.Width, tilesNumRec.Height),
                     Color.White);
-                
-                // Rektangeln där det står hur många brickor i handen
+
+                // Rectangle showing the number of tiles in hand
                 var handTilesNumRec = new Rectangle(x, y + 64 + height + 24, width, height);
                 Ui.OutlinedRectangle(handTilesNumRec);
                 Ui.DrawCenterText(Ui.MontserratBoldSmaller, handNumAmount.ToString(),
                     new Vector2(handTilesNumRec.X, handTilesNumRec.Y),
                     new Vector2(handTilesNumRec.Width, handTilesNumRec.Height), Color.White);
             };
-            
-            // Knappar för att ändra hur många brickor på brädan
+
+            // Buttons to change the number of tiles on the board
             var boardNumPrev = new Button();
             boardNumPrev.SetSize(40, height);
             boardNumPrev.SetPos(x - boardNumPrev.W - 5, y);
@@ -97,18 +97,18 @@ namespace Alfapet
             {
                 boardNumAmount = Math.Max(boardNumAmount - 1, 7);
             };
-            
+
             var boardNumNext = new Button();
             boardNumNext.SetSize(40, height);
             boardNumNext.SetPos(x + width + 5, y);
             boardNumNext.SetText(">");
-            
+
             boardNumNext.ClickEvent = delegate
             {
                 boardNumAmount = Math.Min(boardNumAmount + 1, 14);
             };
-            
-            // Knappar för att ändra hur många brickor i handen
+
+            // Buttons to change the number of tiles in hand
             var handNumPrev = new Button();
             handNumPrev.SetSize(40, height);
             handNumPrev.SetPos(x - handNumPrev.W - 5, y + 64 + height + 24);
@@ -118,30 +118,30 @@ namespace Alfapet
             {
                 handNumAmount = Math.Max(handNumAmount - 1, 6);
             };
-            
+
             var handNumNext = new Button();
             handNumNext.SetSize(40, height);
             handNumNext.SetPos(x + width + 5, y + 64 + height + 24);
             handNumNext.SetText(">");
-            
+
             handNumNext.ClickEvent = delegate
             {
                 handNumAmount = Math.Min(handNumAmount + 1, 13);
             };
 
-            // Knappen för att starta spelet
+            // Button to start the game
             var start = new Button();
             start.SetSize(80 + 10 + width, 75);
             start.SetPos(boardNumPrev.X, handNumNext.Y + 150);
             start.SetText("Start");
-            
+
             start.ClickEvent = delegate
             {
                 Button.List = new List<Button>();
                 Start(boardNumAmount, handNumAmount);
             };
         }
-        
+
         private static void BuildPlayBtn()
         {
             PlayBtn = new Button();
@@ -158,7 +158,7 @@ namespace Alfapet
             {
                 Button.Draw();
 
-                // Ritar spelets titel i mitten av skärmen
+                // Draw the game's title in the center of the screen
                 Ui.DrawCenterText(Ui.MontserratBold, Config.GameTitle, new Vector2(0, 0),
                     new Vector2(Alfapet.Graphics.GraphicsDevice.Viewport.Width,
                         Alfapet.Graphics.GraphicsDevice.Viewport.Height / 2), Color.White);

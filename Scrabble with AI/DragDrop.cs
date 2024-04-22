@@ -9,25 +9,25 @@ namespace Alfapet
 
         private enum Move
         {
-            Place, // Placerar en bricka på brädan (från handen)
-            Change, // Byter brickor i brädan 
-            Remove // Lägger tillbaka brickan i handen från bordet
+            Place,
+            Change,
+            Remove
         }
 
         /*
-         * Kallas när användaren släppt en bricka.
-         * Gör olika saker beroende på vilken Move typ
+         * Called when the user releases a tile.
+         * Performs different actions depending on the Move type.
         */
         private static void DoDrop(dynamic index, Tile originTile, Move moveType)
         {
-            // Behöver inte en destinations bricka
+            // No destination tile needed
             if (moveType == Move.Remove)
             {
-                originTile.ResetPos(); // Sätter tillbaka brickans positionens till bordet
-                
+                originTile.ResetPos(); // Resets the tile's position to the board
+
                 Hand.InsertLetter(originTile.Letter);
-                
-                // Brickan på bordet borde nu vara tom
+
+                // The tile on the board should now be empty
                 originTile.Letter = '\0';
                 originTile.TempPlaced = false;
 
@@ -41,32 +41,32 @@ namespace Alfapet
                     for (var x = 0; x < Board.XTiles; x++)
                     {
                         var destinationTile = Board.Tiles[y, x];
-                        // Om muspekaren är över brickan, är det den användaren vill släppa på
+                        // If the cursor is over the tile, it is where the user wants to drop
                         if (Util.IsHovering(destinationTile.GetPos(), originTile.GetSize()))
                         {
-                            // Låt inte användaren släppa på en bricka med en boktav
+                            // Prevent the user from dropping onto a tile with a letter
                             if (destinationTile.Letter != '\0')
                                 break;
-                            
+
                             switch (moveType)
                             {
                                 case Move.Place:
-                                    // Sätter brickan på bordet till bokstaven i handen
+                                    // Sets the tile on the board to the letter in hand
                                     destinationTile.Letter = originTile.Letter;
-                                    destinationTile.TempPlaced = true; // Nya brickor måste markeras som temporärt placerade
+                                    destinationTile.TempPlaced = true; // New tiles must be marked as temporarily placed
 
                                     Hand.Tiles[index].Letter = '\0';
-                                    
+
                                     Board.TilesPlaced++;
                                     Board.CheckTilesPlaced();
-                                    
+
                                     break;
                                 case Move.Change:
-                                    // Byter brickorna på bordet
+                                    // Swaps the tiles on the board
                                     destinationTile.Letter = originTile.Letter;
                                     destinationTile.TempPlaced = true;
 
-                                    // Återställ brickan man bytt från
+                                    // Reset the tile being swapped from
                                     originTile.ResetPos();
                                     originTile.TempPlaced = false;
                                     originTile.Letter = '\0';
@@ -76,7 +76,7 @@ namespace Alfapet
 
                             break;
                         }
-                        // Om man inte hittar, sätt tillbaka brickans position
+                        // If not found, reset the tile's position
                         originTile.ResetPos();
                     }
                 }
@@ -85,7 +85,7 @@ namespace Alfapet
         }
 
         /*
-         * Kollar om man försöker dra på en bricka
+         * Checks if a tile is being dragged.
         */
         private static void CheckDrag(dynamic index, Tile tile, Move moveType)
         {
@@ -95,28 +95,28 @@ namespace Alfapet
             var mouse = Mouse.GetState(Alfapet.Window);
             if (tile.Dragging)
             {
-                // Man håller på att dra och leftclick är fortfarande nere, brickan fortsätter att följa musen
+                // Currently dragging and left-click is still held, the tile continues to follow the mouse
                 if (mouse.LeftButton == ButtonState.Pressed)
                 {
-                    tile.SetPos(mouse.X - tile.W / 2, mouse.Y - tile.H / 2); // Sätter brickan till i mitten av muspekaren
+                    tile.SetPos(mouse.X - tile.W / 2, mouse.Y - tile.H / 2); // Sets the tile to the center of the cursor
                 }
-                // Man håller på att dra och inte längre håller leftclick, användaren vill släppa brickan
+                // Currently dragging but no longer holding left-click, user wants to drop the tile
                 else
                 {
-                    // Inget dras längre
+                    // No longer dragging
                     Dragging = false;
                     tile.Dragging = false;
-                    
+
                     DoDrop(index, tile, moveType);
                 }
             }
-            // Man drar en bricka men inte denna
+            // Dragging a tile but not this one
             else if (Dragging)
             {
                 return;
             }
 
-            // Om man håller leftclick och är över en bricka, börja dra på brickan
+            // If holding left-click and over a tile, start dragging the tile
             if (mouse.LeftButton == ButtonState.Pressed && Util.IsHovering(tile.GetPos(), new Vector2(Hand.TilesWidth, Hand.TilesHeight)))
             {
                 tile.Dragging = true;
@@ -126,25 +126,25 @@ namespace Alfapet
 
         public static void Check()
         {
-            // Kolla inget om det inte är användarens tur
+            // Do nothing if it's not the user's turn
             if (Ai.Playing)
                 return;
-            
-            // Kolla om brickor i handen blir dragna
+
+            // Check if tiles in the hand are being dragged
             for (var i = 0; i < Hand.Tiles.Length; i++)
             {
                 CheckDrag(i, Hand.Tiles[i], Move.Place);
             }
-            // Kolla brickorna på bordet
+            // Check the tiles on the board
             for (var y = 0; y < Board.YTiles; y++)
             {
                 for (var x = 0; x < Board.XTiles; x++)
                 {
-                    // Låt inte användaren röra fasta eller bottens brickor
+                    // Prevent the user from moving fixed or bottom tiles
                     if (!Board.Tiles[y, x].TempPlaced)
                         continue;
 
-                    // Om muspekaren är vid handens position vill man ta bort, annars flytta till en annan bricka på bordet
+                    // If the cursor is at the hand's position, want to remove; otherwise, move to another tile on the board
                     var mouseInHandRange = Mouse.GetState(Alfapet.Window).Y > (Board.YTiles + 2) * Board.TilesHeight;
                     CheckDrag(new Vector2(x, y), Board.Tiles[y, x], mouseInHandRange ? Move.Remove : Move.Change);
                 }

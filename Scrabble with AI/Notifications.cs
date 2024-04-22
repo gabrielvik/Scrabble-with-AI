@@ -10,37 +10,37 @@ namespace Alfapet
         private static float H = 100;
         private struct Message
         {
-            public string Value { get; set; } // Vad medelandet är
-            public long StartTime { get; set; } // När medelandet kom up på skärmen
+            public string Value { get; set; }
+            public long StartTime { get; set; }
         }
-        
+
         public static void AddMessage(string msg)
         {
             Messages.Add(new Message
             {
                 Value = msg,
                 StartTime = DateTimeOffset.Now.ToUnixTimeSeconds()
-            });    
+            });
         }
 
-        public static void Draw()   
+        public static void Draw()
         {
-            for(var i = 0; i < Messages.Count; i++)
+            for (var i = 0; i < Messages.Count; i++)
             {
-                // 2 sekunder har gått sedan medelandet var tillagt
+                // 2 seconds have passed since the message was added
                 if (DateTimeOffset.Now.ToUnixTimeSeconds() - Messages[i].StartTime > 2)
                 {
-                    // Lerpar positionen till utanför skärmen
+                    // Lerps the position to outside of the screen
                     H = MathHelper.Lerp(H, -20, (float)(DateTimeOffset.Now.ToUnixTimeSeconds() - Messages[i].StartTime + 2) / 100);
-                    if (H <= -14) // Texten är utanför (14 är storleken på font)
+                    if (H <= -14) // The text is off-screen (14 is the font size)
                     {
                         Messages.Remove(Messages[i]);
 
-                        H += 100; // För att nästa meddelande hamnar på start positionen
+                        H += 100; // To position the next message at the start position
                         return;
                     }
                 }
-                
+
                 Ui.DrawCenterText(Ui.MontserratBoldTiny, Messages[i].Value, new Vector2(0, 0),
                     new Vector2(Alfapet.Graphics.GraphicsDevice.Viewport.Width, H + i * 100), Color.White);
             }

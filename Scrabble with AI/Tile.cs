@@ -8,9 +8,9 @@ namespace Alfapet
         public float X, Y, W, H;
 
         public char Letter = '\0';
-        
+
         public SpriteFont Font;
-        
+
         public bool TempPlaced = false;
         public bool Dragging = false;
 
@@ -20,14 +20,14 @@ namespace Alfapet
         {
             X = x;
             Y = y;
-            
-            // Om orignella positionen inte finns, sätt den
+
+            // If the original position does not exist, set it
             if (OriginalPos == Vector2.Zero)
                 OriginalPos = new Vector2(x, y);
         }
 
         /*
-         * Sätter positionen till där den var i början 
+         * Sets the position back to where it was initially 
         */
         public void ResetPos()
         {

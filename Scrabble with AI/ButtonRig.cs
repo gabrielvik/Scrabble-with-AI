@@ -11,9 +11,9 @@ namespace Alfapet
         {
             Buttons = new Dictionary<string, Button>
             {
-                { "move", new Button() },
-                { "sort", new Button() },
-                { "newHand", new Button() }
+                { "move", new Button() }, // Skip
+                { "sort", new Button() }, // Sortera handen
+                { "newHand", new Button() } // Ny hand (skippa)
             };
 
             var x = 5f;
@@ -25,29 +25,29 @@ namespace Alfapet
 
                 x += w + 5;
             }
-            
+
             Buttons["move"].SetText("Skip");
             Buttons["move"].ClickEvent = delegate
             {
                 if (Ai.Playing)
                     return;
 
-                Rounds.DoMove(Board.TilesPlaced <= 0); // Skippa om man inte har brickor på brädan
+                Rounds.DoMove(Board.TilesPlaced <= 0); // Skip if no tiles on board
             };
-            
+
             Buttons["sort"].SetText("Sort Hand");
             Buttons["sort"].ClickEvent = Hand.Sort;
-            
+
             Buttons["newHand"].SetText("New Hand (skip)");
             Buttons["newHand"].ClickEvent = delegate
             {
-                // Låt inte skippa om inte användaren spelar
+                // Don't skip if opponent is playing
                 if (Ai.Playing)
                 {
                     Buttons["newHand"].InvalidClick("Opponent Playing!");
                     return;
                 }
-                // Låt inte skippa om man har brickor på brädan
+                // Don't skip if tiles are on board
                 if (Board.TilesPlaced > 0)
                 {
                     Buttons["newHand"].InvalidClick("Remove Tiles!");

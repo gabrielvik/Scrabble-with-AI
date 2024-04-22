@@ -8,16 +8,16 @@ namespace Alfapet
     {
         public static char GenerateRandomLetter()
         {
-            // Random nummer från 65 till 90 (värden för stora bokstäver i ASCII), och gör om till karaktär
+            // Random number from 65 to 90 (values for uppercase letters in ASCII), and convert to character
             return (char)new Random().Next(65, 90);
         }
 
         /*
-         * Returnerar om muspekaren är över positionen och inom storleken 
-        */
+         * Returns whether the mouse pointer is over the position and within the size 
+         */
         public static bool IsHovering(Vector2 pos, Vector2 size)
         {
-            // Gå inte vidare om man inte är inne i programmet
+            // Do not proceed if the program is not active
             if (!Alfapet.IsActive)
                 return false;
 

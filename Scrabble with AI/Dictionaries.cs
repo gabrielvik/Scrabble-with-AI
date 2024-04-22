@@ -9,14 +9,14 @@ namespace Alfapet
 {
     class Dictionaries : Game
     {
-        // Ordboken från: https://raw.githubusercontent.com/matthewreagan/WebstersEnglishDictionary/master/dictionary.json
+        // Dictionary from: https://raw.githubusercontent.com/matthewreagan/WebstersEnglishDictionary/master/dictionary.json
         private static Dictionary<string, string> Current;
         public static void Initialize(string language)
         {
-            //  Få JSON från filen beroende på vilket språk man kallar funktionen
+            // Get JSON from the file depending on which language the function is called with
             var json = File.ReadAllText(@"dictionaries/" + language + ".json");
 
-            // Gör om JSON till ett dictionary där ordboken lagras
+            // Convert JSON to a dictionary where the dictionary is stored
             Current = new Dictionary<string, string>(JsonConvert.DeserializeObject<Dictionary<string, string>>(json), StringComparer.OrdinalIgnoreCase);
         }
 
@@ -26,7 +26,7 @@ namespace Alfapet
         }
 
         /*
-         * Gör om Dictionary till en lista med alla ord
+         * Convert Dictionary to a list of all words
         */
         public static List<string> GetWordList()
         {

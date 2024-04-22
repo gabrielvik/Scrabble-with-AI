@@ -13,8 +13,8 @@ namespace Alfapet
         public static SpriteFont MontserratBoldTiny;
 
         /*
-         * Laddar in alla fonts 
-        */
+         * Loads all fonts 
+         */
         public static void Load(ContentManager content)
         {
             MontserratBold = content.Load<SpriteFont>("Fonts/Montserrat-Bold");
@@ -23,8 +23,8 @@ namespace Alfapet
         }
 
         /*
-         * Ritar en rektangel med outline runt kanterna
-        */
+         * Draws a rectangle with an outline around the edges
+         */
         public static void OutlinedRectangle(Rectangle rec, Color? colorOverwrite = null)
         {
             const int thickness = 2;
@@ -33,32 +33,32 @@ namespace Alfapet
 
             var borderColor = Color.White;
 
-            // Bakgrunden
+            // Background
             Alfapet.SpriteBatch.Draw(Alfapet.TransparentBack, rec, colorOverwrite ?? Color.Black * 0.5f);
 
-            // Vänster top
+            // Top left
             Alfapet.SpriteBatch.Draw(Alfapet.TransparentBack, new Rectangle(rec.X, rec.Y, width, thickness), borderColor);
             Alfapet.SpriteBatch.Draw(Alfapet.TransparentBack, new Rectangle(rec.X, rec.Y + thickness, thickness, height - thickness), borderColor);
 
-            // Vänster nedre
+            // Bottom left
             Alfapet.SpriteBatch.Draw(Alfapet.TransparentBack, new Rectangle(rec.X, rec.Y + rec.Height - thickness, width, thickness), borderColor);
             Alfapet.SpriteBatch.Draw(Alfapet.TransparentBack, new Rectangle(rec.X, rec.Y + rec.Height - height, thickness, height - thickness), borderColor);
 
-            // Högre top
+            // Top right
             Alfapet.SpriteBatch.Draw(Alfapet.TransparentBack, new Rectangle(rec.X + rec.Width - width, rec.Y, width, thickness), borderColor);
             Alfapet.SpriteBatch.Draw(Alfapet.TransparentBack, new Rectangle(rec.X + rec.Width - thickness, rec.Y + thickness, thickness, height - thickness), borderColor);
 
-            // Högre nedre
+            // Bottom right
             Alfapet.SpriteBatch.Draw(Alfapet.TransparentBack, new Rectangle(rec.X + rec.Width - width, rec.Y + rec.Height - thickness, width, thickness), borderColor);
             Alfapet.SpriteBatch.Draw(Alfapet.TransparentBack, new Rectangle(rec.X + rec.Width - thickness, rec.Y + rec.Height - height, thickness, height - thickness), borderColor);
         }
-        
+
         /*
-         * Ritar text i mitten på positionen beroende på storleken
-        */
+         * Draws text centered at the position depending on the size
+         */
         public static void DrawCenterText(SpriteFont font, string text, Vector2 pos, Vector2 size, Color color)
         {
-            var fontSize = font.MeasureString(text); // Storleken för fontet i X och Y
+            var fontSize = font.MeasureString(text); // Size of the font in X and Y
             var offsetX = (int)(size.X / 2 - fontSize.X / 2);
             var offsetY = (int)(size.Y / 2 - fontSize.Y / 2);
 

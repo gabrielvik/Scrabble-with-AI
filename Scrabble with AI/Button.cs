@@ -49,41 +49,41 @@ namespace Alfapet
         }
 
         /*
-         * Funktion för att en knapp som av någon anleding inte ska tryckas
-         * Gör knappen röd som lerpar genomskinlighet, och ändrar texten på knappen
+         * Function for when a button should not be clickable for some reason
+         * Turns the button red with lerping opacity, and changes the button text
         */
         public async void InvalidClick(string text = "Invalid")
         {
-            if (DrawFunc != null) // Om draw functionen redan finns har klickat nyligen
+            if (DrawFunc != null) // If the draw function already exists, a click has occurred recently
                 return;
 
             var tempDrawFunc = DrawFunc;
             var tempClickEvent = ClickEvent;
 
             var lerpStart = DateTimeOffset.Now.ToUnixTimeMilliseconds();
-            var delay = 1500; // Hur länge det tar tills man får klicka igen
+            var delay = 1500; // How long until you can click again
 
             DrawFunc = delegate ()
             {
                 var lerpValue = MathHelper.Lerp(1f, 0.25f, (float)(DateTimeOffset.Now.ToUnixTimeMilliseconds() - lerpStart) / delay);
-                Ui.OutlinedRectangle(new Rectangle((int)X, (int)Y, (int)W, (int)H), Color.Red * lerpValue); // Sätter genomskinligheten till lerp värdet
+                Ui.OutlinedRectangle(new Rectangle((int)X, (int)Y, (int)W, (int)H), Color.Red * lerpValue); // Sets opacity to lerp value
                 Ui.DrawCenterText(Ui.MontserratBoldSmaller, text, GetPos(), GetSize(), Color.White);
             };
             ClickEvent = null;
 
-            await Task.Delay(delay); // Efter x sekunder, sätt tillbaka funktionerna till deras tidigare läge
+            await Task.Delay(delay); // After x seconds, revert the functions to their previous state
             DrawFunc = tempDrawFunc;
             ClickEvent = tempClickEvent;
         }
-        
+
         /*
-         * Om knappen inte har en draw funktion kommer denna bli det 
+         * If the button does not have a draw function, this will become it 
         */
         private void DefaultDraw()
         {
             var isHovering = Util.IsHovering(GetPos(), GetSize());
 
-            if (Mouse.GetState(Alfapet.Window).LeftButton == ButtonState.Pressed && isHovering) // Håller leftclick på knappen
+            if (Mouse.GetState(Alfapet.Window).LeftButton == ButtonState.Pressed && isHovering) // Holding left click on the button
                 Ui.OutlinedRectangle(new Rectangle((int)X, (int)Y, (int)W, (int)H), Color.White * 0.85f);
             else if (isHovering)
                 Ui.OutlinedRectangle(new Rectangle((int)X, (int)Y, (int)W, (int)H), Color.White * 0.5f);
@@ -106,30 +106,30 @@ namespace Alfapet
 
         public static void ListenForPresses()
         {
-            // Ingen idé att kolla om man inte är inne i programmet
+            // No point in checking if not in the program
             if (!Alfapet.IsActive)
                 return;
 
-            // Gör om till lista, så ändringar som görs inte interfererar mitt i update funktionen (försöker indexa utanför etc)
+            // Convert to list, so changes made don't interfere in the middle of the update function (attempting to index outside etc)
             foreach (var button in List.Where(button => button.ClickEvent != null).ToList())
             {
                 if (Util.IsHovering(button.GetPos(), button.GetSize()))
                 {
                     var mouse = Mouse.GetState(Alfapet.Window);
 
-                    // Man börjar hålla nere knappen
+                    // Starts holding down the button
                     if (!button.Pressed && mouse.LeftButton == ButtonState.Pressed)
                     {
                         button.Pressed = true;
                     }
-                    // Man har hållt nere knappen och har nu släppt, användaren vill klicka
+                    // Has been holding down the button and has now released, the user wants to click
                     if (button.Pressed && mouse.LeftButton == ButtonState.Released)
                     {
                         button.ClickEvent();
                         button.Pressed = false;
                     }
                 }
-                // Man har hållt nere men tagit bort muspekaren från knappen, användaren vill avbryta
+                // Has been holding down but moved the mouse pointer away from the button, user wants to cancel
                 else if (button.Pressed)
                 {
                     button.Pressed = false;

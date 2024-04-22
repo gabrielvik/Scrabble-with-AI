@@ -5,8 +5,8 @@ namespace Alfapet
 {
     class Config : Game
     {
-        public static Dictionary<char, int> CharacterPoints; // Vad bokstävernas poäng blir
-        public static string GameTitle = "GameTitle"; // Vad som visas i start skärmen
+        public static Dictionary<char, int> CharacterPoints;
+        public static string GameTitle = "GameTitle";
 
         public new static void Initialize()
         {

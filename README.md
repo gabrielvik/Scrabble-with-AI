@@ -17,11 +17,5 @@ This project is a simple Scrabble game developed using XNA and MonoGame, where p
 4. **Scoring**: Points are calculated based on the letters used and board tile bonuses.
 5. **End Game**: The game ends when one player uses all their tiles or there are no more valid moves.
 
-## Requirements
-
-- Windows OS
-- XNA Game Studio (for development)
-- MonoGame (for deployment)
-
 ##
 ![Scrabble_with_AI_3NcwPex3i7](https://github.com/gabrielvik/Wordfeud-AI/assets/24679989/7b1b131e-1963-4b90-a5fd-ede433eb0827)
